@@ -27,6 +27,8 @@ dependencies:
   dio:
   logger:
   flutter_secure_storage:
+  intl:
+  shimmer:
 
   ## Firebase packages
   firebase_core:
