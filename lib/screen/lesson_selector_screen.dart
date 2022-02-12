@@ -12,13 +12,13 @@ import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
 
-import 'home/home_page.dart';
+import 'home/flush_card_screen.dart';
 
 class LessonSelectorScreen extends ConsumerStatefulWidget {
   const LessonSelectorScreen({Key? key}) : super(key: key);
 
   @override
-  _LessonSelectorScreenState createState() => _LessonSelectorScreenState();
+  ConsumerState<LessonSelectorScreen> createState() => _LessonSelectorScreenState();
 
   static void navigateTo(BuildContext context) {
     Navigator.push(context, MaterialPageRoute(
@@ -183,7 +183,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
         Card(
           child: InkWell(
             onTap: () {
-              HomePage.navigateTo(
+              FlushScreen.navigateTo(
                 context,
                 lectures.first.spreadsheets.first.id,
               );

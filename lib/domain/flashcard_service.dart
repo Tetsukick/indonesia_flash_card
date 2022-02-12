@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 
 typedef QuestionString = String;
@@ -5,25 +6,16 @@ typedef AnswerString = String;
 typedef HintString = String;
 typedef SolutionString = String;
 
-class FlashcardService {
-  final SheetRepo _sheetRepo;
+final flashCardControllerProvider = StateNotifierProvider<FlashCardController, List<MapEntry<String, String>>>(
+      (ref) => FlashCardController(initialQuestions: List<MapEntry<String, String>>.empty()),
+);
 
-  FlashcardService(this._sheetRepo);
+class FlashCardController extends StateNotifier<List<MapEntry<String, String>>> {
+  FlashCardController({required List<MapEntry<String, String>> initialQuestions}) : super(initialQuestions);
 
-  Future<MapEntry<HintString, SolutionString>> getHeadline() async {
+  Future<Map<QuestionString, AnswerString>> getQuestionsAndAnswers(SheetRepo sheetRepo) async {
     List<List<Object>>? entryList =
-    await _sheetRepo.getEntriesFromRange("B1:C1");
-
-    if (entryList == null) throw UnsupportedError("The entries are null");
-
-    final List<String> firstEntry =
-    entryList.first.map((element) => element.toString()).toList();
-    return MapEntry(firstEntry[0], firstEntry[1]);
-  }
-
-  Future<Map<QuestionString, AnswerString>> getQuestionsAndAnswers() async {
-    List<List<Object>>? entryList =
-    await _sheetRepo.getEntriesFromRange("B2:C1000");
+    await sheetRepo.getEntriesFromRange("B2:C1000");
     if (entryList == null) {
       throw UnsupportedError("There are no questions nor answers.");
     }
@@ -42,6 +34,9 @@ class FlashcardService {
             () => element[1].toString().trim(),
       );
     }
+    final _tmpQuestionsAndAnswers = questionsAndAnswers.entries.toList();
+    _tmpQuestionsAndAnswers.shuffle();
+    state = _tmpQuestionsAndAnswers;
 
     return questionsAndAnswers;
   }
