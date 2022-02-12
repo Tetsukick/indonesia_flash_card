@@ -34,9 +34,6 @@ class _LessonSelectorScreenState extends State<LessonSelectorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Select your lesson"),
-      ),
       body: FutureBuilder<List<LectureFolder>>(
           future: getPossibleLectures,
           builder: (context, snapshot) {
