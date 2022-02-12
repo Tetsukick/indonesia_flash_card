@@ -1,12 +1,16 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:googleapis/drive/v2.dart';
 import 'package:indonesia_flash_card/model/lecture.dart';
 import 'package:indonesia_flash_card/repository/gdrive_repo.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
 
-class FilesService {
-  final GDriveRepo _gDriveRepo;
+final fileControllerProvider = StateNotifierProvider<FileController, List<LectureFolder>>(
+      (ref) => FileController(GDriveRepo(), initialLectures: List<LectureFolder>.empty()),
+);
 
-  FilesService(this._gDriveRepo);
+class FileController extends StateNotifier<List<LectureFolder>> {
+  FileController(this._gDriveRepo, {required List<LectureFolder> initialLectures}) : super(initialLectures);
+  final GDriveRepo _gDriveRepo;
 
   Future<List<LectureFolder>> getPossibleLectures() async {
     List<File> filesAndFolders = await _gDriveRepo.getFilesAndFolders();
@@ -25,6 +29,7 @@ class FilesService {
         LectureInformation(spreadsheet.title ?? "", spreadsheet.id ?? ""),
       );
     }
+    state = result;
 
     return result;
   }
