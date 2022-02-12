@@ -15,7 +15,7 @@ class SheetRepo {
   Future<List<List<Object>>?> getEntriesFromRange(String range) async {
     await init;
     final result =
-    await sheetsApi.spreadsheets.values.get(spreadsheetId, range);
+      await sheetsApi.spreadsheets.values.get(spreadsheetId, range);
     return result.values;
   }
 
