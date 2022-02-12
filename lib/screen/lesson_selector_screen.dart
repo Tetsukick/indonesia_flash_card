@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/domain/file_service.dart';
+import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/lecture.dart';
 import 'package:indonesia_flash_card/repository/gdrive_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -131,8 +132,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
               height: 160,
               child: Stack(
                 children: <Widget>[
-                  SvgPicture.asset(
-                    'assets/svg/eat.svg',
+                  Assets.svg.eat.svg(
                     alignment: Alignment.center,
                     width: double.infinity,
                     height: double.infinity,
@@ -159,12 +159,15 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                   Container(
                     width: double.infinity,
                     height: double.infinity,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextWidget.titleWhiteLargeBold(lectures.first.spreadsheets.first.name)
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(SizeConfig.smallMargin),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextWidget.titleWhiteLargeBold(lectures.first.spreadsheets.first.name)
+                        ],
+                      ),
                     ),
                   ),
                 ],
