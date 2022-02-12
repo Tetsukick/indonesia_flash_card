@@ -5,8 +5,7 @@ import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/domain/flashcard_service.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
-
-import 'completion_widget.dart';
+import 'package:indonesia_flash_card/utils/shimmer.dart';
 
 class FlushScreen extends ConsumerStatefulWidget {
   static navigateTo(context, String spreadsheetId) {
@@ -68,14 +67,21 @@ class _FlushScreenState extends ConsumerState<FlushScreen> {
 
   Widget _flashCardFront() {
     final questionAnswerList = ref.watch(flashCardControllerProvider);
+    if (questionAnswerList.isEmpty) {
+      return _shimmerFlashCard(false);
+    }
     return Card(
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            TextWidget.titleRedMedium('インドネシア語'),
-            TextWidget.titleBlackLargeBold(questionAnswerList[currentIndex].key)
-          ],
+      child: Container(
+        height: 200,
+        width: double.infinity,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              TextWidget.titleRedMedium('インドネシア語'),
+              TextWidget.titleBlackLargeBold(questionAnswerList[currentIndex].key)
+            ],
+          ),
         ),
       ),
     );
@@ -83,34 +89,88 @@ class _FlushScreenState extends ConsumerState<FlushScreen> {
 
   Widget _flashCardBack() {
     final questionAnswerList = ref.watch(flashCardControllerProvider);
+    if (questionAnswerList.isEmpty) {
+      return _shimmerFlashCard(false);
+    } else if (!cardFlipped) {
+      return _shimmerFlashCard(true);
+    }
     return Card(
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            TextWidget.titleRedMedium('日本語'),
-            TextWidget.titleBlackLargeBold(questionAnswerList[currentIndex].value)
-          ],
+      child: Container(
+        height: 200,
+        width: double.infinity,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              TextWidget.titleRedMedium('日本語'),
+              TextWidget.titleBlackLargeBold(questionAnswerList[currentIndex].value)
+            ],
+          ),
         ),
       ),
     );
   }
 
+  Widget _shimmerFlashCard(bool isTappable) {
+    return Stack(
+      children: [
+        Card(
+          child: Container(
+            height: 200,
+            width: double.infinity,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ShimmerWidget.rectangular(height: 16),
+                  ShimmerWidget.rectangular(height: 32)
+                ],
+              ),
+            ),
+          ),
+        ),
+        Visibility(
+          visible: isTappable,
+          child: Align(
+            alignment: Alignment.center,
+            child: TextButton(
+              child: Container(
+                height: 200,
+                width: double.infinity,
+                child: Center(
+                    child: TextWidget.titleGraySmallBold('タップして日本語の意味を表示')
+                ),
+              ),
+              style: TextButton.styleFrom(
+                primary: ColorConfig.bgGreySeparater,
+              ),
+              onPressed: () => setState(() => cardFlipped = true),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
   Widget _actionButtonSection() {
-    return Padding(
-      padding: const EdgeInsets.all(SizeConfig.smallMargin),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          IconButton(
-            onPressed: getNextCard,
-            icon: const Icon(Icons.cancel),
-          ),
-          IconButton(
-            onPressed: getNextCard,
-            icon: const Icon(Icons.check_circle),
-          ),
-        ],
+    final questionAnswerList = ref.watch(flashCardControllerProvider);
+    return Visibility(
+      visible: questionAnswerList.isNotEmpty,
+      child: Padding(
+        padding: const EdgeInsets.all(SizeConfig.smallMargin),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            IconButton(
+              onPressed: getNextCard,
+              icon: const Icon(Icons.cancel),
+            ),
+            IconButton(
+              onPressed: getNextCard,
+              icon: const Icon(Icons.check_circle),
+            ),
+          ],
+        ),
       ),
     );
   }
