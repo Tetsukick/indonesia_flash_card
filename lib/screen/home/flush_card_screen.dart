@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/domain/flashcard_service.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
+import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 
 import 'completion_widget.dart';
 
@@ -46,55 +48,17 @@ class _FlushScreenState extends ConsumerState<FlushScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final questionAnswerList = ref.watch(flashCardControllerProvider);
     return Scaffold(
+      backgroundColor: ColorConfig.bgPinkColor,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(SizeConfig.smallestMargin),
+          padding: const EdgeInsets.all(SizeConfig.mediumMargin),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-          Expanded(
-          child: allCardsFinished
-          ? CompletionWidget(onPressed: () {
-        init = startLesson();
-        })
-            : IgnorePointer(
-        ignoring: cardFlipped,
-        child: InkWell(
-          onTap: () =>
-              setState(() => cardFlipped = !cardFlipped),
-          child: Card(
-            child: Center(
-              child: Column(
-                mainAxisAlignment:
-                MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    cardFlipped
-                        ? '日本語'
-                        : 'インドネシア語',
-                    textAlign: TextAlign.center,
-                  ),
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        cardFlipped
-                            ? questionAnswerList[currentIndex]
-                            .value
-                            : questionAnswerList[currentIndex]
-                            .key,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-    ),
-    ),
+              _flashCardFront(),
+              _flashCardBack(),
+              _actionButtonSection()
             ],
           ),
         ),
@@ -102,18 +66,52 @@ class _FlushScreenState extends ConsumerState<FlushScreen> {
     );
   }
 
+  Widget _flashCardFront() {
+    final questionAnswerList = ref.watch(flashCardControllerProvider);
+    return Card(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextWidget.titleRedMedium('インドネシア語'),
+            TextWidget.titleBlackLargeBold(questionAnswerList[currentIndex].key)
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _flashCardBack() {
+    final questionAnswerList = ref.watch(flashCardControllerProvider);
+    return Card(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextWidget.titleRedMedium('日本語'),
+            TextWidget.titleBlackLargeBold(questionAnswerList[currentIndex].value)
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _actionButtonSection() {
-    return Row(
-      children: [
-        IconButton(
-          onPressed: getNextCard,
-          icon: const Icon(Icons.cancel),
-        ),
-        IconButton(
-          onPressed: getNextCard,
-          icon: const Icon(Icons.check_circle),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(SizeConfig.smallMargin),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          IconButton(
+            onPressed: getNextCard,
+            icon: const Icon(Icons.cancel),
+          ),
+          IconButton(
+            onPressed: getNextCard,
+            icon: const Icon(Icons.check_circle),
+          ),
+        ],
+      ),
     );
   }
 
