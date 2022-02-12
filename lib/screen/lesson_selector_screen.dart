@@ -10,6 +10,7 @@ import 'package:indonesia_flash_card/repository/gdrive_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
+import 'package:indonesia_flash_card/utils/shimmer.dart';
 
 import 'home/home_page.dart';
 
@@ -122,11 +123,71 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
 
   Widget _lectureCard() {
     final lectures = ref.watch(fileControllerProvider);
-    return Visibility(
-      visible: lectures != null && lectures.isNotEmpty,
-      child: Row(
+    final _isLoadingLecture = lectures.isEmpty;
+    if (_isLoadingLecture) {
+      return Row(
         children: [
           Card(
+            child: Container(
+              width: 200,
+              height: 160,
+              child: Stack(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      child: Container(
+                        width: double.infinity,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: FractionalOffset.bottomCenter,
+                            end: FractionalOffset.topCenter,
+                            colors: [
+                              Colors.black.withOpacity(0.5),
+                              Colors.black.withOpacity(0),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: Padding(
+                      padding: const EdgeInsets.all(SizeConfig.smallMargin),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ShimmerWidget.rectangular(
+                            height: 20,
+                            width: double.infinity,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+        ],
+      );
+
+    }
+
+    return Row(
+      children: [
+        Card(
+          child: InkWell(
+            onTap: () {
+              HomePage.navigateTo(
+                context,
+                lectures.first.spreadsheets.first.id,
+              );
+            },
             child: Container(
               width: 200,
               height: 160,
@@ -173,9 +234,9 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                 ],
               ),
             ),
-          )
-        ],
-      ),
+          ),
+        )
+      ],
     );
   }
 }
