@@ -23,7 +23,7 @@ dependencies:
   flutter_svg: ^1.0.3
   flutter_gen:
   fluttertoast: ^8.0.8
-  flutter_riverpod:
+  flutter_riverpod: ^1.0.3
   dio:
   logger:
   flutter_secure_storage:
