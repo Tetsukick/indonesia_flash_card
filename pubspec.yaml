@@ -35,7 +35,6 @@ dependencies:
   firebase_crashlytics:
   firebase_messaging:
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
