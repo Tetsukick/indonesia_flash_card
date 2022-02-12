@@ -159,12 +159,15 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                   Container(
                     width: double.infinity,
                     height: double.infinity,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextWidget.titleWhiteLargeBold(lectures.first.spreadsheets.first.name)
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(SizeConfig.smallMargin),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextWidget.titleWhiteLargeBold(lectures.first.spreadsheets.first.name)
+                        ],
+                      ),
                     ),
                   ),
                 ],
