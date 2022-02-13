@@ -56,6 +56,7 @@ class _FlushScreenState extends ConsumerState<FlushScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _flashCardFront(),
+              SizedBox(height: SizeConfig.smallMargin),
               _flashCardBack(),
               _actionButtonSection()
             ],
@@ -68,32 +69,26 @@ class _FlushScreenState extends ConsumerState<FlushScreen> {
   Widget _flashCardFront() {
     final questionAnswerList = ref.watch(flashCardControllerProvider);
     if (questionAnswerList.isEmpty) {
-      return _shimmerFlashCard(false);
+      return _shimmerFlashCard(isTappable: false, isJapanese: false);
     }
-    return Card(
-      child: Container(
-        height: 200,
-        width: double.infinity,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              TextWidget.titleRedMedium('インドネシア語'),
-              TextWidget.titleBlackLargeBold(questionAnswerList[currentIndex].key)
-            ],
-          ),
-        ),
-      ),
-    );
+    return _flashCard(
+        title: 'インドネシア語',
+        data: questionAnswerList[currentIndex].key);
   }
 
   Widget _flashCardBack() {
     final questionAnswerList = ref.watch(flashCardControllerProvider);
     if (questionAnswerList.isEmpty) {
-      return _shimmerFlashCard(false);
+      return _shimmerFlashCard(isTappable: false);
     } else if (!cardFlipped) {
-      return _shimmerFlashCard(true);
+      return _shimmerFlashCard(isTappable: true);
     }
+    return _flashCard(
+        title: '日本語',
+        data: questionAnswerList[currentIndex].value);
+  }
+
+  Widget _flashCard({required String title, required String data}) {
     return Card(
       child: Container(
         height: 200,
@@ -102,8 +97,8 @@ class _FlushScreenState extends ConsumerState<FlushScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              TextWidget.titleRedMedium('日本語'),
-              TextWidget.titleBlackLargeBold(questionAnswerList[currentIndex].value)
+              TextWidget.titleRedMedium(title),
+              TextWidget.titleBlackLargeBold(data)
             ],
           ),
         ),
@@ -111,7 +106,7 @@ class _FlushScreenState extends ConsumerState<FlushScreen> {
     );
   }
 
-  Widget _shimmerFlashCard(bool isTappable) {
+  Widget _shimmerFlashCard({required bool isTappable, bool isJapanese = true}) {
     return Stack(
       children: [
         Card(
@@ -122,8 +117,8 @@ class _FlushScreenState extends ConsumerState<FlushScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ShimmerWidget.rectangular(height: 16),
-                  ShimmerWidget.rectangular(height: 32)
+                  TextWidget.titleRedMedium(isJapanese ? '日本語' : 'インドネシア語'),
+                  ShimmerWidget.rectangular(height: 40, width: 240,)
                 ],
               ),
             ),
@@ -161,16 +156,41 @@ class _FlushScreenState extends ConsumerState<FlushScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            IconButton(
-              onPressed: getNextCard,
-              icon: const Icon(Icons.cancel),
-            ),
-            IconButton(
-              onPressed: getNextCard,
-              icon: const Icon(Icons.check_circle),
-            ),
+            _actionButton(
+                icon: Icon(Icons.cancel,
+                  color: ColorConfig.red,
+                  size: SizeConfig.largestMargin,
+                ),
+                title: '覚えてない'),
+            _actionButton(
+                icon: Icon(Icons.check_circle,
+                  color: ColorConfig.green,
+                  size: SizeConfig.largestMargin,
+                ),
+                title: '覚えた'),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _actionButton({required Icon icon, required String title}) {
+    return Card(
+      shape: CircleBorder(),
+      child: InkWell(
+        child: Container(
+            height: 120,
+            width: 120,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                icon,
+                SizedBox(height: SizeConfig.smallMargin),
+                TextWidget.titleGraySmallBold(title)
+              ],
+            )
+        ),
+        onTap: getNextCard,
       ),
     );
   }
