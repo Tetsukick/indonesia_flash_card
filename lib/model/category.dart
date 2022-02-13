@@ -1,3 +1,5 @@
+import 'package:indonesia_flash_card/gen/assets.gen.dart';
+
 enum TangoCategory {
   work,
   food,
@@ -48,6 +50,39 @@ extension TangoCategoryExt on TangoCategory {
         return '娯楽';
       case TangoCategory.other:
         return 'その他';
+    }
+  }
+
+  SvgGenImage get svg {
+    switch (this) {
+      case TangoCategory.work:
+        return Assets.svg.work2;
+      case TangoCategory.food:
+        return Assets.svg.eat;
+      case TangoCategory.time:
+        return Assets.svg.time2;
+      case TangoCategory.tool:
+        return Assets.svg.tool2;
+      case TangoCategory.building:
+        return Assets.svg.building2;
+      case TangoCategory.money:
+        return Assets.svg.money2;
+      case TangoCategory.unit:
+        return Assets.svg.unit2;
+      case TangoCategory.event:
+        return Assets.svg.event3;
+      case TangoCategory.fashion:
+        return Assets.svg.fashion4;
+      case TangoCategory.body:
+        return Assets.svg.sport2;
+      case TangoCategory.vehicle:
+        return Assets.svg.vehicle3;
+      case TangoCategory.country:
+        return Assets.svg.world2;
+      case TangoCategory.hobby:
+        return Assets.svg.shodou;
+      case TangoCategory.other:
+        return Assets.svg.islam2;
     }
   }
 
