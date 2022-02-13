@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:indonesia_flash_card/model/category.dart';
+import 'package:indonesia_flash_card/model/part_of_speech.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 
@@ -14,7 +16,7 @@ final flashCardControllerProvider = StateNotifierProvider<FlashCardController, L
 class FlashCardController extends StateNotifier<List<TangoEntity>> {
   FlashCardController({required List<TangoEntity> initialTangos}) : super(initialTangos);
 
-  Future<List<TangoEntity>> getQuestionsAndAnswers(SheetRepo sheetRepo) async {
+  Future<List<TangoEntity>> getQuestionsAndAnswers({required SheetRepo sheetRepo, TangoCategory? category, PartOfSpeechEnum? partOfSpeech}) async {
     List<List<Object>>? entryList =
     await sheetRepo.getEntriesFromRange("A2:J1000");
     if (entryList == null) {
@@ -49,9 +51,14 @@ class FlashCardController extends StateNotifier<List<TangoEntity>> {
       questionsAndAnswers.add(tmpTango);
     }
     final _tmpQuestionsAndAnswers = questionsAndAnswers;
-    _tmpQuestionsAndAnswers.shuffle();
-    state = _tmpQuestionsAndAnswers;
+    final _filteredQuestionsAndAnswers = _tmpQuestionsAndAnswers.where((element) {
+      bool _filterCategory = category != null ? element.category == category.id : true;
+      bool _filterPartOfSpeech = partOfSpeech != null ? element.partOfSpeech == partOfSpeech.id : true;
+      return _filterCategory && _filterPartOfSpeech;
+    }).toList();
+    _filteredQuestionsAndAnswers.shuffle();
+    state = _filteredQuestionsAndAnswers;
 
-    return questionsAndAnswers;
+    return _filteredQuestionsAndAnswers;
   }
 }

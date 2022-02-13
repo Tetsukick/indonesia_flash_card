@@ -1,4 +1,4 @@
-enum PartOfSpeech {
+enum PartOfSpeechEnum {
   noun,
   verbs,
   adjectives,
@@ -12,60 +12,60 @@ enum PartOfSpeech {
   other
 }
 
-extension PartOfSpeechExt on PartOfSpeech {
+extension PartOfSpeechExt on PartOfSpeechEnum {
   int get id => index + 1;
 
   String get title {
     switch (this) {
-      case PartOfSpeech.noun:
+      case PartOfSpeechEnum.noun:
         return '名詞';
-      case PartOfSpeech.verbs:
+      case PartOfSpeechEnum.verbs:
         return '動詞';
-      case PartOfSpeech.adjectives:
+      case PartOfSpeechEnum.adjectives:
         return '形容詞';
-      case PartOfSpeech.conjunctions:
+      case PartOfSpeechEnum.conjunctions:
         return '接続詞';
-      case PartOfSpeech.prepositions:
+      case PartOfSpeechEnum.prepositions:
         return '前置詞';
-      case PartOfSpeech.pronouns:
+      case PartOfSpeechEnum.pronouns:
         return '代名詞';
-      case PartOfSpeech.adverbs:
+      case PartOfSpeechEnum.adverbs:
         return '副詞';
-      case PartOfSpeech.interrogatives:
+      case PartOfSpeechEnum.interrogatives:
         return '疑問詞';
-      case PartOfSpeech.numerals:
+      case PartOfSpeechEnum.numerals:
         return '数詞';
-      case PartOfSpeech.auxiliaryVerbs:
+      case PartOfSpeechEnum.auxiliaryVerbs:
         return '助動詞';
       default:
         return 'その他';
     }
   }
 
-  static PartOfSpeech intToPartOfSpeech({required int value}) {
+  static PartOfSpeechEnum intToPartOfSpeech({required int value}) {
     switch (value) {
       case 1:
-        return PartOfSpeech.noun;
+        return PartOfSpeechEnum.noun;
       case 2:
-        return PartOfSpeech.verbs;
+        return PartOfSpeechEnum.verbs;
       case 3:
-        return PartOfSpeech.adjectives;
+        return PartOfSpeechEnum.adjectives;
       case 4:
-        return PartOfSpeech.conjunctions;
+        return PartOfSpeechEnum.conjunctions;
       case 5:
-        return PartOfSpeech.prepositions;
+        return PartOfSpeechEnum.prepositions;
       case 6:
-        return PartOfSpeech.pronouns;
+        return PartOfSpeechEnum.pronouns;
       case 7:
-        return PartOfSpeech.adverbs;
+        return PartOfSpeechEnum.adverbs;
       case 8:
-        return PartOfSpeech.interrogatives;
+        return PartOfSpeechEnum.interrogatives;
       case 9:
-        return PartOfSpeech.numerals;
+        return PartOfSpeechEnum.numerals;
       case 10:
-        return PartOfSpeech.auxiliaryVerbs;
+        return PartOfSpeechEnum.auxiliaryVerbs;
       default:
-        return PartOfSpeech.other;
+        return PartOfSpeechEnum.other;
     }
   }
 }
