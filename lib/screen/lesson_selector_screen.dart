@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
@@ -30,6 +31,8 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   late Future<List<LectureFolder>> getPossibleLectures;
   final itemCardWidth = 200.0;
   final itemCardHeight = 160.0;
+  int _currentCategoryIndex = 0;
+  final CarouselController _categoryCarouselController = CarouselController();
 
   @override
   void initState() {
@@ -50,7 +53,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
             children: [
               _userSection(),
               _sectionTitle(),
-              _categoryLectureCardList(),
+              _carouselCategoryLectures()
             ],
           ),
         ),
@@ -118,6 +121,51 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
       padding: EdgeInsets.fromLTRB(0, SizeConfig.mediumMargin, SizeConfig.mediumMargin, SizeConfig.mediumMargin),
       child: TextWidget.titleBlackLargeBold('カテゴリー'),
     );
+  }
+
+  Widget _carouselCategoryLectures() {
+    return Column(
+      children: [
+        CarouselSlider(
+          items: _categoryWidgets(),
+          carouselController: _categoryCarouselController,
+          options: CarouselOptions(
+              autoPlay: true,
+              enlargeCenterPage: true,
+              viewportFraction: 0.6,
+              aspectRatio: 2.0,
+              onPageChanged: (index, reason) {
+                setState(() => _currentCategoryIndex = index);
+              }
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: _categoryWidgets().asMap().entries.map((entry) {
+            return GestureDetector(
+              onTap: () => _categoryCarouselController.animateToPage(entry.key),
+              child: Container(
+                width: 8.0,
+                height: 8.0,
+                margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: (ColorConfig.primaryRed900)
+                        .withOpacity(_currentCategoryIndex == entry.key ? 0.9 : 0.2)),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  List<Widget> _categoryWidgets() {
+    List<Widget> _categories = [];
+    TangoCategory.values.forEach((element) {
+      _categories.add(_lectureCard(element));
+    });
+    return _categories;
   }
   
   Widget _categoryLectureCardList() {
