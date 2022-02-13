@@ -92,7 +92,7 @@ class _FlushScreenState extends ConsumerState<FlushScreen> {
     }
     return _flashCard(
         title: 'インドネシア語',
-        data: questionAnswerList[currentIndex].key);
+        data: questionAnswerList[currentIndex].indonesian ?? '');
   }
 
   Widget _flashCardBack() {
@@ -104,7 +104,7 @@ class _FlushScreenState extends ConsumerState<FlushScreen> {
     }
     return _flashCard(
         title: '日本語',
-        data: questionAnswerList[currentIndex].value);
+        data: questionAnswerList[currentIndex].japanese ?? '');
   }
 
   Widget _flashCard({required String title, required String data}) {
