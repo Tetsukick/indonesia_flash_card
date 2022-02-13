@@ -36,6 +36,7 @@ dependencies:
   firebase_messaging:
 
   lottie: ^1.2.1
+  carousel_slider: ^4.0.0
 
 dev_dependencies:
   flutter_test:
