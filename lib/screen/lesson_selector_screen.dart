@@ -3,6 +3,7 @@ import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/domain/file_service.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
+import 'package:indonesia_flash_card/model/category.dart';
 import 'package:indonesia_flash_card/model/lecture.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
@@ -27,6 +28,8 @@ class LessonSelectorScreen extends ConsumerStatefulWidget {
 
 class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   late Future<List<LectureFolder>> getPossibleLectures;
+  final itemCardWidth = 200.0;
+  final itemCardHeight = 160.0;
 
   @override
   void initState() {
@@ -47,7 +50,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
             children: [
               _userSection(),
               _sectionTitle(),
-              _lectureCard()
+              _categoryLectureCardList(),
             ],
           ),
         ),
@@ -116,123 +119,127 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
       child: TextWidget.titleBlackLargeBold('カテゴリー'),
     );
   }
+  
+  Widget _categoryLectureCardList() {
+    return Container(
+      height: itemCardHeight,
+      child: ListView.builder(
+        itemCount: TangoCategory.values.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (BuildContext context, int index){
+          return _lectureCard(TangoCategory.values[index]);
+        },
+      ),
+    );
+  }
 
-  Widget _lectureCard() {
+  Widget _lectureCard(TangoCategory category) {
     final lectures = ref.watch(fileControllerProvider);
     final _isLoadingLecture = lectures.isEmpty;
     if (_isLoadingLecture) {
-      return Row(
-        children: [
-          Card(
-            child: Container(
-              width: 200,
-              height: 160,
-              child: Stack(
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      child: Container(
-                        width: double.infinity,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: FractionalOffset.bottomCenter,
-                            end: FractionalOffset.topCenter,
-                            colors: [
-                              Colors.black.withOpacity(0.5),
-                              Colors.black.withOpacity(0),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
+      return Card(
+        child: Container(
+          width: itemCardWidth,
+          height: itemCardHeight,
+          child: Stack(
+            children: <Widget>[
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  child: Container(
                     width: double.infinity,
-                    height: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.all(SizeConfig.smallMargin),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ShimmerWidget.rectangular(
-                            height: 20,
-                            width: double.infinity,
-                          ),
+                    height: 100,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: FractionalOffset.bottomCenter,
+                        end: FractionalOffset.topCenter,
+                        colors: [
+                          Colors.black.withOpacity(0.5),
+                          Colors.black.withOpacity(0),
                         ],
                       ),
                     ),
                   ),
-                ],
+                ),
               ),
-            ),
-          )
-        ],
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.all(SizeConfig.smallMargin),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ShimmerWidget.rectangular(
+                        height: 20,
+                        width: double.infinity,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       );
-
     }
 
-    return Row(
-      children: [
-        Card(
-          child: InkWell(
-            onTap: () {
-              FlushScreen.navigateTo(
-                context,
-                lectures.first.spreadsheets.first.id,
-              );
-            },
-            child: Container(
-              width: 200,
-              height: 160,
-              child: Stack(
-                children: <Widget>[
-                  Assets.svg.eat.svg(
-                    alignment: Alignment.center,
+    return Card(
+      child: InkWell(
+        onTap: () {
+          FlushScreen.navigateTo(
+            context,
+            lectures.first.spreadsheets.first.id,
+          );
+        },
+        child: Container(
+          width: itemCardWidth,
+          height: itemCardHeight,
+          child: Stack(
+            children: <Widget>[
+              category.svg.svg(
+                alignment: Alignment.center,
+                width: double.infinity,
+                height: double.infinity,
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  child: Container(
                     width: double.infinity,
-                    height: double.infinity,
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      child: Container(
-                        width: double.infinity,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: FractionalOffset.bottomCenter,
-                            end: FractionalOffset.topCenter,
-                            colors: [
-                              Colors.black.withOpacity(0.5),
-                              Colors.black.withOpacity(0),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.all(SizeConfig.smallMargin),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextWidget.titleWhiteLargeBold(lectures.first.spreadsheets.first.name)
+                    height: 100,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: FractionalOffset.bottomCenter,
+                        end: FractionalOffset.topCenter,
+                        colors: [
+                          Colors.black.withOpacity(0.5),
+                          Colors.black.withOpacity(0),
                         ],
                       ),
                     ),
                   ),
-                ],
+                ),
               ),
-            ),
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.all(SizeConfig.smallMargin),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextWidget.titleWhiteLargeBold(category.title)
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        )
-      ],
+        ),
+      ),
     );
   }
 }
