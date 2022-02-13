@@ -24,6 +24,9 @@ class $AssetsLottieGen {
 
   /// File path: assets/lottie/splash_screen.json
   String get splashScreen => 'assets/lottie/splash_screen.json';
+
+  /// File path: assets/lottie/tap.json
+  String get tap => 'assets/lottie/tap.json';
 }
 
 class $AssetsPrefectureIndonesiaGen {

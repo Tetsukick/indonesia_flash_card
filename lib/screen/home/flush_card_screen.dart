@@ -3,9 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/domain/flashcard_service.dart';
+import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
+import 'package:lottie/lottie.dart';
 
 class FlushScreen extends ConsumerStatefulWidget {
   static navigateTo(context, String spreadsheetId) {
@@ -29,6 +31,7 @@ class _FlushScreenState extends ConsumerState<FlushScreen> {
   int currentIndex = 0;
   bool cardFlipped = false;
   bool allCardsFinished = true;
+  final _cardHeight = 160.0;
 
   @override
   initState() {
@@ -55,6 +58,8 @@ class _FlushScreenState extends ConsumerState<FlushScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              _topBarSection(),
+              SizedBox(height: SizeConfig.smallMargin),
               _flashCardFront(),
               SizedBox(height: SizeConfig.smallMargin),
               _flashCardBack(),
@@ -63,6 +68,20 @@ class _FlushScreenState extends ConsumerState<FlushScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _topBarSection() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(Icons.close,
+              color: ColorConfig.bgGrey,
+              size: SizeConfig.largeSmallMargin,
+            ))
+      ],
     );
   }
 
@@ -91,7 +110,7 @@ class _FlushScreenState extends ConsumerState<FlushScreen> {
   Widget _flashCard({required String title, required String data}) {
     return Card(
       child: Container(
-        height: 200,
+        height: _cardHeight,
         width: double.infinity,
         child: Center(
           child: Column(
@@ -111,7 +130,7 @@ class _FlushScreenState extends ConsumerState<FlushScreen> {
       children: [
         Card(
           child: Container(
-            height: 200,
+            height: _cardHeight,
             width: double.infinity,
             child: Center(
               child: Column(
@@ -130,10 +149,20 @@ class _FlushScreenState extends ConsumerState<FlushScreen> {
             alignment: Alignment.center,
             child: TextButton(
               child: Container(
-                height: 200,
+                height: _cardHeight,
                 width: double.infinity,
                 child: Center(
-                    child: TextWidget.titleGraySmallBold('タップして日本語の意味を表示')
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Lottie.asset(
+                          Assets.lottie.tap,
+                          height: _cardHeight / 3,
+                        ),
+                        SizedBox(height: SizeConfig.smallMargin,),
+                        TextWidget.titleGraySmallBold('タップして日本語の意味を表示')
+                      ],
+                    )
                 ),
               ),
               style: TextButton.styleFrom(
