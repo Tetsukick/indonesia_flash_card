@@ -9,44 +9,28 @@ import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
 import 'package:lottie/lottie.dart';
 
-class FlushScreen extends ConsumerStatefulWidget {
+class FlashCardScreen extends ConsumerStatefulWidget {
   static navigateTo(context, String spreadsheetId) {
     Navigator.push(context, MaterialPageRoute(
       builder: (context) {
-        return FlushScreen(spreadsheetId: spreadsheetId);
+        return FlashCardScreen(spreadsheetId: spreadsheetId);
       },
     ));
   }
 
   final String spreadsheetId;
 
-  const FlushScreen({Key? key, required this.spreadsheetId}) : super(key: key);
+  const FlashCardScreen({Key? key, required this.spreadsheetId}) : super(key: key);
 
   @override
-  ConsumerState<FlushScreen> createState() => _FlushScreenState();
+  ConsumerState<FlashCardScreen> createState() => _FlushScreenState();
 }
 
-class _FlushScreenState extends ConsumerState<FlushScreen> {
-  late Future<bool> init;
+class _FlushScreenState extends ConsumerState<FlashCardScreen> {
   int currentIndex = 0;
   bool cardFlipped = false;
-  bool allCardsFinished = true;
+  bool allCardsFinished = false;
   final _cardHeight = 160.0;
-
-  @override
-  initState() {
-    super.initState();
-    init = startLesson();
-  }
-
-  Future<bool> startLesson() async {
-    ref.read(flashCardControllerProvider.notifier).getQuestionsAndAnswers(SheetRepo(widget.spreadsheetId));
-    setState(() {
-      cardFlipped = false;
-      allCardsFinished = false;
-    });
-    return true;
-  }
 
   @override
   Widget build(BuildContext context) {

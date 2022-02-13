@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/domain/file_service.dart';
+import 'package:indonesia_flash_card/domain/flashcard_service.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/category.dart';
 import 'package:indonesia_flash_card/model/lecture.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
 
@@ -223,7 +225,12 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     return Card(
       child: InkWell(
         onTap: () {
-          FlushScreen.navigateTo(
+          ref.read(flashCardControllerProvider.notifier)
+              .getQuestionsAndAnswers(
+                sheetRepo: SheetRepo(lectures.first.spreadsheets.first.id),
+                category: category
+          );
+          FlashCardScreen.navigateTo(
             context,
             lectures.first.spreadsheets.first.id,
           );
@@ -243,7 +250,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                 child: Container(
                   child: Container(
                     width: double.infinity,
-                    height: 100,
+                    height: itemCardHeight * 0.6,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: FractionalOffset.bottomCenter,
