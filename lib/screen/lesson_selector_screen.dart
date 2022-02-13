@@ -167,19 +167,6 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     });
     return _categories;
   }
-  
-  Widget _categoryLectureCardList() {
-    return Container(
-      height: itemCardHeight,
-      child: ListView.builder(
-        itemCount: TangoCategory.values.length,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (BuildContext context, int index){
-          return _lectureCard(TangoCategory.values[index]);
-        },
-      ),
-    );
-  }
 
   Widget _lectureCard(TangoCategory category) {
     final lectures = ref.watch(fileControllerProvider);
