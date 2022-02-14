@@ -1,3 +1,5 @@
+import 'package:indonesia_flash_card/gen/assets.gen.dart';
+
 enum PartOfSpeechEnum {
   noun,
   verbs,
@@ -39,6 +41,33 @@ extension PartOfSpeechExt on PartOfSpeechEnum {
         return '助動詞';
       default:
         return 'その他';
+    }
+  }
+
+  SvgGenImage get svg {
+    switch (this) {
+      case PartOfSpeechEnum.noun:
+        return Assets.svg.drink;
+      case PartOfSpeechEnum.verbs:
+        return Assets.svg.tennis;
+      case PartOfSpeechEnum.adjectives:
+        return Assets.svg.happiness;
+      case PartOfSpeechEnum.conjunctions:
+        return Assets.svg.bear;
+      case PartOfSpeechEnum.prepositions:
+        return Assets.svg.cat;
+      case PartOfSpeechEnum.pronouns:
+        return Assets.svg.islam1;
+      case PartOfSpeechEnum.adverbs:
+        return Assets.svg.islam2;
+      case PartOfSpeechEnum.interrogatives:
+        return Assets.svg.difficult;
+      case PartOfSpeechEnum.numerals:
+        return Assets.svg.ninja;
+      case PartOfSpeechEnum.auxiliaryVerbs:
+        return Assets.svg.sports1;
+      default:
+        return Assets.svg.summerVacation;
     }
   }
 

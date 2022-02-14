@@ -45,10 +45,10 @@ class TextWidget {
     );
   }
 
-  static Widget titleWhiteLargeBold(String data) {
+  static Widget titleWhiteLargeBold(String data, {int maxLines = 1}) {
     return AutoSizeText(
       data,
-      maxLines: 1,
+      maxLines: maxLines,
       minFontSize: 16,
       maxFontSize: 28,
       style: TextStyle(

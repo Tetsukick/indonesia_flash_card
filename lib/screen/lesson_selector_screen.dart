@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:googleapis/language/v1.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/domain/file_service.dart';
@@ -8,6 +9,7 @@ import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/category.dart';
 import 'package:indonesia_flash_card/model/lecture.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:indonesia_flash_card/model/part_of_speech.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
@@ -35,6 +37,8 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   final itemCardHeight = 160.0;
   int _currentCategoryIndex = 0;
   final CarouselController _categoryCarouselController = CarouselController();
+  int _currentPartOfSpeechIndex = 0;
+  final CarouselController _partOfSpeechCarouselController = CarouselController();
 
   @override
   void initState() {
@@ -54,8 +58,10 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               _userSection(),
-              _sectionTitle(),
-              _carouselCategoryLectures()
+              _sectionTitle('カテゴリー別'),
+              _carouselCategoryLectures(),
+              _sectionTitle('品詞別'),
+              _carouselPartOfSpeechLectures(),
             ],
           ),
         ),
@@ -118,45 +124,71 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     );
   }
 
-  Widget _sectionTitle() {
+  Widget _sectionTitle(String title) {
     return Padding(
       padding: EdgeInsets.fromLTRB(0, SizeConfig.mediumMargin, SizeConfig.mediumMargin, SizeConfig.mediumMargin),
-      child: TextWidget.titleBlackLargeBold('カテゴリー'),
+      child: TextWidget.titleBlackLargeBold(title),
     );
   }
 
   Widget _carouselCategoryLectures() {
+    return _carouselLectures(
+      items: _categoryWidgets(),
+      controller: _categoryCarouselController,
+      index: _currentCategoryIndex,
+      autoPlay: true,
+    );
+  }
+
+  Widget _carouselPartOfSpeechLectures() {
+    return _carouselLectures(
+      items: _partOfSpeechWidgets(),
+      controller: _partOfSpeechCarouselController,
+      index: _currentPartOfSpeechIndex,
+    );
+  }
+
+  Widget _carouselLectures({
+    required List<Widget> items,
+    required CarouselController controller,
+    required int index,
+    bool autoPlay = false,
+    bool visibleIndicator = false,
+    bool enlargeCenterPage = false}) {
     return Column(
       children: [
         CarouselSlider(
-          items: _categoryWidgets(),
-          carouselController: _categoryCarouselController,
+          items: items,
+          carouselController: controller,
           options: CarouselOptions(
-              autoPlay: true,
-              enlargeCenterPage: true,
-              viewportFraction: 0.6,
+              autoPlay: autoPlay,
+              enlargeCenterPage: enlargeCenterPage,
+              viewportFraction: 0.3,
               aspectRatio: 2.0,
-              onPageChanged: (index, reason) {
-                setState(() => _currentCategoryIndex = index);
+              onPageChanged: (_index, reason) {
+                setState(() => index = _index);
               }
           ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: _categoryWidgets().asMap().entries.map((entry) {
-            return GestureDetector(
-              onTap: () => _categoryCarouselController.animateToPage(entry.key),
-              child: Container(
-                width: 8.0,
-                height: 8.0,
-                margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: (ColorConfig.primaryRed900)
-                        .withOpacity(_currentCategoryIndex == entry.key ? 0.9 : 0.2)),
-              ),
-            );
-          }).toList(),
+        Visibility(
+          visible: visibleIndicator,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: _categoryWidgets().asMap().entries.map((entry) {
+              return GestureDetector(
+                onTap: () => controller.animateToPage(entry.key),
+                child: Container(
+                  width: 8.0,
+                  height: 8.0,
+                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: (ColorConfig.primaryRed900)
+                          .withOpacity(index == entry.key ? 0.9 : 0.2)),
+                ),
+              );
+            }).toList(),
+          ),
         ),
       ],
     );
@@ -165,12 +197,22 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   List<Widget> _categoryWidgets() {
     List<Widget> _categories = [];
     TangoCategory.values.forEach((element) {
-      _categories.add(_lectureCard(element));
+      _categories.add(_lectureCard(category: element));
     });
     return _categories;
   }
 
-  Widget _lectureCard(TangoCategory category) {
+  List<Widget> _partOfSpeechWidgets() {
+    List<Widget> _partOfSpeechs = [];
+    PartOfSpeechEnum.values.forEach((element) {
+      _partOfSpeechs.add(_lectureCard(partOfSpeech: element));
+    });
+    return _partOfSpeechs;
+  }
+
+  Widget _lectureCard({TangoCategory? category, PartOfSpeechEnum? partOfSpeech}) {
+    final _title = category != null ? category.title : partOfSpeech!.title;
+    final _svg = category != null ? category.svg : partOfSpeech!.svg;
     final lectures = ref.watch(fileControllerProvider);
     final _isLoadingLecture = lectures.isEmpty;
     if (_isLoadingLecture) {
@@ -228,8 +270,9 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
           ref.read(flashCardControllerProvider.notifier)
               .getQuestionsAndAnswers(
                 sheetRepo: SheetRepo(lectures.first.spreadsheets.first.id),
-                category: category
-          );
+                category: category,
+                partOfSpeech: partOfSpeech,
+              );
           FlashCardScreen.navigateTo(
             context,
             lectures.first.spreadsheets.first.id,
@@ -240,7 +283,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
           height: itemCardHeight,
           child: Stack(
             children: <Widget>[
-              category.svg.svg(
+              _svg.svg(
                 alignment: Alignment.center,
                 width: double.infinity,
                 height: double.infinity,
@@ -273,7 +316,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TextWidget.titleWhiteLargeBold(category.title)
+                      TextWidget.titleWhiteLargeBold(_title, maxLines: 2)
                     ],
                   ),
                 ),
