@@ -47,27 +47,27 @@ extension PartOfSpeechExt on PartOfSpeechEnum {
   SvgGenImage get svg {
     switch (this) {
       case PartOfSpeechEnum.noun:
-        return Assets.svg.islam2;
+        return Assets.svg.drink;
       case PartOfSpeechEnum.verbs:
-        return Assets.svg.islam2;
+        return Assets.svg.tennis;
       case PartOfSpeechEnum.adjectives:
-        return Assets.svg.islam2;
+        return Assets.svg.happiness;
       case PartOfSpeechEnum.conjunctions:
-        return Assets.svg.islam2;
+        return Assets.svg.bear;
       case PartOfSpeechEnum.prepositions:
-        return Assets.svg.islam2;
+        return Assets.svg.cat;
       case PartOfSpeechEnum.pronouns:
-        return Assets.svg.islam2;
+        return Assets.svg.islam1;
       case PartOfSpeechEnum.adverbs:
         return Assets.svg.islam2;
       case PartOfSpeechEnum.interrogatives:
-        return Assets.svg.islam2;
+        return Assets.svg.difficult;
       case PartOfSpeechEnum.numerals:
-        return Assets.svg.islam2;
+        return Assets.svg.ninja;
       case PartOfSpeechEnum.auxiliaryVerbs:
-        return Assets.svg.islam2;
+        return Assets.svg.sports1;
       default:
-        return Assets.svg.islam2;
+        return Assets.svg.summerVacation;
     }
   }
 
