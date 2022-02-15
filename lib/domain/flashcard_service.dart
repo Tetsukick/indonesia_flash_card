@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indonesia_flash_card/model/category.dart';
+import 'package:indonesia_flash_card/model/level.dart';
 import 'package:indonesia_flash_card/model/part_of_speech.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
@@ -16,7 +17,7 @@ final flashCardControllerProvider = StateNotifierProvider<FlashCardController, L
 class FlashCardController extends StateNotifier<List<TangoEntity>> {
   FlashCardController({required List<TangoEntity> initialTangos}) : super(initialTangos);
 
-  Future<List<TangoEntity>> getQuestionsAndAnswers({required SheetRepo sheetRepo, TangoCategory? category, PartOfSpeechEnum? partOfSpeech}) async {
+  Future<List<TangoEntity>> getQuestionsAndAnswers({required SheetRepo sheetRepo, TangoCategory? category, PartOfSpeechEnum? partOfSpeech, LevelGroup? levelGroup}) async {
     List<List<Object>>? entryList =
     await sheetRepo.getEntriesFromRange("A2:J1000");
     if (entryList == null) {
@@ -54,7 +55,8 @@ class FlashCardController extends StateNotifier<List<TangoEntity>> {
     final _filteredQuestionsAndAnswers = _tmpQuestionsAndAnswers.where((element) {
       bool _filterCategory = category != null ? element.category == category.id : true;
       bool _filterPartOfSpeech = partOfSpeech != null ? element.partOfSpeech == partOfSpeech.id : true;
-      return _filterCategory && _filterPartOfSpeech;
+      bool _filterLevel = levelGroup != null ? levelGroup.range.any((e) => e == element.level) : true;
+      return _filterCategory && _filterPartOfSpeech && _filterLevel;
     }).toList();
     _filteredQuestionsAndAnswers.shuffle();
     state = _filteredQuestionsAndAnswers;
