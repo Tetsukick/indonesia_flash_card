@@ -9,6 +9,7 @@ import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/category.dart';
 import 'package:indonesia_flash_card/model/lecture.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:indonesia_flash_card/model/level.dart';
 import 'package:indonesia_flash_card/model/part_of_speech.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
@@ -35,6 +36,8 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   late Future<List<LectureFolder>> getPossibleLectures;
   final itemCardWidth = 200.0;
   final itemCardHeight = 160.0;
+  int _currentLevelIndex = 0;
+  final CarouselController _levelCarouselController = CarouselController();
   int _currentCategoryIndex = 0;
   final CarouselController _categoryCarouselController = CarouselController();
   int _currentPartOfSpeechIndex = 0;
@@ -51,18 +54,22 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     return Scaffold(
       backgroundColor: ColorConfig.bgPinkColor,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(SizeConfig.mediumMargin),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              _userSection(),
-              _sectionTitle('カテゴリー別'),
-              _carouselCategoryLectures(),
-              _sectionTitle('品詞別'),
-              _carouselPartOfSpeechLectures(),
-            ],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(SizeConfig.mediumMargin),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                _userSection(),
+                _sectionTitle('レベル別'),
+                _carouselLevelLectures(),
+                _sectionTitle('カテゴリー別'),
+                _carouselCategoryLectures(),
+                _sectionTitle('品詞別'),
+                _carouselPartOfSpeechLectures(),
+              ],
+            ),
           ),
         ),
       ),
@@ -131,6 +138,14 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     );
   }
 
+  Widget _carouselLevelLectures() {
+    return _carouselLectures(
+      items: _levelWidgets(),
+      controller: _levelCarouselController,
+      index: _currentLevelIndex,
+    );
+  }
+
   Widget _carouselCategoryLectures() {
     return _carouselLectures(
       items: _categoryWidgets(),
@@ -194,6 +209,14 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     );
   }
 
+  List<Widget> _levelWidgets() {
+    List<Widget> _levels = [];
+    LevelGroup.values.forEach((element) {
+      _levels.add(_lectureCard(levelGroup: element));
+    });
+    return _levels;
+  }
+
   List<Widget> _categoryWidgets() {
     List<Widget> _categories = [];
     TangoCategory.values.forEach((element) {
@@ -210,9 +233,20 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     return _partOfSpeechs;
   }
 
-  Widget _lectureCard({TangoCategory? category, PartOfSpeechEnum? partOfSpeech}) {
-    final _title = category != null ? category.title : partOfSpeech!.title;
-    final _svg = category != null ? category.svg : partOfSpeech!.svg;
+  Widget _lectureCard({TangoCategory? category, PartOfSpeechEnum? partOfSpeech, LevelGroup? levelGroup}) {
+    String _title = '';
+    SvgGenImage _svg = Assets.svg.islam1;
+    if (category != null) {
+      _title = category.title;
+      _svg = category.svg;
+    } else if (partOfSpeech != null) {
+      _title = partOfSpeech.title;
+      _svg = partOfSpeech.svg;
+    } else if (levelGroup != null) {
+      _title = levelGroup.title;
+      _svg = levelGroup.svg;
+    }
+
     final lectures = ref.watch(fileControllerProvider);
     final _isLoadingLecture = lectures.isEmpty;
     if (_isLoadingLecture) {
