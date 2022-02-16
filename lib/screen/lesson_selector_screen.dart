@@ -15,7 +15,7 @@ import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
 
-import 'home/flush_card_screen.dart';
+import 'flush_card_screen.dart';
 
 class LessonSelectorScreen extends ConsumerStatefulWidget {
   const LessonSelectorScreen({Key? key}) : super(key: key);

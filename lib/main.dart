@@ -3,6 +3,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:indonesia_flash_card/screen/home_navigation.dart';
 import 'package:indonesia_flash_card/screen/lesson_selector_screen.dart';
 
 void main() async {
@@ -30,7 +31,7 @@ class FlushCardApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const LessonSelectorScreen(),
+      home: const HomeNavigation(),
     );
   }
 }

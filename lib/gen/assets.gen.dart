@@ -29,6 +29,50 @@ class $AssetsLottieGen {
   String get tap => 'assets/lottie/tap.json';
 }
 
+class $AssetsPngGen {
+  const $AssetsPngGen();
+
+  /// File path: assets/png/card_games.png
+  AssetGenImage get cardGames =>
+      const AssetGenImage('assets/png/card_games.png');
+
+  /// File path: assets/png/dictionary_black.png
+  AssetGenImage get dictionaryBlack =>
+      const AssetGenImage('assets/png/dictionary_black.png');
+
+  /// File path: assets/png/dictionary_black_2.png
+  AssetGenImage get dictionaryBlack2 =>
+      const AssetGenImage('assets/png/dictionary_black_2.png');
+
+  /// File path: assets/png/dictionary_color.png
+  AssetGenImage get dictionaryColor =>
+      const AssetGenImage('assets/png/dictionary_color.png');
+
+  /// File path: assets/png/dictionary_color_2.png
+  AssetGenImage get dictionaryColor2 =>
+      const AssetGenImage('assets/png/dictionary_color_2.png');
+
+  /// File path: assets/png/flash_card_color.png
+  AssetGenImage get flashCardColor =>
+      const AssetGenImage('assets/png/flash_card_color.png');
+
+  /// File path: assets/png/flash_cards_black.png
+  AssetGenImage get flashCardsBlack =>
+      const AssetGenImage('assets/png/flash_cards_black.png');
+
+  /// File path: assets/png/menu_color.png
+  AssetGenImage get menuColor =>
+      const AssetGenImage('assets/png/menu_color.png');
+
+  /// File path: assets/png/settings_color.png
+  AssetGenImage get settingsColor =>
+      const AssetGenImage('assets/png/settings_color.png');
+
+  /// File path: assets/png/settings_color_2.png
+  AssetGenImage get settingsColor2 =>
+      const AssetGenImage('assets/png/settings_color_2.png');
+}
+
 class $AssetsPrefectureIndonesiaGen {
   const $AssetsPrefectureIndonesiaGen();
 
@@ -346,6 +390,7 @@ class Assets {
 
   static const $AssetsIconGen icon = $AssetsIconGen();
   static const $AssetsLottieGen lottie = $AssetsLottieGen();
+  static const $AssetsPngGen png = $AssetsPngGen();
   static const $AssetsPrefectureIndonesiaGen prefectureIndonesia =
       $AssetsPrefectureIndonesiaGen();
   static const $AssetsSvgGen svg = $AssetsSvgGen();
