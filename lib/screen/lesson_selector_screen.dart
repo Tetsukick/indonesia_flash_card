@@ -305,6 +305,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                 sheetRepo: SheetRepo(lectures.first.spreadsheets.first.id),
                 category: category,
                 partOfSpeech: partOfSpeech,
+                levelGroup: levelGroup,
               );
           FlashCardScreen.navigateTo(
             context,
