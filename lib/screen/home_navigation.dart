@@ -21,10 +21,11 @@ class _HomeNavigationState extends State<HomeNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       backgroundColor: ColorConfig.bgPinkColor,
       bottomNavigationBar: CurvedNavigationBar(
         key: _bottomNavigationKey,
-        backgroundColor: ColorConfig.bgPinkColor,
+        backgroundColor: ColorConfig.bgPinkColor.withOpacity(0.4),
         items: <Widget>[
           Assets.png.flashCardColor.image(width: iconWidth, height: iconHeight),
           Assets.png.dictionaryColor2.image(width: iconWidth, height: iconHeight),
@@ -32,7 +33,9 @@ class _HomeNavigationState extends State<HomeNavigation> {
         ],
         onTap: (index) => setState(() => _page = index),
       ),
-      body: pages(),
+      body: SafeArea(
+          bottom: false,
+          child: pages()),
     );
   }
 

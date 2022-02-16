@@ -7,4 +7,6 @@ class SizeConfig {
   static const largeSmallMargin = 32.0;
   static const largeMediumMargin = 40.0;
   static const largestMargin = 48.0;
+
+  static const bottomBarHeight = 100.0;
 }

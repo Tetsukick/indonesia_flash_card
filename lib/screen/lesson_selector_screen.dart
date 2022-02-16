@@ -51,26 +51,25 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorConfig.bgPinkColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(SizeConfig.mediumMargin),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                _userSection(),
-                _sectionTitle('レベル別'),
-                _carouselLevelLectures(),
-                _sectionTitle('カテゴリー別'),
-                _carouselCategoryLectures(),
-                _sectionTitle('品詞別'),
-                _carouselPartOfSpeechLectures(),
-              ],
-            ),
-          ),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(
+            SizeConfig.mediumMargin,
+            SizeConfig.mediumMargin,
+            SizeConfig.mediumMargin,
+            SizeConfig.bottomBarHeight),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            _userSection(),
+            _sectionTitle('レベル別'),
+            _carouselLevelLectures(),
+            _sectionTitle('カテゴリー別'),
+            _carouselCategoryLectures(),
+            _sectionTitle('品詞別'),
+            _carouselPartOfSpeechLectures(),
+          ],
         ),
       ),
     );
