@@ -5,11 +5,6 @@ import 'package:indonesia_flash_card/model/part_of_speech.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 
-typedef QuestionString = String;
-typedef AnswerString = String;
-typedef HintString = String;
-typedef SolutionString = String;
-
 final flashCardControllerProvider = StateNotifierProvider<FlashCardController, List<TangoEntity>>(
       (ref) => FlashCardController(initialTangos: List<TangoEntity>.empty()),
 );

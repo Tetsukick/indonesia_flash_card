@@ -32,9 +32,25 @@ class $AssetsLottieGen {
 class $AssetsPngGen {
   const $AssetsPngGen();
 
+  /// File path: assets/png/cancel_red_128.png
+  AssetGenImage get cancelRed128 =>
+      const AssetGenImage('assets/png/cancel_red_128.png');
+
+  /// File path: assets/png/cancel_red_512.png
+  AssetGenImage get cancelRed512 =>
+      const AssetGenImage('assets/png/cancel_red_512.png');
+
   /// File path: assets/png/card_games.png
   AssetGenImage get cardGames =>
       const AssetGenImage('assets/png/card_games.png');
+
+  /// File path: assets/png/checked_green_128.png
+  AssetGenImage get checkedGreen128 =>
+      const AssetGenImage('assets/png/checked_green_128.png');
+
+  /// File path: assets/png/checked_green_512.png
+  AssetGenImage get checkedGreen512 =>
+      const AssetGenImage('assets/png/checked_green_512.png');
 
   /// File path: assets/png/dictionary_black.png
   AssetGenImage get dictionaryBlack =>
@@ -64,6 +80,9 @@ class $AssetsPngGen {
   AssetGenImage get menuColor =>
       const AssetGenImage('assets/png/menu_color.png');
 
+  /// File path: assets/png/minus_128.png
+  AssetGenImage get minus128 => const AssetGenImage('assets/png/minus_128.png');
+
   /// File path: assets/png/settings_color.png
   AssetGenImage get settingsColor =>
       const AssetGenImage('assets/png/settings_color.png');
@@ -71,6 +90,9 @@ class $AssetsPngGen {
   /// File path: assets/png/settings_color_2.png
   AssetGenImage get settingsColor2 =>
       const AssetGenImage('assets/png/settings_color_2.png');
+
+  /// File path: assets/png/sort_128.png
+  AssetGenImage get sort128 => const AssetGenImage('assets/png/sort_128.png');
 }
 
 class $AssetsPrefectureIndonesiaGen {
