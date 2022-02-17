@@ -31,6 +31,20 @@ class TextWidget {
     );
   }
 
+  static Widget titleBlackMediumBold(String data) {
+    return AutoSizeText(
+      data,
+      maxLines: 1,
+      minFontSize: 14,
+      maxFontSize: 18,
+      style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: ColorConfig.fontBlack,
+          fontSize: 18
+      ),
+    );
+  }
+
   static Widget titleGraySmallBold(String data) {
     return AutoSizeText(
       data,
@@ -39,6 +53,32 @@ class TextWidget {
       maxFontSize: 16,
       style: TextStyle(
           fontWeight: FontWeight.bold,
+          color: ColorConfig.fontGrey,
+          fontSize: 14
+      ),
+    );
+  }
+
+  static Widget titleGraySmallest(String data) {
+    return AutoSizeText(
+      data,
+      maxLines: 1,
+      minFontSize: 9,
+      maxFontSize: 12,
+      style: TextStyle(
+          color: ColorConfig.fontGrey,
+          fontSize: 12
+      ),
+    );
+  }
+
+  static Widget titleGraySmall(String data) {
+    return AutoSizeText(
+      data,
+      maxLines: 1,
+      minFontSize: 9,
+      maxFontSize: 16,
+      style: TextStyle(
           color: ColorConfig.fontGrey,
           fontSize: 14
       ),

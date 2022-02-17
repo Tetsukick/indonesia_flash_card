@@ -1,6 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
+import 'package:indonesia_flash_card/screen/dictionary_screen.dart';
 import 'package:indonesia_flash_card/screen/lesson_selector_screen.dart';
 
 import '../config/color_config.dart';
@@ -13,9 +14,14 @@ class HomeNavigation extends StatefulWidget {
 }
 
 class _HomeNavigationState extends State<HomeNavigation> {
+  final List<Widget> _pages = [
+    LessonSelectorScreen(),
+    DictionaryScreen(),
+    LessonSelectorScreen(),
+  ];
   final iconWidth = 32.0;
   final iconHeight = 32.0;
-  int _page = 0;
+  int _pageIndex = 0;
   GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
   @override
@@ -31,15 +37,11 @@ class _HomeNavigationState extends State<HomeNavigation> {
           Assets.png.dictionaryColor2.image(width: iconWidth, height: iconHeight),
           Assets.png.menuColor.image(width: iconWidth, height: iconHeight),
         ],
-        onTap: (index) => setState(() => _page = index),
+        onTap: (index) => setState(() => _pageIndex = index),
       ),
       body: SafeArea(
           bottom: false,
-          child: pages()),
+          child: _pages[_pageIndex]),
     );
-  }
-
-  Widget pages() {
-    return LessonSelectorScreen();
   }
 }
