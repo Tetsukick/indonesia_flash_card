@@ -5,6 +5,7 @@ import 'package:indonesia_flash_card/domain/file_service.dart';
 import 'package:indonesia_flash_card/domain/tango_list_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
+import 'package:indonesia_flash_card/model/sort_type.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
@@ -26,6 +27,8 @@ class DictionaryScreen extends ConsumerStatefulWidget {
 
 class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
   final itemCardHeight = 80.0;
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
+  SortType _selectedSortType = SortType.indonesian;
 
   @override
   void initState() {
@@ -43,6 +46,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
   Widget build(BuildContext context) {
     final tangoList = ref.watch(tangoListControllerProvider);
     return Scaffold(
+      key: _key,
       backgroundColor: ColorConfig.bgPinkColor,
       extendBody: true,
       body: ListView.builder(
@@ -86,12 +90,46 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
           backgroundColor: ColorConfig.primaryRed900,
           child: Assets.png.sort128.image(width: 32, height: 32),
           onPressed: () {
-
+            _key.currentState!.openDrawer();
           },
         ),
       ),
       endDrawer: Drawer(
-
+        child: ListView.builder(
+          padding: EdgeInsets.symmetric(vertical: SizeConfig.smallMargin, horizontal: SizeConfig.mediumLargeMargin),
+          itemBuilder: (BuildContext context, int index){
+            SortType sortType = SortType.values[index];
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: SizeConfig.mediumSmallMargin),
+              child: Card(
+                child: InkWell(
+                  onTap: () {
+                   setState(() => _selectedSortType = sortType);
+                   final lectures = ref.watch(fileControllerProvider);
+                   ref.read(tangoListControllerProvider.notifier)
+                       .getSortAndFilteredTangoList(
+                          sheetRepo: SheetRepo(lectures.first.spreadsheets.first.id),
+                          sortType: sortType);
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    height: 40,
+                    child: Row(
+                      children: [
+                        Visibility(
+                          visible: _selectedSortType == sortType,
+                            child: Assets.png.checkedGreen128.image(width: 32, height: 32)),
+                        SizedBox(width: SizeConfig.smallestMargin),
+                        TextWidget.titleBlackMediumBold(sortType.title),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+          itemCount: SortType.values.length,
+        ),
       ),
     );
   }

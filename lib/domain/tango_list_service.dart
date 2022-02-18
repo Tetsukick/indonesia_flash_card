@@ -6,6 +6,7 @@ import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 import '../model/category.dart';
 import '../model/level.dart';
 import '../model/part_of_speech.dart';
+import '../model/sort_type.dart';
 
 final tangoListControllerProvider = StateNotifierProvider<TangoListController, Dictionary>(
       (ref) => TangoListController(initialDictionary: Dictionary()),
@@ -99,11 +100,4 @@ class TangoListController extends StateNotifier<Dictionary> {
 
     return _filteredTangos;
   }
-}
-
-enum SortType {
-  indonesian,
-  indonesianReverse,
-  level,
-  levelReverse,
 }
