@@ -90,7 +90,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
           backgroundColor: ColorConfig.primaryRed900,
           child: Assets.png.sort128.image(width: 32, height: 32),
           onPressed: () {
-            _key.currentState!.openDrawer();
+            _key.currentState!.openEndDrawer();
           },
         ),
       ),
@@ -103,25 +103,29 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
               padding: const EdgeInsets.symmetric(vertical: 0, horizontal: SizeConfig.mediumSmallMargin),
               child: Card(
                 child: InkWell(
-                  onTap: () {
+                  onTap: () async {
                    setState(() => _selectedSortType = sortType);
                    final lectures = ref.watch(fileControllerProvider);
-                   ref.read(tangoListControllerProvider.notifier)
+                   await ref.read(tangoListControllerProvider.notifier)
                        .getSortAndFilteredTangoList(
                           sheetRepo: SheetRepo(lectures.first.spreadsheets.first.id),
                           sortType: sortType);
+                   Navigator.pop(context);
                   },
                   child: Container(
                     width: double.infinity,
                     height: 40,
-                    child: Row(
-                      children: [
-                        Visibility(
-                          visible: _selectedSortType == sortType,
-                            child: Assets.png.checkedGreen128.image(width: 32, height: 32)),
-                        SizedBox(width: SizeConfig.smallestMargin),
-                        TextWidget.titleBlackMediumBold(sortType.title),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: SizeConfig.smallMargin),
+                      child: Row(
+                        children: [
+                          Visibility(
+                            visible: _selectedSortType == sortType,
+                              child: Assets.png.checkedGreen128.image(width: 20, height: 20)),
+                          SizedBox(width: SizeConfig.smallestMargin),
+                          TextWidget.titleBlackMediumBold(sortType.title),
+                        ],
+                      ),
                     ),
                   ),
                 ),

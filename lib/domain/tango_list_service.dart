@@ -52,8 +52,6 @@ class TangoListController extends StateNotifier<Dictionary> {
     tangoList.sort((a, b) {
       return a.indonesian!.toLowerCase().compareTo(b.indonesian!.toLowerCase());
     });
-    state.allTangos = tangoList;
-    state.sortAndFilteredTangos = tangoList;
     state = state
       ..allTangos = tangoList
       ..sortAndFilteredTangos = tangoList;
