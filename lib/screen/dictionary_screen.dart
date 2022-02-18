@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/domain/file_service.dart';
 import 'package:indonesia_flash_card/domain/tango_list_service.dart';
@@ -41,40 +42,44 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
   @override
   Widget build(BuildContext context) {
     final tangoList = ref.watch(tangoListControllerProvider);
-    return ListView.builder(
-      padding: EdgeInsets.fromLTRB(0, SizeConfig.mediumSmallMargin, 0, SizeConfig.bottomBarHeight),
-      itemBuilder: (BuildContext context, int index){
-        TangoEntity tango = tangoList.sortAndFilteredTangos[index];
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: SizeConfig.mediumSmallMargin),
-          child: Card(
-            child: Container(
-              width: double.infinity,
-              height: itemCardHeight,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: SizeConfig.smallMargin, horizontal: SizeConfig.mediumSmallMargin),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Assets.png.minus128.image(height: 16, width: 16),
-                        SizedBox(width: SizeConfig.smallestMargin),
-                        TextWidget.titleGraySmallest('未学習'),
-                      ],
-                    ),
-                    SizedBox(height: SizeConfig.smallestMargin,),
-                    TextWidget.titleBlackMediumBold(tango.indonesian ?? ''),
-                    SizedBox(height: 2,),
-                    TextWidget.titleGraySmall(tango.japanese ?? ''),
-                  ],
+    return Scaffold(
+      backgroundColor: ColorConfig.bgPinkColor,
+      extendBody: true,
+      body: ListView.builder(
+        padding: EdgeInsets.fromLTRB(0, SizeConfig.mediumSmallMargin, 0, SizeConfig.bottomBarHeight),
+        itemBuilder: (BuildContext context, int index){
+          TangoEntity tango = tangoList.sortAndFilteredTangos[index];
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: SizeConfig.mediumSmallMargin),
+            child: Card(
+              child: Container(
+                width: double.infinity,
+                height: itemCardHeight,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: SizeConfig.smallMargin, horizontal: SizeConfig.mediumSmallMargin),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Assets.png.minus128.image(height: 16, width: 16),
+                          SizedBox(width: SizeConfig.smallestMargin),
+                          TextWidget.titleGraySmallest('未学習'),
+                        ],
+                      ),
+                      SizedBox(height: SizeConfig.smallestMargin,),
+                      TextWidget.titleBlackMediumBold(tango.indonesian ?? ''),
+                      SizedBox(height: 2,),
+                      TextWidget.titleGraySmall(tango.japanese ?? ''),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-      },
-      itemCount: tangoList.length,
+          );
+        },
+        itemCount: tangoList.sortAndFilteredTangos.length,
+      ),
     );
   }
 }
