@@ -80,6 +80,19 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
         },
         itemCount: tangoList.sortAndFilteredTangos.length,
       ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: SizeConfig.bottomBarHeight),
+        child: FloatingActionButton(
+          backgroundColor: ColorConfig.primaryRed900,
+          child: Assets.png.sort128.image(width: 32, height: 32),
+          onPressed: () {
+
+          },
+        ),
+      ),
+      endDrawer: Drawer(
+
+      ),
     );
   }
 }
