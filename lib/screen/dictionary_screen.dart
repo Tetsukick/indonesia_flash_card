@@ -44,7 +44,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
     return ListView.builder(
       padding: EdgeInsets.fromLTRB(0, SizeConfig.mediumSmallMargin, 0, SizeConfig.bottomBarHeight),
       itemBuilder: (BuildContext context, int index){
-        TangoEntity tango = tangoList[index];
+        TangoEntity tango = tangoList.sortAndFilteredTangos[index];
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 0, horizontal: SizeConfig.mediumSmallMargin),
           child: Card(
