@@ -53,6 +53,9 @@ class TangoListController extends StateNotifier<Dictionary> {
     });
     state.allTangos = tangoList;
     state.sortAndFilteredTangos = tangoList;
+    state = state
+      ..allTangos = tangoList
+      ..sortAndFilteredTangos = tangoList;
 
     return tangoList;
   }
@@ -92,6 +95,7 @@ class TangoListController extends StateNotifier<Dictionary> {
       }
     }
     state.sortAndFilteredTangos = _filteredTangos;
+    state = state..sortAndFilteredTangos = _filteredTangos;
 
     return _filteredTangos;
   }
