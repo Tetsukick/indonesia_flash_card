@@ -80,6 +80,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   }
 
   Widget _userSection() {
+    final tangoMaster = ref.watch(tangoListControllerProvider);
     return Card(
         child: Container(
             height: 80,
@@ -88,24 +89,36 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _userSectionItem(),
+                _userSectionItem(
+                  title: '総単語数',
+                  data: tangoMaster.dictionary.allTangos.length,
+                  unitTitle: '単語'
+                ),
                 _separater(),
-                _userSectionItem(),
+                _userSectionItem(
+                  title: '覚えた単語数',
+                  data: 100,
+                  unitTitle: '単語'
+                ),
                 _separater(),
-                _userSectionItem(),
+                _userSectionItem(
+                  title: '累計学習日数',
+                  data: 100,
+                  unitTitle: '日'
+                ),
               ],
             )
         )
     );
   }
 
-  Widget _userSectionItem() {
+  Widget _userSectionItem({required String title, required int data, required String unitTitle}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(
           padding: const EdgeInsets.all(SizeConfig.smallMargin),
-          child: TextWidget.titleRedMedium('継続日数'),
+          child: TextWidget.titleRedMedium(title),
         ),
         Expanded(
           child: Padding(
@@ -113,8 +126,8 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                TextWidget.titleBlackLargeBold('111'),
-                TextWidget.titleGraySmallBold('日'),
+                TextWidget.titleBlackLargeBold(data.toString()),
+                TextWidget.titleGraySmallBold(unitTitle),
               ],
             ),
           ),
