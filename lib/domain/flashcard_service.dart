@@ -47,13 +47,16 @@ class FlashCardController extends StateNotifier<List<TangoEntity>> {
       questionsAndAnswers.add(tmpTango);
     }
     final _tmpQuestionsAndAnswers = questionsAndAnswers;
-    final _filteredQuestionsAndAnswers = _tmpQuestionsAndAnswers.where((element) {
+    var _filteredQuestionsAndAnswers = _tmpQuestionsAndAnswers.where((element) {
       bool _filterCategory = category != null ? element.category == category.id : true;
       bool _filterPartOfSpeech = partOfSpeech != null ? element.partOfSpeech == partOfSpeech.id : true;
       bool _filterLevel = levelGroup != null ? levelGroup.range.any((e) => e == element.level) : true;
       return _filterCategory && _filterPartOfSpeech && _filterLevel;
     }).toList();
     _filteredQuestionsAndAnswers.shuffle();
+    if (_filteredQuestionsAndAnswers.length > 10) {
+      _filteredQuestionsAndAnswers = _filteredQuestionsAndAnswers.getRange(0, 10).toList();
+    }
     state = _filteredQuestionsAndAnswers;
 
     return _filteredQuestionsAndAnswers;
