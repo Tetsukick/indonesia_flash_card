@@ -55,7 +55,7 @@ class FlashCardController extends StateNotifier<List<TangoEntity>> {
     }).toList();
     _filteredQuestionsAndAnswers.shuffle();
     if (_filteredQuestionsAndAnswers.length > 10) {
-      _filteredQuestionsAndAnswers = _filteredQuestionsAndAnswers.getRange(0, 9).toList();
+      _filteredQuestionsAndAnswers = _filteredQuestionsAndAnswers.getRange(0, 10).toList();
     }
     state = _filteredQuestionsAndAnswers;
 

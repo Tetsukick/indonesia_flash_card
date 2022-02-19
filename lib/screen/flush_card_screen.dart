@@ -40,7 +40,8 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
         child: Padding(
           padding: const EdgeInsets.all(SizeConfig.mediumMargin),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               _topBarSection(),
               SizedBox(height: SizeConfig.smallMargin),
@@ -56,9 +57,11 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
   }
 
   Widget _topBarSection() {
+    final questionAnswerList = ref.watch(flashCardControllerProvider);
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        TextWidget.titleGraySmallBold('${currentIndex + 1} / ${questionAnswerList.length} 問目'),
         IconButton(
             onPressed: () => Navigator.pop(context),
             icon: Icon(Icons.close,
