@@ -31,18 +31,6 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
   SortType _selectedSortType = SortType.indonesian;
 
   @override
-  void initState() {
-    super.initState();
-    _loadTangoList();
-  }
-
-  void _loadTangoList() async {
-    await ref.read(fileControllerProvider.notifier).getPossibleLectures();
-    final lectures = ref.watch(fileControllerProvider);
-    ref.read(tangoListControllerProvider.notifier).getAllTangoList(sheetRepo: SheetRepo(lectures.first.spreadsheets.first.id));
-  }
-
-  @override
   Widget build(BuildContext context) {
     final tangoList = ref.watch(tangoListControllerProvider);
     return Scaffold(
@@ -52,7 +40,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
       body: ListView.builder(
         padding: EdgeInsets.fromLTRB(0, SizeConfig.mediumSmallMargin, 0, SizeConfig.bottomBarHeight),
         itemBuilder: (BuildContext context, int index){
-          TangoEntity tango = tangoList.sortAndFilteredTangos[index];
+          TangoEntity tango = tangoList.dictionary.sortAndFilteredTangos[index];
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 0, horizontal: SizeConfig.mediumSmallMargin),
             child: Card(
@@ -82,7 +70,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
             ),
           );
         },
-        itemCount: tangoList.sortAndFilteredTangos.length,
+        itemCount: tangoList.dictionary.sortAndFilteredTangos.length,
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: SizeConfig.bottomBarHeight),

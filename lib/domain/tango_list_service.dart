@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:indonesia_flash_card/model/dictionary.dart';
+import 'package:indonesia_flash_card/model/tango_master.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 
@@ -8,12 +8,12 @@ import '../model/level.dart';
 import '../model/part_of_speech.dart';
 import '../model/sort_type.dart';
 
-final tangoListControllerProvider = StateNotifierProvider<TangoListController, Dictionary>(
-      (ref) => TangoListController(initialDictionary: Dictionary()),
+final tangoListControllerProvider = StateNotifierProvider<TangoListController, TangoMaster>(
+      (ref) => TangoListController(initialTangoMaster: TangoMaster()),
 );
 
-class TangoListController extends StateNotifier<Dictionary> {
-  TangoListController({required Dictionary initialDictionary}) : super(initialDictionary);
+class TangoListController extends StateNotifier<TangoMaster> {
+  TangoListController({required TangoMaster initialTangoMaster}) : super(initialTangoMaster);
 
   Future<List<TangoEntity>> getAllTangoList({required SheetRepo sheetRepo}) async {
     List<List<Object>>? entryList =
@@ -53,8 +53,8 @@ class TangoListController extends StateNotifier<Dictionary> {
       return a.indonesian!.toLowerCase().compareTo(b.indonesian!.toLowerCase());
     });
     state = state
-      ..allTangos = tangoList
-      ..sortAndFilteredTangos = tangoList;
+      ..dictionary.allTangos = tangoList
+      ..dictionary.sortAndFilteredTangos = tangoList;
 
     return tangoList;
   }
@@ -66,16 +66,10 @@ class TangoListController extends StateNotifier<Dictionary> {
     LevelGroup? levelGroup,
     SortType? sortType
   }) async {
-    if (state.allTangos == null || state.allTangos.isEmpty) {
+    if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
       await getAllTangoList(sheetRepo: sheetRepo);
     }
-    final _tmpTangos = state.allTangos;
-    List<TangoEntity> _filteredTangos = _tmpTangos.where((element) {
-      bool _filterCategory = category != null ? element.category == category.id : true;
-      bool _filterPartOfSpeech = partOfSpeech != null ? element.partOfSpeech == partOfSpeech.id : true;
-      bool _filterLevel = levelGroup != null ? levelGroup.range.any((e) => e == element.level) : true;
-      return _filterCategory && _filterPartOfSpeech && _filterLevel;
-    }).toList();
+    List<TangoEntity> _filteredTangos = filterTangoList(category: category, partOfSpeech: partOfSpeech, levelGroup: levelGroup);
     if (sortType != null) {
       if (sortType == SortType.indonesian || sortType == SortType.indonesianReverse) {
         _filteredTangos.sort((a, b) {
@@ -93,9 +87,42 @@ class TangoListController extends StateNotifier<Dictionary> {
         }
       }
     }
-    state.sortAndFilteredTangos = _filteredTangos;
-    state = state..sortAndFilteredTangos = _filteredTangos;
+    state.dictionary.sortAndFilteredTangos = _filteredTangos;
+    state = state..dictionary.sortAndFilteredTangos = _filteredTangos;
 
+    return _filteredTangos;
+  }
+
+  Future<List<TangoEntity>> setLessonsData({
+    required SheetRepo sheetRepo,
+    TangoCategory? category,
+    PartOfSpeechEnum? partOfSpeech,
+    LevelGroup? levelGroup
+  }) async {
+    if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
+      await getAllTangoList(sheetRepo: sheetRepo);
+    }
+    List<TangoEntity> _filteredTangos = filterTangoList(category: category, partOfSpeech: partOfSpeech, levelGroup: levelGroup);
+    if (_filteredTangos.length > 10) {
+      _filteredTangos = _filteredTangos.getRange(0, 10).toList();
+    }
+    state = state..currentLessonData = _filteredTangos;
+
+    return _filteredTangos;
+  }
+
+  List<TangoEntity> filterTangoList({
+    TangoCategory? category,
+    PartOfSpeechEnum? partOfSpeech,
+    LevelGroup? levelGroup,
+  }) {
+    final _tmpTangos = state.dictionary.allTangos;
+    List<TangoEntity> _filteredTangos = _tmpTangos.where((element) {
+      bool _filterCategory = category != null ? element.category == category.id : true;
+      bool _filterPartOfSpeech = partOfSpeech != null ? element.partOfSpeech == partOfSpeech.id : true;
+      bool _filterLevel = levelGroup != null ? levelGroup.range.any((e) => e == element.level) : true;
+      return _filterCategory && _filterPartOfSpeech && _filterLevel;
+    }).toList();
     return _filteredTangos;
   }
 }

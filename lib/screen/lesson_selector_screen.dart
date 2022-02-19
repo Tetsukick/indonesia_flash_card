@@ -1,10 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:googleapis/language/v1.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/domain/file_service.dart';
-import 'package:indonesia_flash_card/domain/flashcard_service.dart';
+import 'package:indonesia_flash_card/domain/tango_list_service.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/category.dart';
 import 'package:indonesia_flash_card/model/lecture.dart';
@@ -46,7 +45,12 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   @override
   void initState() {
     super.initState();
-    ref.read(fileControllerProvider.notifier).getPossibleLectures();
+    initTangoList();
+  }
+
+  void initTangoList() async {
+    final lectures = await ref.read(fileControllerProvider.notifier).getPossibleLectures();
+    ref.read(tangoListControllerProvider.notifier).getAllTangoList(sheetRepo: SheetRepo(lectures.first.spreadsheets.first.id));
   }
 
   @override
@@ -300,8 +304,8 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     return Card(
       child: InkWell(
         onTap: () {
-          ref.read(flashCardControllerProvider.notifier)
-              .getQuestionsAndAnswers(
+          ref.read(tangoListControllerProvider.notifier)
+              .setLessonsData(
                 sheetRepo: SheetRepo(lectures.first.spreadsheets.first.id),
                 category: category,
                 partOfSpeech: partOfSpeech,
