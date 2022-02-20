@@ -22,8 +22,17 @@ class $AssetsLottieGen {
   /// File path: assets/lottie/bicycle_indonesia.json
   String get bicycleIndonesia => 'assets/lottie/bicycle_indonesia.json';
 
+  /// File path: assets/lottie/complete.json
+  String get complete => 'assets/lottie/complete.json';
+
+  /// File path: assets/lottie/congratulation.json
+  String get congratulation => 'assets/lottie/congratulation.json';
+
   /// File path: assets/lottie/countdown_10s.json
   String get countdown10s => 'assets/lottie/countdown_10s.json';
+
+  /// File path: assets/lottie/kanpai.json
+  String get kanpai => 'assets/lottie/kanpai.json';
 
   /// File path: assets/lottie/splash_screen.json
   String get splashScreen => 'assets/lottie/splash_screen.json';
