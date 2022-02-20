@@ -4,22 +4,21 @@ import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/domain/tango_list_service.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
+import 'package:indonesia_flash_card/screen/completion_screen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
 import 'package:lottie/lottie.dart';
 
 class FlashCardScreen extends ConsumerStatefulWidget {
-  static navigateTo(context, String spreadsheetId) {
+  static navigateTo(context) {
     Navigator.push(context, MaterialPageRoute(
       builder: (context) {
-        return FlashCardScreen(spreadsheetId: spreadsheetId);
+        return FlashCardScreen();
       },
     ));
   }
 
-  final String spreadsheetId;
-
-  const FlashCardScreen({Key? key, required this.spreadsheetId}) : super(key: key);
+  const FlashCardScreen({Key? key}) : super(key: key);
 
   @override
   ConsumerState<FlashCardScreen> createState() => _FlushScreenState();
@@ -60,7 +59,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        TextWidget.titleGraySmallBold('${currentIndex + 1} / ${questionAnswerList.currentLessonData.length} 問目'),
+        TextWidget.titleGraySmallBold('${currentIndex + 1} / ${questionAnswerList.lesson.tangos.length} 問目'),
         IconButton(
             onPressed: () => Navigator.pop(context),
             icon: Icon(Icons.close,
@@ -73,24 +72,24 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
 
   Widget _flashCardFront() {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
-    if (questionAnswerList.currentLessonData.isEmpty) {
+    if (questionAnswerList.lesson.tangos.isEmpty) {
       return _shimmerFlashCard(isTappable: false, isJapanese: false);
     }
     return _flashCard(
         title: 'インドネシア語',
-        data: questionAnswerList.currentLessonData[currentIndex].indonesian ?? '');
+        data: questionAnswerList.lesson.tangos[currentIndex].indonesian ?? '');
   }
 
   Widget _flashCardBack() {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
-    if (questionAnswerList.currentLessonData.isEmpty) {
+    if (questionAnswerList.lesson.tangos.isEmpty) {
       return _shimmerFlashCard(isTappable: false);
     } else if (!cardFlipped) {
       return _shimmerFlashCard(isTappable: true);
     }
     return _flashCard(
         title: '日本語',
-        data: questionAnswerList.currentLessonData[currentIndex].japanese ?? '');
+        data: questionAnswerList.lesson.tangos[currentIndex].japanese ?? '');
   }
 
   Widget _flashCard({required String title, required String data}) {
@@ -165,7 +164,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
   Widget _actionButtonSection() {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     return Visibility(
-      visible: questionAnswerList.currentLessonData.isNotEmpty,
+      visible: questionAnswerList.lesson.tangos.isNotEmpty,
       child: Padding(
         padding: const EdgeInsets.all(SizeConfig.smallMargin),
         child: Row(
@@ -212,8 +211,9 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
 
   void getNextCard() {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
-    if (questionAnswerList.currentLessonData.length <= currentIndex + 1) {
+    if (questionAnswerList.lesson.tangos.length <= currentIndex + 1) {
       setState(() => allCardsFinished = true);
+      CompletionScreen.navigateTo(context);
       return;
     }
     setState(() {
