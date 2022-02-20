@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
+import 'package:lottie/lottie.dart';
 import 'package:package_info/package_info.dart';
 
 import '../utils/my_inapp_browser.dart';
@@ -22,43 +23,55 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
-      child: ListView.builder(
-        itemCount: MenuItem.values.length,
-        itemBuilder: (BuildContext context, int index) {
-          final _menuItem = MenuItem.values[index];
-          return Card(
-            child: InkWell(
-              onTap: () async {
-                if (_menuItem == MenuItem.licence) {
-                  final info = await PackageInfo.fromPlatform();
-                  showLicensePage(
-                    context: context,
-                    applicationName: info.appName,
-                    applicationVersion: info.version,
-                    applicationIcon: Assets.icon.appIcon.image(),
-                    applicationLegalese: "単語ネシアアプリのライセンス情報",
-                  );
-                } else {
-                  setBrowserPage(_menuItem.url);
-                }
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Lottie.asset(
+            Assets.lottie.bicycleIndonesia,
+            height: _menuItemBarHeight * 3,
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: MenuItem.values.length,
+              itemBuilder: (BuildContext context, int index) {
+                final _menuItem = MenuItem.values[index];
+                return Card(
+                  child: InkWell(
+                    onTap: () async {
+                      if (_menuItem == MenuItem.licence) {
+                        final info = await PackageInfo.fromPlatform();
+                        showLicensePage(
+                          context: context,
+                          applicationName: info.appName,
+                          applicationVersion: info.version,
+                          applicationIcon: Assets.icon.appIcon.image(),
+                          applicationLegalese: "単語ネシアアプリのライセンス情報",
+                        );
+                      } else {
+                        setBrowserPage(_menuItem.url);
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
+                      height: _menuItemBarHeight,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          _menuItem.img,
+                          SizedBox(width: SizeConfig.smallMargin),
+                          TextWidget.titleBlackMediumBold(_menuItem.title)
+                        ],
+                      ),
+                    ),
+                  ),
+                );
               },
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
-                height: _menuItemBarHeight,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    _menuItem.img,
-                    SizedBox(width: SizeConfig.smallMargin),
-                    TextWidget.titleBlackMediumBold(_menuItem.title)
-                  ],
-                ),
-              ),
             ),
-          );
-        },
-      ),
+          ),
+        ],
+      )
     );
   }
 

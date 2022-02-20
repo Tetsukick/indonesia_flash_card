@@ -19,6 +19,9 @@ class $AssetsIconGen {
 class $AssetsLottieGen {
   const $AssetsLottieGen();
 
+  /// File path: assets/lottie/bicycle_indonesia.json
+  String get bicycleIndonesia => 'assets/lottie/bicycle_indonesia.json';
+
   /// File path: assets/lottie/countdown_10s.json
   String get countdown10s => 'assets/lottie/countdown_10s.json';
 
