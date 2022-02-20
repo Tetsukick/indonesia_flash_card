@@ -15,7 +15,7 @@ class MenuScreen extends ConsumerStatefulWidget {
 }
 
 class _MenuScreenState extends ConsumerState<MenuScreen> {
-  final _menuItemBarHeight = 80.0;
+  final _menuItemBarHeight = 60.0;
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +93,7 @@ extension MenuItemExt on MenuItem {
       case MenuItem.privacyPolicy:
         return 'https://qiita.com/tetsukick/items/a3c844940064e15f0dac';
       case MenuItem.feedback:
-        return 'https://forms.gle/jMJvWZ5MrJnreB3o8';
+        return 'https://docs.google.com/forms/d/e/1FAIpQLSddXsg9zlzk0Zd-Y_0n0pEfsK3U246OJoI0cQCOCVL7XyRWOw/viewform';
       case MenuItem.developerInfo:
         return 'https://linktr.ee/TeppeiKikuchi';
     }
