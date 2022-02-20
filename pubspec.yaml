@@ -29,6 +29,7 @@ dependencies:
   flutter_secure_storage:
   intl:
   shimmer:
+  package_info: ^2.0.2
 
   ## Firebase packages
   firebase_core:
