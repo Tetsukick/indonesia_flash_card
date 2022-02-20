@@ -64,6 +64,10 @@ class $AssetsPngGen {
   AssetGenImage get checkedGreen512 =>
       const AssetGenImage('assets/png/checked_green_512.png');
 
+  /// File path: assets/png/continue_128.png
+  AssetGenImage get continue128 =>
+      const AssetGenImage('assets/png/continue_128.png');
+
   /// File path: assets/png/developer_128.png
   AssetGenImage get developer128 =>
       const AssetGenImage('assets/png/developer_128.png');
@@ -99,6 +103,9 @@ class $AssetsPngGen {
   /// File path: assets/png/growth_128.png
   AssetGenImage get growth128 =>
       const AssetGenImage('assets/png/growth_128.png');
+
+  /// File path: assets/png/home_128.png
+  AssetGenImage get home128 => const AssetGenImage('assets/png/home_128.png');
 
   /// File path: assets/png/licence_128.png
   AssetGenImage get licence128 =>

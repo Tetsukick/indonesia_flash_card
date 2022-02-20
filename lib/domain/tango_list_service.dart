@@ -16,6 +16,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
   TangoListController({required TangoMaster initialTangoMaster}) : super(initialTangoMaster);
 
   Future<List<TangoEntity>> getAllTangoList({required SheetRepo sheetRepo}) async {
+    state = state..lesson.sheetRepo = sheetRepo;
     List<List<Object>>? entryList =
     await sheetRepo.getEntriesFromRange("A2:J1000");
     if (entryList == null) {
@@ -66,6 +67,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
     LevelGroup? levelGroup,
     SortType? sortType
   }) async {
+    state = state..lesson.sheetRepo = sheetRepo;
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
       await getAllTangoList(sheetRepo: sheetRepo);
     }
@@ -99,6 +101,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
     PartOfSpeechEnum? partOfSpeech,
     LevelGroup? levelGroup
   }) async {
+    state = state..lesson.sheetRepo = sheetRepo;
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
       await getAllTangoList(sheetRepo: sheetRepo);
     }
@@ -106,7 +109,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
     if (_filteredTangos.length > 10) {
       _filteredTangos = _filteredTangos.getRange(0, 10).toList();
     }
-    state = state..currentLessonData = _filteredTangos;
+    state = state..lesson.tangos = _filteredTangos;
 
     return _filteredTangos;
   }
@@ -123,6 +126,20 @@ class TangoListController extends StateNotifier<TangoMaster> {
       bool _filterLevel = levelGroup != null ? levelGroup.range.any((e) => e == element.level) : true;
       return _filterCategory && _filterPartOfSpeech && _filterLevel;
     }).toList();
+    return _filteredTangos;
+  }
+
+  Future<List<TangoEntity>> resetLessonsData() async {
+    List<TangoEntity> _filteredTangos = filterTangoList(
+        category: state.lesson.category,
+        partOfSpeech: state.lesson.partOfSpeech,
+        levelGroup: state.lesson.levelGroup);
+    _filteredTangos.shuffle();
+    if (_filteredTangos.length > 10) {
+      _filteredTangos = _filteredTangos.getRange(0, 10).toList();
+    }
+    state = state..lesson.tangos = _filteredTangos;
+
     return _filteredTangos;
   }
 }

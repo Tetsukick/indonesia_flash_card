@@ -324,10 +324,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                 partOfSpeech: partOfSpeech,
                 levelGroup: levelGroup,
               );
-          FlashCardScreen.navigateTo(
-            context,
-            lectures.first.spreadsheets.first.id,
-          );
+          FlashCardScreen.navigateTo(context);
         },
         child: Container(
           width: itemCardWidth,
