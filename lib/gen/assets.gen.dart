@@ -52,6 +52,10 @@ class $AssetsPngGen {
   AssetGenImage get checkedGreen512 =>
       const AssetGenImage('assets/png/checked_green_512.png');
 
+  /// File path: assets/png/developer_128.png
+  AssetGenImage get developer128 =>
+      const AssetGenImage('assets/png/developer_128.png');
+
   /// File path: assets/png/dictionary_black.png
   AssetGenImage get dictionaryBlack =>
       const AssetGenImage('assets/png/dictionary_black.png');
@@ -68,6 +72,10 @@ class $AssetsPngGen {
   AssetGenImage get dictionaryColor2 =>
       const AssetGenImage('assets/png/dictionary_color_2.png');
 
+  /// File path: assets/png/feedback_128.png
+  AssetGenImage get feedback128 =>
+      const AssetGenImage('assets/png/feedback_128.png');
+
   /// File path: assets/png/flash_card_color.png
   AssetGenImage get flashCardColor =>
       const AssetGenImage('assets/png/flash_card_color.png');
@@ -76,12 +84,20 @@ class $AssetsPngGen {
   AssetGenImage get flashCardsBlack =>
       const AssetGenImage('assets/png/flash_cards_black.png');
 
+  /// File path: assets/png/growth_128.png
+  AssetGenImage get growth128 =>
+      const AssetGenImage('assets/png/growth_128.png');
+
   /// File path: assets/png/menu_color.png
   AssetGenImage get menuColor =>
       const AssetGenImage('assets/png/menu_color.png');
 
   /// File path: assets/png/minus_128.png
   AssetGenImage get minus128 => const AssetGenImage('assets/png/minus_128.png');
+
+  /// File path: assets/png/privacypolicy_128.png
+  AssetGenImage get privacypolicy128 =>
+      const AssetGenImage('assets/png/privacypolicy_128.png');
 
   /// File path: assets/png/settings_color.png
   AssetGenImage get settingsColor =>
