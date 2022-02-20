@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/screen/dictionary_screen.dart';
 import 'package:indonesia_flash_card/screen/lesson_selector_screen.dart';
+import 'package:indonesia_flash_card/screen/menu_screen.dart';
 
 import '../config/color_config.dart';
 
@@ -17,7 +18,7 @@ class _HomeNavigationState extends State<HomeNavigation> {
   final List<Widget> _pages = [
     LessonSelectorScreen(),
     DictionaryScreen(),
-    LessonSelectorScreen(),
+    MenuScreen(),
   ];
   final iconWidth = 32.0;
   final iconHeight = 32.0;
