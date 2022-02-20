@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
+import 'package:package_info/package_info.dart';
 
 import '../utils/my_inapp_browser.dart';
 
@@ -27,7 +28,20 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
           final _menuItem = MenuItem.values[index];
           return Card(
             child: InkWell(
-              onTap: () => setBrowserPage(_menuItem.url),
+              onTap: () async {
+                if (_menuItem == MenuItem.licence) {
+                  final info = await PackageInfo.fromPlatform();
+                  showLicensePage(
+                    context: context,
+                    applicationName: info.appName,
+                    applicationVersion: info.version,
+                    applicationIcon: Assets.icon.appIcon.image(),
+                    applicationLegalese: "単語ネシアアプリのライセンス情報",
+                  );
+                } else {
+                  setBrowserPage(_menuItem.url);
+                }
+              },
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
                 height: _menuItemBarHeight,
@@ -73,7 +87,8 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
 enum MenuItem {
   privacyPolicy,
   feedback,
-  developerInfo
+  developerInfo,
+  licence
 }
 
 extension MenuItemExt on MenuItem {
@@ -85,6 +100,8 @@ extension MenuItemExt on MenuItem {
         return 'フィードバック';
       case MenuItem.developerInfo:
         return '開発者情報';
+      case MenuItem.licence:
+        return 'ライセンス';
     }
   }
 
@@ -96,6 +113,8 @@ extension MenuItemExt on MenuItem {
         return 'https://docs.google.com/forms/d/e/1FAIpQLSddXsg9zlzk0Zd-Y_0n0pEfsK3U246OJoI0cQCOCVL7XyRWOw/viewform';
       case MenuItem.developerInfo:
         return 'https://linktr.ee/TeppeiKikuchi';
+      case MenuItem.licence:
+        return '';
     }
   }
 
@@ -109,6 +128,8 @@ extension MenuItemExt on MenuItem {
         return Assets.png.feedback128.image(height: _height, width: _width);
       case MenuItem.developerInfo:
         return Assets.png.developer128.image(height: _height, width: _width);
+      case MenuItem.licence:
+        return Assets.png.licence128.image(height: _height, width: _width);
     }
   }
 }

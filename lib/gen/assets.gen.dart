@@ -88,6 +88,10 @@ class $AssetsPngGen {
   AssetGenImage get growth128 =>
       const AssetGenImage('assets/png/growth_128.png');
 
+  /// File path: assets/png/licence_128.png
+  AssetGenImage get licence128 =>
+      const AssetGenImage('assets/png/licence_128.png');
+
   /// File path: assets/png/menu_color.png
   AssetGenImage get menuColor =>
       const AssetGenImage('assets/png/menu_color.png');
