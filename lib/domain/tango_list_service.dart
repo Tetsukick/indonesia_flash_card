@@ -1,9 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
 import 'package:indonesia_flash_card/model/tango_master.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
+import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 
 import '../model/category.dart';
+import '../model/floor_database/database.dart';
 import '../model/level.dart';
 import '../model/part_of_speech.dart';
 import '../model/sort_type.dart';
@@ -106,12 +109,32 @@ class TangoListController extends StateNotifier<TangoMaster> {
       await getAllTangoList(sheetRepo: sheetRepo);
     }
     List<TangoEntity> _filteredTangos = filterTangoList(category: category, partOfSpeech: partOfSpeech, levelGroup: levelGroup);
+    _filteredTangos.shuffle();
     if (_filteredTangos.length > 10) {
+      final wordStatusList = await getAllWordStatus();
+      _filteredTangos.sort((a, b) {
+        if (!(wordStatusList.any((element) => element.wordId == b.id))) {
+          return 1;
+        } else if (wordStatusList.firstWhere((element) => element.wordId == b.id).status == WordStatusType.notRemembered.id) {
+          return 0;
+        } else {
+          return -1;
+        }
+      });
       _filteredTangos = _filteredTangos.getRange(0, 10).toList();
     }
+    _filteredTangos.shuffle();
     state = state..lesson.tangos = _filteredTangos;
 
     return _filteredTangos;
+  }
+
+  Future<List<WordStatus>> getAllWordStatus() async {
+    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+
+    final wordStatusDao = database.wordStatusDao;
+    final wordStatus = await wordStatusDao.findAllWordStatus();
+    return wordStatus;
   }
 
   List<TangoEntity> filterTangoList({
