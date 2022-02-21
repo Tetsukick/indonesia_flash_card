@@ -149,6 +149,13 @@ class _$WordStatusDao extends WordStatusDao {
   }
 
   @override
+  Future<void> updateWordStatusById(int status, int id) async {
+    await _queryAdapter.queryNoReturn(
+        'UPDATE WordStatus SET status = ?1 WHERE = ?2',
+        arguments: [status, id]);
+  }
+
+  @override
   Future<void> insertWordStatus(WordStatus wordStatus) async {
     await _wordStatusInsertionAdapter.insert(
         wordStatus, OnConflictStrategy.abort);
