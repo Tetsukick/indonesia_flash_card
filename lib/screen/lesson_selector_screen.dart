@@ -6,14 +6,19 @@ import 'package:indonesia_flash_card/domain/file_service.dart';
 import 'package:indonesia_flash_card/domain/tango_list_service.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/category.dart';
+import 'package:indonesia_flash_card/model/floor_entity/activity.dart';
+import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
 import 'package:indonesia_flash_card/model/lecture.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indonesia_flash_card/model/level.dart';
 import 'package:indonesia_flash_card/model/part_of_speech.dart';
+import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
 
+import '../config/config.dart';
+import '../model/floor_database/database.dart';
 import 'flush_card_screen.dart';
 
 class LessonSelectorScreen extends ConsumerStatefulWidget {
@@ -41,16 +46,21 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   final CarouselController _categoryCarouselController = CarouselController();
   int _currentPartOfSpeechIndex = 0;
   final CarouselController _partOfSpeechCarouselController = CarouselController();
+  List<WordStatus> wordStatusList = [];
+  List<Activity> activityList = [];
 
   @override
   void initState() {
     super.initState();
     initTangoList();
+    getAllWordStatus();
+    getAllActivity();
   }
 
   void initTangoList() async {
     final lectures = await ref.read(fileControllerProvider.notifier).getPossibleLectures();
-    ref.read(tangoListControllerProvider.notifier).getAllTangoList(sheetRepo: SheetRepo(lectures.first.spreadsheets.first.id));
+    ref.read(tangoListControllerProvider.notifier).getAllTangoList(
+        sheetRepo: SheetRepo(lectures.first.spreadsheets.firstWhere((element) => element.name == Config.dictionarySpreadSheetName).id));
   }
 
   @override
@@ -97,13 +107,13 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                 _separater(),
                 _userSectionItem(
                   title: '覚えた単語数',
-                  data: 100,
+                  data: wordStatusList.where((element) => element.status == WordStatusType.remembered.id).length,
                   unitTitle: '単語'
                 ),
                 _separater(),
                 _userSectionItem(
                   title: '累計学習日数',
-                  data: 100,
+                  data: activityList.map((e) => e.date).toList().toSet().toList().length,
                   unitTitle: '日'
                 ),
               ],
@@ -319,7 +329,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
         onTap: () {
           ref.read(tangoListControllerProvider.notifier)
               .setLessonsData(
-                sheetRepo: SheetRepo(lectures.first.spreadsheets.first.id),
+                sheetRepo: SheetRepo(lectures.first.spreadsheets.firstWhere((element) => element.name == Config.dictionarySpreadSheetName).id),
                 category: category,
                 partOfSpeech: partOfSpeech,
                 levelGroup: levelGroup,
@@ -374,5 +384,21 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> getAllWordStatus() async {
+    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+
+    final wordStatusDao = database.wordStatusDao;
+    final wordStatus = await wordStatusDao.findAllWordStatus();
+    setState(() => wordStatusList = wordStatus);
+  }
+
+  Future<void> getAllActivity() async {
+    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+
+    final activityDao = database.activityDao;
+    final _activityList = await activityDao.findAllActivity();
+    setState(() => activityList = _activityList);
   }
 }
