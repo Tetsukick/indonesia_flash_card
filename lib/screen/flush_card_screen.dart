@@ -217,7 +217,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     final wordStatusDao = database.wordStatusDao;
     final wordStatus = await wordStatusDao.findWordStatusById(currentTango.id!);
     if (wordStatus != null) {
-      await wordStatusDao.updateWordStatusById(type.id, wordStatus.wordId);
+      await wordStatusDao.updateWordStatus(wordStatus..status = type.id);
     } else {
       await wordStatusDao.insertWordStatus(WordStatus(wordId: currentTango.id!, status: type.id));
     }

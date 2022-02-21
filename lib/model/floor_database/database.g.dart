@@ -115,6 +115,15 @@ class _$WordStatusDao extends WordStatusDao {
                   'id': item.id,
                   'wordId': item.wordId,
                   'status': item.status
+                }),
+        _wordStatusUpdateAdapter = UpdateAdapter(
+            database,
+            'WordStatus',
+            ['id'],
+            (WordStatus item) => <String, Object?>{
+                  'id': item.id,
+                  'wordId': item.wordId,
+                  'status': item.status
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -124,6 +133,8 @@ class _$WordStatusDao extends WordStatusDao {
   final QueryAdapter _queryAdapter;
 
   final InsertionAdapter<WordStatus> _wordStatusInsertionAdapter;
+
+  final UpdateAdapter<WordStatus> _wordStatusUpdateAdapter;
 
   @override
   Future<List<WordStatus>> findAllWordStatus() async {
@@ -145,16 +156,14 @@ class _$WordStatusDao extends WordStatusDao {
   }
 
   @override
-  Future<void> updateWordStatusById(int status, int id) async {
-    await _queryAdapter.queryNoReturn(
-        'UPDATE WordStatus SET status = ?1 WHERE = ?2',
-        arguments: [status, id]);
-  }
-
-  @override
   Future<void> insertWordStatus(WordStatus wordStatus) async {
     await _wordStatusInsertionAdapter.insert(
         wordStatus, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateWordStatus(WordStatus wordStatus) async {
+    await _wordStatusUpdateAdapter.update(wordStatus, OnConflictStrategy.abort);
   }
 }
 

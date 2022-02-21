@@ -5,7 +5,7 @@ class WordStatus {
   @PrimaryKey(autoGenerate: true)
   int? id;
   final int wordId;
-  final int status;
+  int status;
 
   WordStatus({
     this.id,

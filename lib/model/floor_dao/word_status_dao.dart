@@ -9,8 +9,8 @@ abstract class WordStatusDao {
   @Query('SELECT * FROM WordStatus WHERE wordId = :id')
   Future<WordStatus?> findWordStatusById(int id);
 
-  @Query('UPDATE WordStatus SET status = :status WHERE = :id')
-  Future<void> updateWordStatusById(int status, int id);
+  @update
+  Future<void> updateWordStatus(WordStatus wordStatus);
 
   @insert
   Future<void> insertWordStatus(WordStatus wordStatus);
