@@ -21,9 +21,33 @@ extension WordStatusTypeExt on WordStatusType {
     }
   }
 
+  String get actionTitle {
+    switch (this) {
+      case WordStatusType.notLearned:
+        return '';
+      case WordStatusType.notRemembered:
+        return '知らない';
+      case WordStatusType.remembered:
+        return '覚えた';
+    }
+  }
+
   Widget get icon {
     final _height = 16.0;
     final _width = 16.0;
+    switch (this) {
+      case WordStatusType.notLearned:
+        return Assets.png.minus128.image(height: _height, width: _width);
+      case WordStatusType.notRemembered:
+        return Assets.png.cancelRed128.image(height: _height, width: _width);
+      case WordStatusType.remembered:
+        return Assets.png.checkedGreen128.image(height: _height, width: _width);
+    }
+  }
+
+  Widget get iconLarge {
+    final _height = 40.0;
+    final _width = 40.0;
     switch (this) {
       case WordStatusType.notLearned:
         return Assets.png.minus128.image(height: _height, width: _width);

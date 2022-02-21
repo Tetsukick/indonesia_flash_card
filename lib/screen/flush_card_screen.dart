@@ -4,10 +4,13 @@ import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/domain/tango_list_service.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
+import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/screen/completion_screen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
 import 'package:lottie/lottie.dart';
+
+import '../model/floor_database/database.dart';
 
 class FlashCardScreen extends ConsumerStatefulWidget {
   static navigateTo(context) {
@@ -170,25 +173,15 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _actionButton(
-                icon: Icon(Icons.cancel,
-                  color: ColorConfig.red,
-                  size: SizeConfig.largestMargin,
-                ),
-                title: '覚えてない'),
-            _actionButton(
-                icon: Icon(Icons.check_circle,
-                  color: ColorConfig.green,
-                  size: SizeConfig.largestMargin,
-                ),
-                title: '覚えた'),
+            _actionButton(type: WordStatusType.notRemembered),
+            _actionButton(type: WordStatusType.remembered),
           ],
         ),
       ),
     );
   }
 
-  Widget _actionButton({required Icon icon, required String title}) {
+  Widget _actionButton({required WordStatusType type}) {
     return Card(
       shape: CircleBorder(),
       child: InkWell(
