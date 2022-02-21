@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/sort_type.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
+import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 
@@ -54,9 +55,9 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
                     children: [
                       Row(
                         children: [
-                          Assets.png.minus128.image(height: 16, width: 16),
+                          WordStatusType.notLearned.icon,
                           SizedBox(width: SizeConfig.smallestMargin),
-                          TextWidget.titleGraySmallest('未学習'),
+                          TextWidget.titleGraySmallest(WordStatusType.notLearned.title),
                         ],
                       ),
                       SizedBox(height: SizeConfig.smallestMargin,),
