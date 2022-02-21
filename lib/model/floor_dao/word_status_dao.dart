@@ -7,7 +7,7 @@ abstract class WordStatusDao {
   Future<List<WordStatus>> findAllWordStatus();
 
   @Query('SELECT * FROM WordStatus WHERE wordId = :id')
-  Stream<WordStatus?> findWordStatusById(int id);
+  Future<WordStatus?> findWordStatusById(int id);
 
   @Query('UPDATE WordStatus SET status = :status WHERE = :id')
   Future<void> updateWordStatusById(int status, int id);

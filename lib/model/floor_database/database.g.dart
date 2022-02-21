@@ -107,7 +107,7 @@ class _$AppDatabase extends AppDatabase {
 
 class _$WordStatusDao extends WordStatusDao {
   _$WordStatusDao(this.database, this.changeListener)
-      : _queryAdapter = QueryAdapter(database, changeListener),
+      : _queryAdapter = QueryAdapter(database),
         _wordStatusInsertionAdapter = InsertionAdapter(
             database,
             'WordStatus',
@@ -115,8 +115,7 @@ class _$WordStatusDao extends WordStatusDao {
                   'id': item.id,
                   'wordId': item.wordId,
                   'status': item.status
-                },
-            changeListener);
+                });
 
   final sqflite.DatabaseExecutor database;
 
@@ -136,16 +135,13 @@ class _$WordStatusDao extends WordStatusDao {
   }
 
   @override
-  Stream<WordStatus?> findWordStatusById(int id) {
-    return _queryAdapter.queryStream(
-        'SELECT * FROM WordStatus WHERE wordId = ?1',
+  Future<WordStatus?> findWordStatusById(int id) async {
+    return _queryAdapter.query('SELECT * FROM WordStatus WHERE wordId = ?1',
         mapper: (Map<String, Object?> row) => WordStatus(
             id: row['id'] as int?,
             wordId: row['wordId'] as int,
             status: row['status'] as int),
-        arguments: [id],
-        queryableName: 'WordStatus',
-        isView: false);
+        arguments: [id]);
   }
 
   @override
@@ -164,7 +160,7 @@ class _$WordStatusDao extends WordStatusDao {
 
 class _$ActivityDao extends ActivityDao {
   _$ActivityDao(this.database, this.changeListener)
-      : _queryAdapter = QueryAdapter(database, changeListener),
+      : _queryAdapter = QueryAdapter(database),
         _activityInsertionAdapter = InsertionAdapter(
             database,
             'Activity',
@@ -172,8 +168,7 @@ class _$ActivityDao extends ActivityDao {
                   'id': item.id,
                   'wordId': item.wordId,
                   'date': item.date
-                },
-            changeListener);
+                });
 
   final sqflite.DatabaseExecutor database;
 
@@ -193,29 +188,23 @@ class _$ActivityDao extends ActivityDao {
   }
 
   @override
-  Stream<List<Activity>> findActivityById(int id) {
-    return _queryAdapter.queryListStream(
-        'SELECT * FROM Activity WHERE wordId = ?1',
+  Future<List<Activity>> findActivityById(int id) async {
+    return _queryAdapter.queryList('SELECT * FROM Activity WHERE wordId = ?1',
         mapper: (Map<String, Object?> row) => Activity(
             id: row['id'] as int?,
             wordId: row['wordId'] as int,
             date: row['date'] as String),
-        arguments: [id],
-        queryableName: 'Activity',
-        isView: false);
+        arguments: [id]);
   }
 
   @override
-  Stream<List<Activity>> findActivityByDate(String date) {
-    return _queryAdapter.queryListStream(
-        'SELECT * FROM Activity WHERE date = ?1',
+  Future<List<Activity>> findActivityByDate(String date) async {
+    return _queryAdapter.queryList('SELECT * FROM Activity WHERE date = ?1',
         mapper: (Map<String, Object?> row) => Activity(
             id: row['id'] as int?,
             wordId: row['wordId'] as int,
             date: row['date'] as String),
-        arguments: [date],
-        queryableName: 'Activity',
-        isView: false);
+        arguments: [date]);
   }
 
   @override

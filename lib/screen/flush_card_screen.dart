@@ -4,6 +4,7 @@ import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/domain/tango_list_service.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
+import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/screen/completion_screen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
@@ -191,15 +192,32 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                icon,
+                type.iconLarge,
                 SizedBox(height: SizeConfig.smallMargin),
-                TextWidget.titleGraySmallBold(title)
+                TextWidget.titleGraySmallBold(type.actionTitle)
               ],
             )
         ),
-        onTap: getNextCard,
+        onTap: () async {
+          await registerWordStatus(type: type);
+          getNextCard();
+        },
       ),
     );
+  }
+
+  Future<void> registerWordStatus({required WordStatusType type}) async {
+    final questionAnswerList = ref.watch(tangoListControllerProvider);
+    final currentTango = questionAnswerList.lesson.tangos[currentIndex];
+    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+
+    final wordStatusDao = database.wordStatusDao;
+    final wordStatus = await wordStatusDao.findWordStatusById(currentTango.id!);
+    if (wordStatus != null) {
+      await wordStatusDao.updateWordStatusById(type.id, wordStatus.wordId);
+    } else {
+      await wordStatusDao.insertWordStatus(WordStatus(wordId: currentTango.id!, status: type.id));
+    }
   }
 
   void getNextCard() {

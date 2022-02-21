@@ -7,10 +7,10 @@ abstract class ActivityDao {
   Future<List<Activity>> findAllActivity();
 
   @Query('SELECT * FROM Activity WHERE wordId = :id')
-  Stream<List<Activity>> findActivityById(int id);
+  Future<List<Activity>> findActivityById(int id);
 
   @Query('SELECT * FROM Activity WHERE date = :date')
-  Stream<List<Activity>> findActivityByDate(String date);
+  Future<List<Activity>> findActivityByDate(String date);
 
   @insert
   Future<void> insertActivity(Activity activity);
