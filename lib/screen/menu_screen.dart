@@ -98,6 +98,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
 }
 
 enum MenuItem {
+  addNewTango,
   privacyPolicy,
   feedback,
   developerInfo,
@@ -107,6 +108,8 @@ enum MenuItem {
 extension MenuItemExt on MenuItem {
   String get title {
     switch (this) {
+      case MenuItem.addNewTango:
+        return '新規単語の追加';
       case MenuItem.privacyPolicy:
         return 'プライバシーポリシー';
       case MenuItem.feedback:
@@ -120,6 +123,8 @@ extension MenuItemExt on MenuItem {
 
   String get url {
     switch (this) {
+      case MenuItem.addNewTango:
+        return 'https://docs.google.com/forms/d/e/1FAIpQLSezIwLEoiKf_sQU99ioxjKCOhXI6o_ZVDulwwuTug2rRSxmew/viewform';
       case MenuItem.privacyPolicy:
         return 'https://qiita.com/tetsukick/items/a3c844940064e15f0dac';
       case MenuItem.feedback:
@@ -135,6 +140,8 @@ extension MenuItemExt on MenuItem {
     const _height = 24.0;
     const _width = 24.0;
     switch (this) {
+      case MenuItem.addNewTango:
+        return Assets.png.addDocument128.image(height: _height, width: _width);
       case MenuItem.privacyPolicy:
         return Assets.png.privacypolicy128.image(height: _height, width: _width);
       case MenuItem.feedback:
