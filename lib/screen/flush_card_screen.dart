@@ -4,11 +4,13 @@ import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/domain/tango_list_service.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
+import 'package:indonesia_flash_card/model/floor_entity/activity.dart';
 import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/screen/completion_screen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
+import 'package:indonesia_flash_card/utils/utils.dart';
 import 'package:lottie/lottie.dart';
 
 import '../model/floor_database/database.dart';
@@ -200,6 +202,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
         ),
         onTap: () async {
           await registerWordStatus(type: type);
+          await registerActivity();
           getNextCard();
         },
       ),
@@ -218,6 +221,16 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     } else {
       await wordStatusDao.insertWordStatus(WordStatus(wordId: currentTango.id!, status: type.id));
     }
+  }
+
+  Future<void> registerActivity() async {
+    final questionAnswerList = ref.watch(tangoListControllerProvider);
+    final currentTango = questionAnswerList.lesson.tangos[currentIndex];
+    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+
+    final activityDao = database.activityDao;
+    final now = Utils.dateTimeToString(DateTime.now());
+    await activityDao.insertActivity(Activity(date: now, wordId: currentTango.id!));
   }
 
   void getNextCard() {

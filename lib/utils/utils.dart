@@ -23,25 +23,16 @@ class Utils {
   }
 
   static DateTime stringToDateTime(String stringDateTime) {
-    final formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
-    return formatter.parse(stringDateTime);
-  }
-
-  static DateTime stringToDateTimeWithTimeZone(String stringDateTime) {
-    final formatter = DateFormat('yyyy-MM-ddTHH:mm:ssZ');
+    final formatter = DateFormat('yyyy-MM-dd');
     return formatter.parse(stringDateTime);
   }
 
   static String dateTimeToString(DateTime dateTime) {
-    final formatter = DateFormat('MM/dd HH:mm');
+    final formatter = DateFormat('yyyy-MM-dd');
     return formatter.format(dateTime);
   }
 
   static String formatDateString(String stringDateTime) {
     return dateTimeToString(stringToDateTime(stringDateTime));
-  }
-
-  static String formatDateStringWithTimeZone(String stringDateTime) {
-    return dateTimeToString(stringToDateTimeWithTimeZone(stringDateTime));
   }
 }
