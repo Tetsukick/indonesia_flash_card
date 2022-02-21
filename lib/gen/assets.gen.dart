@@ -44,6 +44,10 @@ class $AssetsLottieGen {
 class $AssetsPngGen {
   const $AssetsPngGen();
 
+  /// File path: assets/png/add_document_128.png
+  AssetGenImage get addDocument128 =>
+      const AssetGenImage('assets/png/add_document_128.png');
+
   /// File path: assets/png/cancel_red_128.png
   AssetGenImage get cancelRed128 =>
       const AssetGenImage('assets/png/cancel_red_128.png');
