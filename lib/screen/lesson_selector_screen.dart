@@ -14,6 +14,7 @@ import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
 
+import '../config/config.dart';
 import 'flush_card_screen.dart';
 
 class LessonSelectorScreen extends ConsumerStatefulWidget {
@@ -51,7 +52,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   void initTangoList() async {
     final lectures = await ref.read(fileControllerProvider.notifier).getPossibleLectures();
     ref.read(tangoListControllerProvider.notifier).getAllTangoList(
-        sheetRepo: SheetRepo(lectures.first.spreadsheets.firstWhere((element) => element.name == "001 indonesian dictionary").id));
+        sheetRepo: SheetRepo(lectures.first.spreadsheets.firstWhere((element) => element.name == Config.dictionarySpreadSheetName).id));
   }
 
   @override
@@ -320,7 +321,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
         onTap: () {
           ref.read(tangoListControllerProvider.notifier)
               .setLessonsData(
-                sheetRepo: SheetRepo(lectures.first.spreadsheets.firstWhere((element) => element.name == "001 indonesian dictionary").id),
+                sheetRepo: SheetRepo(lectures.first.spreadsheets.firstWhere((element) => element.name == Config.dictionarySpreadSheetName).id),
                 category: category,
                 partOfSpeech: partOfSpeech,
                 levelGroup: levelGroup,

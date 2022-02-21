@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
+import 'package:indonesia_flash_card/config/config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/domain/file_service.dart';
 import 'package:indonesia_flash_card/domain/tango_list_service.dart';
@@ -103,7 +104,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
                    final lectures = ref.watch(fileControllerProvider);
                    await ref.read(tangoListControllerProvider.notifier)
                        .getSortAndFilteredTangoList(
-                          sheetRepo: SheetRepo(lectures.first.spreadsheets.firstWhere((element) => element.name == "001 indonesian dictionary").id),
+                          sheetRepo: SheetRepo(lectures.first.spreadsheets.firstWhere((element) => element.name == Config.dictionarySpreadSheetName).id),
                           sortType: sortType);
                    Navigator.pop(context);
                   },
