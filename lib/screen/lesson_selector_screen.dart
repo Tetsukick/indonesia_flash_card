@@ -50,7 +50,8 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
 
   void initTangoList() async {
     final lectures = await ref.read(fileControllerProvider.notifier).getPossibleLectures();
-    ref.read(tangoListControllerProvider.notifier).getAllTangoList(sheetRepo: SheetRepo(lectures.first.spreadsheets.first.id));
+    ref.read(tangoListControllerProvider.notifier).getAllTangoList(
+        sheetRepo: SheetRepo(lectures.first.spreadsheets.firstWhere((element) => element.name == "001 indonesian dictionary").id));
   }
 
   @override
@@ -319,7 +320,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
         onTap: () {
           ref.read(tangoListControllerProvider.notifier)
               .setLessonsData(
-                sheetRepo: SheetRepo(lectures.first.spreadsheets.first.id),
+                sheetRepo: SheetRepo(lectures.first.spreadsheets.firstWhere((element) => element.name == "001 indonesian dictionary").id),
                 category: category,
                 partOfSpeech: partOfSpeech,
                 levelGroup: levelGroup,
