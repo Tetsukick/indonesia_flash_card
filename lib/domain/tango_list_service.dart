@@ -65,16 +65,14 @@ class TangoListController extends StateNotifier<TangoMaster> {
   }
 
   Future<List<TangoEntity>> getSortAndFilteredTangoList({
-    required SheetRepo sheetRepo,
     TangoCategory? category,
     PartOfSpeechEnum? partOfSpeech,
     LevelGroup? levelGroup,
     WordStatusType? wordStatusType,
     SortType? sortType
   }) async {
-    state = state..lesson.sheetRepo = sheetRepo;
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
-      await getAllTangoList(sheetRepo: sheetRepo);
+      await getAllTangoList(sheetRepo: state.lesson.sheetRepo!);
     }
     List<TangoEntity> _filteredTangos = await filterTangoList(category: category, partOfSpeech: partOfSpeech, levelGroup: levelGroup, wordStatusType: wordStatusType);
     if (sortType != null) {
@@ -94,7 +92,6 @@ class TangoListController extends StateNotifier<TangoMaster> {
         }
       }
     }
-    state.dictionary.sortAndFilteredTangos = _filteredTangos;
     state = state..dictionary.sortAndFilteredTangos = _filteredTangos;
 
     return _filteredTangos;

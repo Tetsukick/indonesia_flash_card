@@ -139,14 +139,12 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
             child: InkWell(
               onTap: () async {
                 setState(() => _selectedSortType = sortType);
-                final lectures = ref.watch(fileControllerProvider);
                 await ref.read(tangoListControllerProvider.notifier)
                     .getSortAndFilteredTangoList(
-                    sheetRepo: SheetRepo(lectures.first.spreadsheets.firstWhere((element) => element.name == Config.dictionarySpreadSheetName).id),
-                    category: _selectedCategory,
-                    levelGroup: _selectedLevelGroup,
-                    wordStatusType: _selectedWordStatusType,
-                    sortType: sortType);
+                      category: _selectedCategory,
+                      levelGroup: _selectedLevelGroup,
+                      wordStatusType: _selectedWordStatusType,
+                      sortType: sortType);
               },
               child: Container(
                 width: double.infinity,
@@ -220,14 +218,12 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
             child: InkWell(
               onTap: () async {
                 setState(() => _selectedWordStatusType = wordStatusType);
-                final lectures = ref.watch(fileControllerProvider);
                 await ref.read(tangoListControllerProvider.notifier)
                     .getSortAndFilteredTangoList(
-                    sheetRepo: SheetRepo(lectures.first.spreadsheets.firstWhere((element) => element.name == Config.dictionarySpreadSheetName).id),
-                    category: _selectedCategory,
-                    levelGroup: _selectedLevelGroup,
-                    wordStatusType: _selectedWordStatusType,
-                    sortType: _selectedSortType);
+                      category: _selectedCategory,
+                      levelGroup: _selectedLevelGroup,
+                      wordStatusType: wordStatusType,
+                      sortType: _selectedSortType);
               },
               child: Container(
                 width: double.infinity,
@@ -266,14 +262,12 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
             child: InkWell(
               onTap: () async {
                 setState(() => _selectedCategory = tangoCategory);
-                final lectures = ref.watch(fileControllerProvider);
                 await ref.read(tangoListControllerProvider.notifier)
                     .getSortAndFilteredTangoList(
-                    sheetRepo: SheetRepo(lectures.first.spreadsheets.firstWhere((element) => element.name == Config.dictionarySpreadSheetName).id),
-                    category: _selectedCategory,
-                    levelGroup: _selectedLevelGroup,
-                    wordStatusType: _selectedWordStatusType,
-                    sortType: _selectedSortType);
+                      category: tangoCategory,
+                      levelGroup: _selectedLevelGroup,
+                      wordStatusType: _selectedWordStatusType,
+                      sortType: _selectedSortType);
               },
               child: Container(
                 width: double.infinity,
@@ -312,14 +306,12 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
             child: InkWell(
               onTap: () async {
                 setState(() => _selectedLevelGroup = levelGroup);
-                final lectures = ref.watch(fileControllerProvider);
                 await ref.read(tangoListControllerProvider.notifier)
                     .getSortAndFilteredTangoList(
-                    sheetRepo: SheetRepo(lectures.first.spreadsheets.firstWhere((element) => element.name == Config.dictionarySpreadSheetName).id),
-                    category: _selectedCategory,
-                    levelGroup: _selectedLevelGroup,
-                    wordStatusType: _selectedWordStatusType,
-                    sortType: _selectedSortType);
+                      category: _selectedCategory,
+                      levelGroup: levelGroup,
+                      wordStatusType: _selectedWordStatusType,
+                      sortType: _selectedSortType);
               },
               child: Container(
                 width: double.infinity,
