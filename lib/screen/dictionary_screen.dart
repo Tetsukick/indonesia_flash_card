@@ -80,57 +80,81 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
         },
         itemCount: tangoList.dictionary.sortAndFilteredTangos.length,
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: SizeConfig.bottomBarHeight),
-        child: FloatingActionButton(
-          backgroundColor: ColorConfig.primaryRed900,
-          child: Assets.png.sort128.image(width: 32, height: 32),
-          onPressed: () {
-            _key.currentState!.openEndDrawer();
-          },
-        ),
+      floatingActionButton: sortAndFilterButton(),
+      endDrawer: sortAndFilterDrawer(),
+    );
+  }
+
+  Widget sortAndFilterButton() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: SizeConfig.bottomBarHeight),
+      child: FloatingActionButton(
+        backgroundColor: ColorConfig.primaryRed900,
+        child: Assets.png.sort128.image(width: 32, height: 32),
+        onPressed: () {
+          _key.currentState!.openEndDrawer();
+        },
       ),
-      endDrawer: Drawer(
-        child: ListView.builder(
-          padding: EdgeInsets.symmetric(vertical: SizeConfig.smallMargin, horizontal: SizeConfig.mediumLargeMargin),
-          itemBuilder: (BuildContext context, int index){
-            SortType sortType = SortType.values[index];
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: SizeConfig.mediumSmallMargin),
-              child: Card(
-                child: InkWell(
-                  onTap: () async {
-                   setState(() => _selectedSortType = sortType);
-                   final lectures = ref.watch(fileControllerProvider);
-                   await ref.read(tangoListControllerProvider.notifier)
-                       .getSortAndFilteredTangoList(
-                          sheetRepo: SheetRepo(lectures.first.spreadsheets.firstWhere((element) => element.name == Config.dictionarySpreadSheetName).id),
-                          sortType: sortType);
-                   Navigator.pop(context);
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    height: 40,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: SizeConfig.smallMargin),
-                      child: Row(
-                        children: [
-                          Visibility(
-                            visible: _selectedSortType == sortType,
-                              child: Assets.png.checkedGreen128.image(width: 20, height: 20)),
-                          SizedBox(width: SizeConfig.smallestMargin),
-                          TextWidget.titleBlackMediumBold(sortType.title),
-                        ],
-                      ),
-                    ),
+    );
+  }
+
+  Widget sortAndFilterDrawer() {
+    return Drawer(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextWidget.titleGraySmallBold('ソート'),
+          SizedBox(height: SizeConfig.smallMargin),
+          sortItems(),
+          SizedBox(height: SizeConfig.mediumSmallMargin),
+          TextWidget.titleGraySmallBold('フィルタ'),
+          SizedBox(height: SizeConfig.smallMargin,),
+
+        ],
+      ),
+    );
+  }
+
+  Widget sortItems() {
+    return ListView.builder(
+      padding: EdgeInsets.symmetric(vertical: SizeConfig.smallMargin, horizontal: SizeConfig.mediumLargeMargin),
+      itemBuilder: (BuildContext context, int index){
+        SortType sortType = SortType.values[index];
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: SizeConfig.mediumSmallMargin),
+          child: Card(
+            child: InkWell(
+              onTap: () async {
+                setState(() => _selectedSortType = sortType);
+                final lectures = ref.watch(fileControllerProvider);
+                await ref.read(tangoListControllerProvider.notifier)
+                    .getSortAndFilteredTangoList(
+                    sheetRepo: SheetRepo(lectures.first.spreadsheets.firstWhere((element) => element.name == Config.dictionarySpreadSheetName).id),
+                    sortType: sortType);
+                Navigator.pop(context);
+              },
+              child: Container(
+                width: double.infinity,
+                height: 40,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: SizeConfig.smallMargin),
+                  child: Row(
+                    children: [
+                      Visibility(
+                          visible: _selectedSortType == sortType,
+                          child: Assets.png.checkedGreen128.image(width: 20, height: 20)),
+                      SizedBox(width: SizeConfig.smallestMargin),
+                      TextWidget.titleBlackMediumBold(sortType.title),
+                    ],
                   ),
                 ),
               ),
-            );
-          },
-          itemCount: SortType.values.length,
-        ),
-      ),
+            ),
+          ),
+        );
+      },
+      itemCount: SortType.values.length,
     );
   }
 
@@ -158,13 +182,5 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
           );
         }
       });
-
-    return Row(
-      children: [
-        WordStatusType.notLearned.icon,
-        SizedBox(width: SizeConfig.smallestMargin),
-        TextWidget.titleGraySmallest(WordStatusType.notLearned.title),
-      ],
-    );
   }
 }
