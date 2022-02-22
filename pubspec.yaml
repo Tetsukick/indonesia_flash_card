@@ -41,6 +41,7 @@ dependencies:
   curved_navigation_bar: ^1.0.3
   flutter_inappwebview:
   floor: ^1.2.0
+  collection:
 
 dev_dependencies:
   flutter_test:

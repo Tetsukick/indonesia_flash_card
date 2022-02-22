@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:collection/collection.dart';
 import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
 import 'package:indonesia_flash_card/model/tango_master.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
@@ -157,11 +158,16 @@ class TangoListController extends StateNotifier<TangoMaster> {
     }).toList();
     if (wordStatusType != null) {
       final wordStatusList = await getAllWordStatus();
-      if (wordStatusType == WordStatusType.notLearned) {
-        _filteredTangos = _filteredTangos.where((element) => !(wordStatusList.any((e) => e.wordId == element.id)) || wordStatusList.firstWhere((e) => e.wordId == element.id).status == wordStatusType.id).toList();
-      } else {
-        _filteredTangos = _filteredTangos.where((element) => wordStatusList.firstWhere((e) => e.wordId == element.id).status == wordStatusType.id).toList();
-      }
+      _filteredTangos = _filteredTangos.where((element) {
+          final targetWordStatus = wordStatusList.firstWhereOrNull((e) {
+            return e.wordId == element.id;
+          });
+          if (targetWordStatus == null) {
+            return wordStatusType == WordStatusType.notLearned;
+          } else {
+            return targetWordStatus.status == wordStatusType.id;
+          }
+        }).toList();
     }
     return _filteredTangos;
   }
