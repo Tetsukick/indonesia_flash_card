@@ -68,13 +68,14 @@ class TangoListController extends StateNotifier<TangoMaster> {
     TangoCategory? category,
     PartOfSpeechEnum? partOfSpeech,
     LevelGroup? levelGroup,
+    WordStatusType? wordStatusType,
     SortType? sortType
   }) async {
     state = state..lesson.sheetRepo = sheetRepo;
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
       await getAllTangoList(sheetRepo: sheetRepo);
     }
-    List<TangoEntity> _filteredTangos = filterTangoList(category: category, partOfSpeech: partOfSpeech, levelGroup: levelGroup);
+    List<TangoEntity> _filteredTangos = await filterTangoList(category: category, partOfSpeech: partOfSpeech, levelGroup: levelGroup, wordStatusType: wordStatusType);
     if (sortType != null) {
       if (sortType == SortType.indonesian || sortType == SortType.indonesianReverse) {
         _filteredTangos.sort((a, b) {
@@ -105,10 +106,14 @@ class TangoListController extends StateNotifier<TangoMaster> {
     LevelGroup? levelGroup
   }) async {
     state = state..lesson.sheetRepo = sheetRepo;
+    state = state
+      ..lesson.category = category
+      ..lesson.partOfSpeech = partOfSpeech
+      ..lesson.levelGroup = levelGroup;
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
       await getAllTangoList(sheetRepo: sheetRepo);
     }
-    List<TangoEntity> _filteredTangos = filterTangoList(category: category, partOfSpeech: partOfSpeech, levelGroup: levelGroup);
+    List<TangoEntity> _filteredTangos = await filterTangoList(category: category, partOfSpeech: partOfSpeech, levelGroup: levelGroup);
     _filteredTangos.shuffle();
     if (_filteredTangos.length > 10) {
       final wordStatusList = await getAllWordStatus();
@@ -137,11 +142,12 @@ class TangoListController extends StateNotifier<TangoMaster> {
     return wordStatus;
   }
 
-  List<TangoEntity> filterTangoList({
+  Future<List<TangoEntity>> filterTangoList({
     TangoCategory? category,
     PartOfSpeechEnum? partOfSpeech,
     LevelGroup? levelGroup,
-  }) {
+    WordStatusType? wordStatusType,
+  }) async {
     final _tmpTangos = state.dictionary.allTangos;
     List<TangoEntity> _filteredTangos = _tmpTangos.where((element) {
       bool _filterCategory = category != null ? element.category == category.id : true;
@@ -149,11 +155,19 @@ class TangoListController extends StateNotifier<TangoMaster> {
       bool _filterLevel = levelGroup != null ? levelGroup.range.any((e) => e == element.level) : true;
       return _filterCategory && _filterPartOfSpeech && _filterLevel;
     }).toList();
+    if (wordStatusType != null) {
+      final wordStatusList = await getAllWordStatus();
+      if (wordStatusType == WordStatusType.notLearned) {
+        _filteredTangos = _filteredTangos.where((element) => !(wordStatusList.any((e) => e.wordId == element.id)) || wordStatusList.firstWhere((e) => e.wordId == element.id).status == wordStatusType.id).toList();
+      } else {
+        _filteredTangos = _filteredTangos.where((element) => wordStatusList.firstWhere((e) => e.wordId == element.id).status == wordStatusType.id).toList();
+      }
+    }
     return _filteredTangos;
   }
 
   Future<List<TangoEntity>> resetLessonsData() async {
-    List<TangoEntity> _filteredTangos = filterTangoList(
+    List<TangoEntity> _filteredTangos = await filterTangoList(
         category: state.lesson.category,
         partOfSpeech: state.lesson.partOfSpeech,
         levelGroup: state.lesson.levelGroup);
