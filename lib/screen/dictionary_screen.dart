@@ -147,7 +147,6 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
                     levelGroup: _selectedLevelGroup,
                     wordStatusType: _selectedWordStatusType,
                     sortType: sortType);
-                Navigator.pop(context);
               },
               child: Container(
                 width: double.infinity,
@@ -229,7 +228,6 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
                     levelGroup: _selectedLevelGroup,
                     wordStatusType: _selectedWordStatusType,
                     sortType: _selectedSortType);
-                Navigator.pop(context);
               },
               child: Container(
                 width: double.infinity,
@@ -276,7 +274,6 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
                     levelGroup: _selectedLevelGroup,
                     wordStatusType: _selectedWordStatusType,
                     sortType: _selectedSortType);
-                Navigator.pop(context);
               },
               child: Container(
                 width: double.infinity,
@@ -323,7 +320,6 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
                     levelGroup: _selectedLevelGroup,
                     wordStatusType: _selectedWordStatusType,
                     sortType: _selectedSortType);
-                Navigator.pop(context);
               },
               child: Container(
                 width: double.infinity,
