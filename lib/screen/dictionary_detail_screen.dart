@@ -60,32 +60,35 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
         child: Padding(
           padding: const EdgeInsets.all(SizeConfig.smallMargin),
           child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _topBarSection(),
-                  _partOfSpeech(),
-                  SizedBox(height: SizeConfig.smallMargin),
-                  _indonesian(),
-                  SizedBox(height: SizeConfig.smallestMargin),
-                  _separater(),
-                  _japanese(),
-                  SizedBox(height: SizeConfig.smallMargin),
-                  _english(),
-                  SizedBox(height: SizeConfig.smallMargin),
-                  _exampleHeader(),
-                  SizedBox(height: SizeConfig.smallMargin),
-                  _example(),
-                  SizedBox(height: SizeConfig.smallMargin),
-                  _exampleJp(),
-                  SizedBox(height: SizeConfig.smallMargin),
-                  _descriptionHeader(),
-                  SizedBox(height: SizeConfig.smallMargin),
-                  _description()
-                ],
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _topBarSection(),
+                    _partOfSpeech(),
+                    SizedBox(height: SizeConfig.smallMargin),
+                    _indonesian(),
+                    SizedBox(height: SizeConfig.smallestMargin),
+                    _separater(),
+                    _japanese(),
+                    SizedBox(height: SizeConfig.smallMargin),
+                    _english(),
+                    SizedBox(height: SizeConfig.smallMargin),
+                    _exampleHeader(),
+                    SizedBox(height: SizeConfig.smallMargin),
+                    _example(),
+                    SizedBox(height: SizeConfig.smallMargin),
+                    _exampleJp(),
+                    SizedBox(height: SizeConfig.smallMargin),
+                    _descriptionHeader(),
+                    SizedBox(height: SizeConfig.smallMargin),
+                    _description(),
+                    SizedBox(height: SizeConfig.smallMargin),
+                  ],
+                ),
               ),
             ),
           ),
@@ -159,12 +162,15 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
   }
 
   Widget _descriptionHeader() {
-    return Row(
-      children: [
-        TextWidget.titleRedMedium('豆知識', maxLines: 1),
-        SizedBox(width: SizeConfig.mediumSmallMargin),
-        Flexible(child: _separater())
-      ],
+    return Visibility(
+      visible: this.widget.tangoEntity.description != null && this.widget.tangoEntity.description != '',
+      child: Row(
+        children: [
+          TextWidget.titleRedMedium('豆知識', maxLines: 1),
+          SizedBox(width: SizeConfig.mediumSmallMargin),
+          Flexible(child: _separater())
+        ],
+      ),
     );
   }
 
