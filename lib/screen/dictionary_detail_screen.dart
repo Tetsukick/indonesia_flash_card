@@ -75,7 +75,7 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
                   _japanese(),
                   SizedBox(height: SizeConfig.smallMargin),
                   _english(),
-                  SizedBox(heiTetsukick29ght: SizeConfig.smallMargin),
+                  SizedBox(height: SizeConfig.smallMargin),
                   _exampleHeader(),
                   SizedBox(height: SizeConfig.smallMargin),
                   _example(),
