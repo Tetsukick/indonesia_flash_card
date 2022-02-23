@@ -36,10 +36,8 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Lottie.asset(
-              Assets.lottie.kanpai,
-              height: 150,
-            ),
+            Assets.gif.birBintangKanpai.image(height: 150),
+            const SizedBox(height: SizeConfig.mediumSmallMargin),
             TextWidget.titleGraySmallBold('おつかれさまでした!'),
             const SizedBox(height: SizeConfig.smallMargin),
             _button(
