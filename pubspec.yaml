@@ -69,6 +69,7 @@ flutter:
     - assets/prefecture_indonesia/
     - assets/svg/
     - assets/png/
+    - assets/gif/
 
 flutter_icons:
   android: "launcher_icon"

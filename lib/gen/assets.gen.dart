@@ -9,6 +9,14 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/services.dart';
 
+class $AssetsGifGen {
+  const $AssetsGifGen();
+
+  /// File path: assets/gif/bir_bintang_kanpai.gif
+  AssetGenImage get birBintangKanpai =>
+      const AssetGenImage('assets/gif/bir_bintang_kanpai.gif');
+}
+
 class $AssetsIconGen {
   const $AssetsIconGen();
 
@@ -453,6 +461,7 @@ class $AssetsSvgGen {
 class Assets {
   Assets._();
 
+  static const $AssetsGifGen gif = $AssetsGifGen();
   static const $AssetsIconGen icon = $AssetsIconGen();
   static const $AssetsLottieGen lottie = $AssetsLottieGen();
   static const $AssetsPngGen png = $AssetsPngGen();
