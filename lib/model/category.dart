@@ -14,6 +14,9 @@ enum TangoCategory {
   vehicle,
   country,
   hobby,
+  color,
+  plantsAndAnimals,
+  sports,
   other,
 }
 
@@ -48,6 +51,10 @@ extension TangoCategoryExt on TangoCategory {
         return '国';
       case TangoCategory.hobby:
         return '娯楽';
+      case TangoCategory.color:
+        return '色';
+      case TangoCategory.plantsAndAnimals:
+        return '動植物';
       case TangoCategory.other:
         return 'その他';
     }
@@ -80,7 +87,11 @@ extension TangoCategoryExt on TangoCategory {
       case TangoCategory.country:
         return Assets.svg.world2;
       case TangoCategory.hobby:
+        return Assets.svg.tennis;
+      case TangoCategory.color:
         return Assets.svg.shodou;
+      case TangoCategory.plantsAndAnimals:
+        return Assets.svg.bear;
       case TangoCategory.other:
         return Assets.svg.islam2;
     }
@@ -114,6 +125,10 @@ extension TangoCategoryExt on TangoCategory {
         return TangoCategory.country;
       case 13:
         return TangoCategory.hobby;
+      case 14:
+        return TangoCategory.color;
+      case 15:
+        return TangoCategory.plantsAndAnimals;
       default:
         return TangoCategory.other;
     }
