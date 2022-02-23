@@ -14,6 +14,7 @@ import 'package:indonesia_flash_card/model/sort_type.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
+import 'package:indonesia_flash_card/screen/dictionary_detail_screen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
 
@@ -64,21 +65,26 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
           TangoEntity tango = tangoList.dictionary.sortAndFilteredTangos[index];
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 0, horizontal: SizeConfig.mediumSmallMargin),
-            child: Card(
-              child: Container(
-                width: double.infinity,
-                height: itemCardHeight,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: SizeConfig.smallMargin, horizontal: SizeConfig.mediumSmallMargin),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      wordStatus(tango),
-                      SizedBox(height: SizeConfig.smallestMargin,),
-                      TextWidget.titleBlackMediumBold(tango.indonesian ?? ''),
-                      SizedBox(height: 2,),
-                      TextWidget.titleGraySmall(tango.japanese ?? ''),
-                    ],
+            child: InkWell(
+              onTap: () {
+                DictionaryDetail.navigateTo(context, tangoEntity: tango);
+              },
+              child: Card(
+                child: Container(
+                  width: double.infinity,
+                  height: itemCardHeight,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: SizeConfig.smallMargin, horizontal: SizeConfig.mediumSmallMargin),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        wordStatus(tango),
+                        SizedBox(height: SizeConfig.smallestMargin,),
+                        TextWidget.titleBlackMediumBold(tango.indonesian ?? ''),
+                        SizedBox(height: 2,),
+                        TextWidget.titleGraySmall(tango.japanese ?? ''),
+                      ],
+                    ),
                   ),
                 ),
               ),
