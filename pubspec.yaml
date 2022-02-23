@@ -30,6 +30,7 @@ dependencies:
   intl:
   shimmer:
   package_info: ^2.0.2
+  shared_preferences: ^2.0.13
 
   ## Firebase packages
   firebase_core:
@@ -42,6 +43,8 @@ dependencies:
   flutter_inappwebview:
   floor: ^1.2.0
   collection:
+  flutter_tts: ^3.3.3
+  flutter_switch: ^0.3.2
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +73,7 @@ flutter:
     - assets/svg/
     - assets/png/
     - assets/gif/
+    - assets/dot/
 
 flutter_icons:
   android: "launcher_icon"

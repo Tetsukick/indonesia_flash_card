@@ -9,6 +9,71 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/services.dart';
 
+class $AssetsDotGen {
+  const $AssetsDotGen();
+
+  /// File path: assets/dot/dashimaki.gif
+  AssetGenImage get dashimaki =>
+      const AssetGenImage('assets/dot/dashimaki.gif');
+
+  /// File path: assets/dot/eagle.gif
+  AssetGenImage get eagle => const AssetGenImage('assets/dot/eagle.gif');
+
+  /// File path: assets/dot/eagle_strong.gif
+  AssetGenImage get eagleStrong =>
+      const AssetGenImage('assets/dot/eagle_strong.gif');
+
+  /// File path: assets/dot/fried_egg.gif
+  AssetGenImage get friedEgg => const AssetGenImage('assets/dot/fried_egg.gif');
+
+  /// File path: assets/dot/hiyoko.gif
+  AssetGenImage get hiyoko => const AssetGenImage('assets/dot/hiyoko.gif');
+
+  /// File path: assets/dot/monster.gif
+  AssetGenImage get monster => const AssetGenImage('assets/dot/monster.gif');
+
+  /// File path: assets/dot/monster_strong.gif
+  AssetGenImage get monsterStrong =>
+      const AssetGenImage('assets/dot/monster_strong.gif');
+
+  /// File path: assets/dot/niwatori.gif
+  AssetGenImage get niwatori => const AssetGenImage('assets/dot/niwatori.gif');
+
+  /// File path: assets/dot/niwatori_break.gif
+  AssetGenImage get niwatoriBreak =>
+      const AssetGenImage('assets/dot/niwatori_break.gif');
+
+  /// File path: assets/dot/niwatori_cute_eye.gif
+  AssetGenImage get niwatoriCuteEye =>
+      const AssetGenImage('assets/dot/niwatori_cute_eye.gif');
+
+  /// File path: assets/dot/niwatori_front.gif
+  AssetGenImage get niwatoriFront =>
+      const AssetGenImage('assets/dot/niwatori_front.gif');
+
+  /// File path: assets/dot/niwatori_half_egg.gif
+  AssetGenImage get niwatoriHalfEgg =>
+      const AssetGenImage('assets/dot/niwatori_half_egg.gif');
+
+  /// File path: assets/dot/niwatori_run.gif
+  AssetGenImage get niwatoriRun =>
+      const AssetGenImage('assets/dot/niwatori_run.gif');
+
+  /// File path: assets/dot/omurice.gif
+  AssetGenImage get omurice => const AssetGenImage('assets/dot/omurice.gif');
+
+  /// File path: assets/dot/pengin_cute.gif
+  AssetGenImage get penginCute =>
+      const AssetGenImage('assets/dot/pengin_cute.gif');
+
+  /// File path: assets/dot/tori_karaage.gif
+  AssetGenImage get toriKaraage =>
+      const AssetGenImage('assets/dot/tori_karaage.gif');
+
+  /// File path: assets/dot/yakitori.gif
+  AssetGenImage get yakitori => const AssetGenImage('assets/dot/yakitori.gif');
+}
+
 class $AssetsGifGen {
   const $AssetsGifGen();
 
@@ -22,6 +87,10 @@ class $AssetsIconGen {
 
   /// File path: assets/icon/app_icon.png
   AssetGenImage get appIcon => const AssetGenImage('assets/icon/app_icon.png');
+
+  /// File path: assets/icon/app_icon_512.png
+  AssetGenImage get appIcon512 =>
+      const AssetGenImage('assets/icon/app_icon_512.png');
 }
 
 class $AssetsLottieGen {
@@ -41,6 +110,9 @@ class $AssetsLottieGen {
 
   /// File path: assets/lottie/kanpai.json
   String get kanpai => 'assets/lottie/kanpai.json';
+
+  /// File path: assets/lottie/speaker.json
+  String get speaker => 'assets/lottie/speaker.json';
 
   /// File path: assets/lottie/splash_screen.json
   String get splashScreen => 'assets/lottie/splash_screen.json';
@@ -144,6 +216,14 @@ class $AssetsPngGen {
 
   /// File path: assets/png/sort_128.png
   AssetGenImage get sort128 => const AssetGenImage('assets/png/sort_128.png');
+
+  /// File path: assets/png/sound-off_64.png
+  AssetGenImage get soundOff64 =>
+      const AssetGenImage('assets/png/sound-off_64.png');
+
+  /// File path: assets/png/sound-on_64.png
+  AssetGenImage get soundOn64 =>
+      const AssetGenImage('assets/png/sound-on_64.png');
 }
 
 class $AssetsPrefectureIndonesiaGen {
@@ -461,6 +541,7 @@ class $AssetsSvgGen {
 class Assets {
   Assets._();
 
+  static const $AssetsDotGen dot = $AssetsDotGen();
   static const $AssetsGifGen gif = $AssetsGifGen();
   static const $AssetsIconGen icon = $AssetsIconGen();
   static const $AssetsLottieGen lottie = $AssetsLottieGen();

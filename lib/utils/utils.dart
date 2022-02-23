@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:intl/intl.dart';
+
+import '../config/color_config.dart';
+import '../gen/assets.gen.dart';
 
 class Utils {
   static MaterialColor createMaterialColor(Color color) {
@@ -34,5 +38,22 @@ class Utils {
 
   static String formatDateString(String stringDateTime) {
     return dateTimeToString(stringToDateTime(stringDateTime));
+  }
+
+  static Widget soundSettingSwitch({required bool value, required ValueChanged<bool> onToggle}) {
+    return FlutterSwitch(
+      width: 70.0,
+      height: 40.0,
+      valueFontSize: 14.0,
+      toggleSize: 32.0,
+      value: value,
+      borderRadius: 20.0,
+      padding: 4.0,
+      showOnOff: true,
+      activeIcon: Assets.png.soundOn64.image(height: 20, width: 20),
+      inactiveIcon: Assets.png.soundOff64.image(height: 20, width: 20),
+      activeColor: ColorConfig.primaryRed900,
+      onToggle: onToggle,
+    );
   }
 }
