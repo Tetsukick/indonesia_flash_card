@@ -22,6 +22,10 @@ class $AssetsIconGen {
 
   /// File path: assets/icon/app_icon.png
   AssetGenImage get appIcon => const AssetGenImage('assets/icon/app_icon.png');
+
+  /// File path: assets/icon/app_icon_512.png
+  AssetGenImage get appIcon512 =>
+      const AssetGenImage('assets/icon/app_icon_512.png');
 }
 
 class $AssetsLottieGen {
@@ -41,6 +45,9 @@ class $AssetsLottieGen {
 
   /// File path: assets/lottie/kanpai.json
   String get kanpai => 'assets/lottie/kanpai.json';
+
+  /// File path: assets/lottie/speaker.json
+  String get speaker => 'assets/lottie/speaker.json';
 
   /// File path: assets/lottie/splash_screen.json
   String get splashScreen => 'assets/lottie/splash_screen.json';
