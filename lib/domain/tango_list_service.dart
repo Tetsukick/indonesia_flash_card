@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:collection/collection.dart';
 import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
 import 'package:indonesia_flash_card/model/tango_master.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
@@ -64,17 +65,16 @@ class TangoListController extends StateNotifier<TangoMaster> {
   }
 
   Future<List<TangoEntity>> getSortAndFilteredTangoList({
-    required SheetRepo sheetRepo,
     TangoCategory? category,
     PartOfSpeechEnum? partOfSpeech,
     LevelGroup? levelGroup,
+    WordStatusType? wordStatusType,
     SortType? sortType
   }) async {
-    state = state..lesson.sheetRepo = sheetRepo;
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
-      await getAllTangoList(sheetRepo: sheetRepo);
+      await getAllTangoList(sheetRepo: state.lesson.sheetRepo!);
     }
-    List<TangoEntity> _filteredTangos = filterTangoList(category: category, partOfSpeech: partOfSpeech, levelGroup: levelGroup);
+    List<TangoEntity> _filteredTangos = await filterTangoList(category: category, partOfSpeech: partOfSpeech, levelGroup: levelGroup, wordStatusType: wordStatusType);
     if (sortType != null) {
       if (sortType == SortType.indonesian || sortType == SortType.indonesianReverse) {
         _filteredTangos.sort((a, b) {
@@ -92,7 +92,6 @@ class TangoListController extends StateNotifier<TangoMaster> {
         }
       }
     }
-    state.dictionary.sortAndFilteredTangos = _filteredTangos;
     state = state..dictionary.sortAndFilteredTangos = _filteredTangos;
 
     return _filteredTangos;
@@ -105,10 +104,14 @@ class TangoListController extends StateNotifier<TangoMaster> {
     LevelGroup? levelGroup
   }) async {
     state = state..lesson.sheetRepo = sheetRepo;
+    state = state
+      ..lesson.category = category
+      ..lesson.partOfSpeech = partOfSpeech
+      ..lesson.levelGroup = levelGroup;
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
       await getAllTangoList(sheetRepo: sheetRepo);
     }
-    List<TangoEntity> _filteredTangos = filterTangoList(category: category, partOfSpeech: partOfSpeech, levelGroup: levelGroup);
+    List<TangoEntity> _filteredTangos = await filterTangoList(category: category, partOfSpeech: partOfSpeech, levelGroup: levelGroup);
     _filteredTangos.shuffle();
     if (_filteredTangos.length > 10) {
       final wordStatusList = await getAllWordStatus();
@@ -137,11 +140,12 @@ class TangoListController extends StateNotifier<TangoMaster> {
     return wordStatus;
   }
 
-  List<TangoEntity> filterTangoList({
+  Future<List<TangoEntity>> filterTangoList({
     TangoCategory? category,
     PartOfSpeechEnum? partOfSpeech,
     LevelGroup? levelGroup,
-  }) {
+    WordStatusType? wordStatusType,
+  }) async {
     final _tmpTangos = state.dictionary.allTangos;
     List<TangoEntity> _filteredTangos = _tmpTangos.where((element) {
       bool _filterCategory = category != null ? element.category == category.id : true;
@@ -149,11 +153,24 @@ class TangoListController extends StateNotifier<TangoMaster> {
       bool _filterLevel = levelGroup != null ? levelGroup.range.any((e) => e == element.level) : true;
       return _filterCategory && _filterPartOfSpeech && _filterLevel;
     }).toList();
+    if (wordStatusType != null) {
+      final wordStatusList = await getAllWordStatus();
+      _filteredTangos = _filteredTangos.where((element) {
+          final targetWordStatus = wordStatusList.firstWhereOrNull((e) {
+            return e.wordId == element.id;
+          });
+          if (targetWordStatus == null) {
+            return wordStatusType == WordStatusType.notLearned;
+          } else {
+            return targetWordStatus.status == wordStatusType.id;
+          }
+        }).toList();
+    }
     return _filteredTangos;
   }
 
   Future<List<TangoEntity>> resetLessonsData() async {
-    List<TangoEntity> _filteredTangos = filterTangoList(
+    List<TangoEntity> _filteredTangos = await filterTangoList(
         category: state.lesson.category,
         partOfSpeech: state.lesson.partOfSpeech,
         levelGroup: state.lesson.levelGroup);
