@@ -172,6 +172,14 @@ class $AssetsPngGen {
   AssetGenImage get dictionaryColor2 =>
       const AssetGenImage('assets/png/dictionary_color_2.png');
 
+  /// File path: assets/png/english_64.png
+  AssetGenImage get english64 =>
+      const AssetGenImage('assets/png/english_64.png');
+
+  /// File path: assets/png/example_64.png
+  AssetGenImage get example64 =>
+      const AssetGenImage('assets/png/example_64.png');
+
   /// File path: assets/png/feedback_128.png
   AssetGenImage get feedback128 =>
       const AssetGenImage('assets/png/feedback_128.png');
@@ -190,6 +198,21 @@ class $AssetsPngGen {
 
   /// File path: assets/png/home_128.png
   AssetGenImage get home128 => const AssetGenImage('assets/png/home_128.png');
+
+  /// File path: assets/png/indonesia_64.png
+  AssetGenImage get indonesia64 =>
+      const AssetGenImage('assets/png/indonesia_64.png');
+
+  /// File path: assets/png/info_notes.png
+  AssetGenImage get infoNotes =>
+      const AssetGenImage('assets/png/info_notes.png');
+
+  /// File path: assets/png/japan_64.png
+  AssetGenImage get japan64 => const AssetGenImage('assets/png/japan_64.png');
+
+  /// File path: assets/png/japan_fuji_64.png
+  AssetGenImage get japanFuji64 =>
+      const AssetGenImage('assets/png/japan_fuji_64.png');
 
   /// File path: assets/png/licence_128.png
   AssetGenImage get licence128 =>
