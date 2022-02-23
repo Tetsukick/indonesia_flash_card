@@ -16,7 +16,6 @@ enum TangoCategory {
   hobby,
   color,
   plantsAndAnimals,
-  sports,
   other,
 }
 

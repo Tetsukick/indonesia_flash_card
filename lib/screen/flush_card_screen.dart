@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/domain/tango_list_service.dart';
@@ -35,6 +36,17 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
   bool cardFlipped = false;
   bool allCardsFinished = false;
   final _cardHeight = 160.0;
+  FlutterTts flutterTts = FlutterTts();
+  
+  @override
+  void initState() {
+    setTTS();
+    super.initState();
+  }
+  
+  void setTTS() {
+    flutterTts.setLanguage('id-ID');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +90,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
 
   Widget _flashCardFront() {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
+    flutterTts.speak(questionAnswerList.lesson.tangos[currentIndex].indonesian ?? '');
     if (questionAnswerList.lesson.tangos.isEmpty) {
       return _shimmerFlashCard(isTappable: false, isJapanese: false);
     }
@@ -103,16 +116,45 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
       child: Container(
         height: _cardHeight,
         width: double.infinity,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              TextWidget.titleRedMedium(title),
-              TextWidget.titleBlackLargeBold(data)
-            ],
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextWidget.titleRedMedium(title),
+                  TextWidget.titleBlackLargeBold(data),
+                ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: _soundButton(data),
+            )
+          ],
+        )
+      ),
+    );
+  }
+
+  Widget _soundButton(String data) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        GestureDetector(
+          onTap: () {
+            flutterTts.speak(data);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
+            child: Lottie.asset(
+              Assets.lottie.speaker,
+              height: _cardHeight / 4,
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 

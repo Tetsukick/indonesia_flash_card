@@ -42,6 +42,7 @@ dependencies:
   flutter_inappwebview:
   floor: ^1.2.0
   collection:
+  flutter_tts: ^3.3.3
 
 dev_dependencies:
   flutter_test:
