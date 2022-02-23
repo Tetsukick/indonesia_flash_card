@@ -16,6 +16,7 @@ import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
+import 'package:lottie/lottie.dart';
 
 import '../config/config.dart';
 import '../model/floor_database/database.dart';
@@ -65,27 +66,44 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-            SizeConfig.mediumMargin,
-            SizeConfig.mediumMargin,
-            SizeConfig.mediumMargin,
-            SizeConfig.bottomBarHeight),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            _userSection(),
-            _sectionTitle('レベル別'),
-            _carouselLevelLectures(),
-            _sectionTitle('カテゴリー別'),
-            _carouselCategoryLectures(),
-            _sectionTitle('品詞別'),
-            _carouselPartOfSpeechLectures(),
-          ],
+    final tangoMaster = ref.watch(tangoListControllerProvider);
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+                SizeConfig.mediumMargin,
+                SizeConfig.mediumMargin,
+                SizeConfig.mediumMargin,
+                SizeConfig.bottomBarHeight),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                _userSection(),
+                _sectionTitle('レベル別'),
+                _carouselLevelLectures(),
+                _sectionTitle('カテゴリー別'),
+                _carouselCategoryLectures(),
+                _sectionTitle('品詞別'),
+                _carouselPartOfSpeechLectures(),
+              ],
+            ),
+          ),
         ),
-      ),
+        Visibility(
+          visible: tangoMaster.dictionary.allTangos.isEmpty,
+          child: Container(
+            color: Colors.black.withOpacity(0.2),
+            child: Center(
+              child: Lottie.asset(
+                Assets.lottie.splashScreen,
+                height: 300,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
