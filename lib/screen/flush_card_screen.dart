@@ -15,6 +15,7 @@ import 'package:indonesia_flash_card/utils/utils.dart';
 import 'package:lottie/lottie.dart';
 
 import '../model/floor_database/database.dart';
+import '../utils/shared_preference.dart';
 
 class FlashCardScreen extends ConsumerStatefulWidget {
   static navigateTo(context) {
@@ -37,15 +38,21 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
   bool allCardsFinished = false;
   final _cardHeight = 160.0;
   FlutterTts flutterTts = FlutterTts();
+  bool _isSoundOn = true;
   
   @override
   void initState() {
     setTTS();
+    loadSoundSetting();
     super.initState();
   }
   
   void setTTS() {
     flutterTts.setLanguage('id-ID');
+  }
+
+  void loadSoundSetting() async {
+    setState(() async => _isSoundOn = await PreferenceKey.isSoundOn.getBool());
   }
 
   @override
@@ -78,6 +85,14 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         TextWidget.titleGraySmallBold('${currentIndex + 1} / ${questionAnswerList.lesson.tangos.length} 問目'),
+        SizedBox(width: SizeConfig.smallMargin),
+        Utils.soundSettingSwitch(value: _isSoundOn,
+            onToggle: (val) {
+              setState(() => _isSoundOn = val);
+              PreferenceKey.isSoundOn.setBool(val);
+            }
+        ),
+        Spacer(),
         IconButton(
             onPressed: () => Navigator.pop(context),
             icon: Icon(Icons.close,
@@ -90,7 +105,9 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
 
   Widget _flashCardFront() {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
-    flutterTts.speak(questionAnswerList.lesson.tangos[currentIndex].indonesian ?? '');
+    if (_isSoundOn) {
+      flutterTts.speak(questionAnswerList.lesson.tangos[currentIndex].indonesian ?? '');
+    }
     if (questionAnswerList.lesson.tangos.isEmpty) {
       return _shimmerFlashCard(isTappable: false, isJapanese: false);
     }

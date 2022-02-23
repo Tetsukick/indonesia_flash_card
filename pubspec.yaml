@@ -30,6 +30,7 @@ dependencies:
   intl:
   shimmer:
   package_info: ^2.0.2
+  shared_preferences: ^2.0.13
 
   ## Firebase packages
   firebase_core:
@@ -43,6 +44,7 @@ dependencies:
   floor: ^1.2.0
   collection:
   flutter_tts: ^3.3.3
+  flutter_switch: ^0.3.2
 
 dev_dependencies:
   flutter_test:
