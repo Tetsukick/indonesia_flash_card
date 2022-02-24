@@ -26,6 +26,14 @@ class FlashCardScreen extends ConsumerStatefulWidget {
     ));
   }
 
+  static navigateReplacementTo(context) {
+    Navigator.pushReplacement(context, MaterialPageRoute(
+      builder: (context) {
+        return FlashCardScreen();
+      },
+    ));
+  }
+
   const FlashCardScreen({Key? key}) : super(key: key);
 
   @override
@@ -38,7 +46,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
   bool allCardsFinished = false;
   final _cardHeight = 160.0;
   FlutterTts flutterTts = FlutterTts();
-  bool _isSoundOn = true;
+  bool _isSoundOn = false;
   
   @override
   void initState() {
@@ -52,7 +60,12 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
   }
 
   void loadSoundSetting() async {
-    setState(() async => _isSoundOn = await PreferenceKey.isSoundOn.getBool());
+    _isSoundOn = await PreferenceKey.isSoundOn.getBool();
+    setState(() {});
+    final questionAnswerList = ref.watch(tangoListControllerProvider);
+    if (_isSoundOn) {
+      flutterTts.speak(questionAnswerList.lesson.tangos[currentIndex].indonesian ?? '');
+    }
   }
 
   @override
@@ -124,11 +137,12 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
       return _shimmerFlashCard(isTappable: true);
     }
     return _flashCard(
-        title: '日本語',
-        data: questionAnswerList.lesson.tangos[currentIndex].japanese ?? '');
+      title: '日本語',
+      data: questionAnswerList.lesson.tangos[currentIndex].japanese ?? '',
+      isFront: false);
   }
 
-  Widget _flashCard({required String title, required String data}) {
+  Widget _flashCard({required String title, required String data, bool isFront = true}) {
     return Card(
       child: Container(
         height: _cardHeight,
@@ -145,9 +159,12 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
                 ],
               ),
             ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: _soundButton(data),
+            Visibility(
+              visible: isFront,
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: _soundButton(data),
+              ),
             )
           ],
         )
