@@ -7,6 +7,7 @@ import 'package:indonesia_flash_card/domain/tango_list_service.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/floor_entity/activity.dart';
 import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
+import 'package:indonesia_flash_card/model/tango_entity.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/screen/completion_screen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
@@ -15,11 +16,20 @@ import 'package:indonesia_flash_card/utils/utils.dart';
 import 'package:lottie/lottie.dart';
 
 import '../model/floor_database/database.dart';
+import '../model/part_of_speech.dart';
 import '../utils/shared_preference.dart';
 
 class FlashCardScreen extends ConsumerStatefulWidget {
   static navigateTo(context) {
     Navigator.push(context, MaterialPageRoute(
+      builder: (context) {
+        return FlashCardScreen();
+      },
+    ));
+  }
+
+  static navigateReplacementTo(context) {
+    Navigator.pushReplacement(context, MaterialPageRoute(
       builder: (context) {
         return FlashCardScreen();
       },
@@ -36,9 +46,11 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
   int currentIndex = 0;
   bool cardFlipped = false;
   bool allCardsFinished = false;
-  final _cardHeight = 160.0;
+  final _cardHeight = 100.0;
   FlutterTts flutterTts = FlutterTts();
-  bool _isSoundOn = true;
+  bool _isSoundOn = false;
+  final _iconHeight = 20.0;
+  final _iconWidth = 20.0;
   
   @override
   void initState() {
@@ -52,7 +64,12 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
   }
 
   void loadSoundSetting() async {
-    setState(() async => _isSoundOn = await PreferenceKey.isSoundOn.getBool());
+    _isSoundOn = await PreferenceKey.isSoundOn.getBool();
+    setState(() {});
+    final questionAnswerList = ref.watch(tangoListControllerProvider);
+    if (_isSoundOn) {
+      flutterTts.speak(questionAnswerList.lesson.tangos[currentIndex].indonesian ?? '');
+    }
   }
 
   @override
@@ -118,17 +135,40 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
 
   Widget _flashCardBack() {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
+    final entity = questionAnswerList.lesson.tangos[currentIndex];
     if (questionAnswerList.lesson.tangos.isEmpty) {
       return _shimmerFlashCard(isTappable: false);
     } else if (!cardFlipped) {
       return _shimmerFlashCard(isTappable: true);
     }
-    return _flashCard(
-        title: '日本語',
-        data: questionAnswerList.lesson.tangos[currentIndex].japanese ?? '');
+    return Card(
+      child: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _partOfSpeech(entity),
+              SizedBox(height: SizeConfig.smallMargin),
+              _japanese(entity),
+              SizedBox(height: SizeConfig.smallMargin),
+              _english(entity),
+              SizedBox(height: SizeConfig.smallMargin),
+              _exampleHeader(),
+              SizedBox(height: SizeConfig.smallMargin),
+              _example(entity),
+              SizedBox(height: SizeConfig.smallMargin),
+              _exampleJp(entity),
+              SizedBox(height: SizeConfig.smallMargin),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
-  Widget _flashCard({required String title, required String data}) {
+  Widget _flashCard({required String title, required String data, bool isFront = true}) {
     return Card(
       child: Container(
         height: _cardHeight,
@@ -141,16 +181,89 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   TextWidget.titleRedMedium(title),
-                  TextWidget.titleBlackLargeBold(data),
+                  TextWidget.titleBlackLargestBold(data),
                 ],
               ),
             ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: _soundButton(data),
+            Visibility(
+              visible: isFront,
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: _soundButton(data),
+              ),
             )
           ],
         )
+      ),
+    );
+  }
+
+  Widget _partOfSpeech(TangoEntity entity) {
+    return Row(
+      children: [
+        TextWidget.titleWhiteSmallBoldWithBackGround(PartOfSpeechExt.intToPartOfSpeech(value: entity.partOfSpeech!).title),
+        SizedBox(width: SizeConfig.mediumSmallMargin),
+      ],
+    );
+  }
+
+  Widget _japanese(TangoEntity entity) {
+    return Row(
+      children: [
+        Assets.png.japanFuji64.image(height: _iconHeight, width: _iconWidth),
+        SizedBox(width: SizeConfig.mediumSmallMargin),
+        Flexible(child: TextWidget.titleGrayLargeBold(entity.japanese!, maxLines: 2)),
+      ],
+    );
+  }
+
+  Widget _english(TangoEntity entity) {
+    return Row(
+      children: [
+        Assets.png.english64.image(height: _iconHeight, width: _iconWidth),
+        SizedBox(width: SizeConfig.mediumSmallMargin),
+        Flexible(child: TextWidget.titleGrayLargeBold(entity.english!, maxLines: 2)),
+      ],
+    );
+  }
+
+  Widget _exampleHeader() {
+    return Row(
+      children: [
+        TextWidget.titleRedMedium('例文', maxLines: 1),
+        SizedBox(width: SizeConfig.mediumSmallMargin),
+        Flexible(child: _separater())
+      ],
+    );
+  }
+
+  Widget _example(TangoEntity entity) {
+    return Row(
+      children: [
+        Assets.png.example64.image(height: _iconHeight, width: _iconWidth),
+        SizedBox(width: SizeConfig.mediumSmallMargin),
+        Flexible(child: TextWidget.titleBlackMediumBold(entity.example!, maxLines: 5)),
+      ],
+    );
+  }
+
+  Widget _exampleJp(TangoEntity entity) {
+    return Row(
+      children: [
+        Assets.png.japan64.image(height: _iconHeight, width: _iconWidth),
+        SizedBox(width: SizeConfig.mediumSmallMargin),
+        Flexible(child: TextWidget.titleGrayMediumSmallBold(entity.exampleJp!, maxLines: 5)),
+      ],
+    );
+  }
+
+  Widget _separater() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: SizeConfig.mediumMargin),
+      child: Container(
+        height: 1,
+        width: double.infinity,
+        color: ColorConfig.bgGreySeparater,
       ),
     );
   }

@@ -118,16 +118,42 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextWidget.titleGraySmallBold('フィルタ'),
+            _filterHeader(),
             SizedBox(height: SizeConfig.smallMargin,),
             filterItems(),
             SizedBox(height: SizeConfig.mediumSmallMargin),
-            TextWidget.titleGraySmallBold('ソート'),
+            _sortHeader(),
             SizedBox(height: SizeConfig.smallMargin),
             sortItems(),
             SizedBox(height: SizeConfig.bottomBarHeight,)
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _filterHeader() {
+    return Padding(
+      padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
+      child: Row(
+        children: [
+          Assets.png.filter64.image(height: 20, width: 20),
+          SizedBox(width: SizeConfig.mediumSmallMargin),
+          TextWidget.titleGraySmallBold('フィルタ'),
+        ],
+      ),
+    );
+  }
+
+  Widget _sortHeader() {
+    return Padding(
+      padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
+      child: Row(
+        children: [
+          Assets.png.sort64.image(height: 20, width: 20),
+          SizedBox(width: SizeConfig.mediumSmallMargin),
+          TextWidget.titleGraySmallBold('ソート'),
+        ],
       ),
     );
   }

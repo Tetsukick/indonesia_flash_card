@@ -13,7 +13,7 @@ class CompletionScreen extends ConsumerStatefulWidget {
   const CompletionScreen({Key? key}) : super(key: key);
 
   static navigateTo(context) {
-    Navigator.push(context, MaterialPageRoute(
+    Navigator.pushReplacement(context, MaterialPageRoute(
       builder: (context) {
         return CompletionScreen();
       },
@@ -43,9 +43,7 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
             _button(
               onPressed: () {
                 ref.read(tangoListControllerProvider.notifier).resetLessonsData();
-                FlashCardScreen.navigateTo(
-                  context,
-                );
+                FlashCardScreen.navigateReplacementTo(context);
               },
               img: Assets.png.continue128,
               title: '同じ設定で継続'
