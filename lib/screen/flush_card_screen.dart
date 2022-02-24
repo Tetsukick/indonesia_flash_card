@@ -191,7 +191,8 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
                 alignment: Alignment.bottomRight,
                 child: _soundButton(data),
               ),
-            )
+            ),
+            Align(),
           ],
         )
       ),
