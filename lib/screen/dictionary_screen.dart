@@ -1,9 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
-import 'package:indonesia_flash_card/config/config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
-import 'package:indonesia_flash_card/domain/file_service.dart';
 import 'package:indonesia_flash_card/domain/tango_list_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
@@ -13,10 +11,11 @@ import 'package:indonesia_flash_card/model/level.dart';
 import 'package:indonesia_flash_card/model/sort_type.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
-import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 import 'package:indonesia_flash_card/screen/dictionary_detail_screen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
+import 'package:indonesia_flash_card/utils/logger.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import '../model/floor_database/database.dart';
 import '../model/floor_entity/word_status.dart';
@@ -43,6 +42,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
   TangoCategory? _selectedCategory;
   LevelGroup? _selectedLevelGroup;
   WordStatusType? _selectedWordStatusType;
+  List<TangoEntity> _searchedTango = [];
 
   Future<WordStatus?> getWordStatus(TangoEntity entity) async {
     final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
@@ -59,42 +59,51 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
       key: _key,
       backgroundColor: ColorConfig.bgPinkColor,
       extendBody: true,
-      body: ListView.builder(
-        padding: EdgeInsets.fromLTRB(0, SizeConfig.mediumSmallMargin, 0, SizeConfig.bottomBarHeight),
-        itemBuilder: (BuildContext context, int index){
-          TangoEntity tango = tangoList.dictionary.sortAndFilteredTangos[index];
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: SizeConfig.mediumSmallMargin),
-            child: InkWell(
-              onTap: () {
-                DictionaryDetail.navigateTo(context, tangoEntity: tango);
-              },
-              child: Card(
-                child: Container(
-                  width: double.infinity,
-                  height: itemCardHeight,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: SizeConfig.smallMargin, horizontal: SizeConfig.mediumSmallMargin),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        wordStatus(tango),
-                        SizedBox(height: SizeConfig.smallestMargin,),
-                        TextWidget.titleBlackMediumBold(tango.indonesian ?? ''),
-                        SizedBox(height: 2,),
-                        TextWidget.titleGraySmall(tango.japanese ?? ''),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-        itemCount: tangoList.dictionary.sortAndFilteredTangos.length,
+      body: Stack(
+        children: [
+          ListView.builder(
+            padding: EdgeInsets.fromLTRB(0, 64, 0, SizeConfig.bottomBarHeight),
+            itemBuilder: (BuildContext context, int index){
+              TangoEntity tango = tangoList.dictionary.sortAndFilteredTangos[index];
+              return tangoListItem(tango);
+            },
+            itemCount: tangoList.dictionary.sortAndFilteredTangos.length,
+          ),
+          buildFloatingSearchBar()
+        ],
       ),
       floatingActionButton: sortAndFilterButton(),
       endDrawer: sortAndFilterDrawer(),
+    );
+  }
+  
+  Widget tangoListItem(TangoEntity tango) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: SizeConfig.mediumSmallMargin),
+      child: InkWell(
+        onTap: () {
+          DictionaryDetail.navigateTo(context, tangoEntity: tango);
+        },
+        child: Card(
+          child: Container(
+            width: double.infinity,
+            height: itemCardHeight,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: SizeConfig.smallMargin, horizontal: SizeConfig.mediumSmallMargin),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  wordStatus(tango),
+                  SizedBox(height: SizeConfig.smallestMargin,),
+                  TextWidget.titleBlackMediumBold(tango.indonesian ?? ''),
+                  SizedBox(height: 2,),
+                  TextWidget.titleGraySmall(tango.japanese ?? ''),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -393,5 +402,53 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
           );
         }
       });
+  }
+
+  Widget buildFloatingSearchBar() {
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
+    return FloatingSearchBar(
+      scrollPadding: const EdgeInsets.only(top: 16, bottom: SizeConfig.bottomBarHeight),
+      transitionDuration: const Duration(milliseconds: 800),
+      transitionCurve: Curves.easeInOut,
+      physics: const BouncingScrollPhysics(),
+      axisAlignment: isPortrait ? 0.0 : -1.0,
+      openAxisAlignment: 0.0,
+      width: isPortrait ? 600 : 500,
+      debounceDelay: const Duration(milliseconds: 500),
+      onQueryChanged: (query) {
+        logger.d(query);
+        if (query.length >= 2) {
+          search(query);
+        }
+      },
+      transition: CircularFloatingSearchBarTransition(),
+      actions: [
+        FloatingSearchBarAction.searchToClear(
+          showIfClosed: false,
+        ),
+      ],
+      builder: (context, transition) {
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: _searchedTango.map((tango) {
+              return tangoListItem(tango);
+            }).toList(),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<List<TangoEntity>> search(String search) async {
+    final tangoList = ref.watch(tangoListControllerProvider);
+    final allTangoList = tangoList.dictionary.allTangos;
+    var searchTangos = allTangoList
+        .where((tango) => tango.indonesian!.toLowerCase().contains(search.toLowerCase()))
+        .toList();
+    setState(() => _searchedTango = searchTangos);
+    return searchTangos;
   }
 }

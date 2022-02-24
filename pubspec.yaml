@@ -45,6 +45,7 @@ dependencies:
   collection:
   flutter_tts: ^3.3.3
   flutter_switch: ^0.3.2
+  material_floating_search_bar: ^0.3.6
 
 dev_dependencies:
   flutter_test:
