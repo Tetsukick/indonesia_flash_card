@@ -162,7 +162,7 @@ class _$WordStatusDao extends WordStatusDao {
   @override
   Future<List<WordStatus>> findBookmarkWordStatus() async {
     return _queryAdapter.queryList(
-        'SELECT * FROM WordStatus WHERE isBookmarked = true',
+        'SELECT * FROM WordStatus WHERE isBookmarked = 1',
         mapper: (Map<String, Object?> row) => WordStatus(
             id: row['id'] as int?,
             wordId: row['wordId'] as int,

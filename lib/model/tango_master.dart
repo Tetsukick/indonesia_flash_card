@@ -19,5 +19,6 @@ class Lesson {
   TangoCategory? category;
   PartOfSpeechEnum? partOfSpeech;
   LevelGroup? levelGroup;
+  bool isBookmark = false;
   List<TangoEntity> tangos = [];
 }

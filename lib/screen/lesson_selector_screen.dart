@@ -50,14 +50,27 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   int _currentPartOfSpeechIndex = 0;
   final CarouselController _partOfSpeechCarouselController = CarouselController();
   List<WordStatus> wordStatusList = [];
+  List<WordStatus> bookmarkList = [];
   List<Activity> activityList = [];
+  late AppDatabase database;
 
   @override
   void initState() {
+    initializeDB();
     super.initState();
     initTangoList();
+  }
+
+  void initializeDB() async {
+    final _database = await $FloorAppDatabase
+        .databaseBuilder(Config.dbName)
+        .addMigrations([migration1to2])
+        .build();
+    setState(() => database = _database);
+
     getAllWordStatus();
     getAllActivity();
+    getBookmark();
   }
 
   void initTangoList() async {
@@ -83,6 +96,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 _userSection(),
+                _bookMarkLecture(),
                 _sectionTitle('レベル別'),
                 _carouselLevelLectures(),
                 _sectionTitle('カテゴリー別'),
@@ -142,6 +156,43 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     );
   }
 
+  Widget _bookMarkLecture() {
+    return Visibility(
+      visible: bookmarkList.isNotEmpty,
+      child: Card(
+          child: InkWell(
+            onTap: () {
+              ref.read(tangoListControllerProvider.notifier).setBookmarkLessonsData();
+              FlashCardScreen.navigateTo(context);
+            },
+            child: Container(
+                height: 40,
+                width: double.infinity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
+                          child: Assets.png.bookmarkOn64.image(height: 20, width: 20),
+                        ),
+                        TextWidget.titleGraySmallBold('ブックマークの復習 ${bookmarkList.length}語'),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
+                      child: Icon(Icons.arrow_forward_ios_sharp, size: 20),
+                    )
+                  ],
+                )
+            ),
+          )
+      ),
+    );
+  }
+
   Widget _userSectionItem({required String title, required int data, required String unitTitle}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -179,7 +230,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
 
   Widget _sectionTitle(String title) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(0, SizeConfig.mediumMargin, SizeConfig.mediumMargin, SizeConfig.mediumMargin),
+      padding: EdgeInsets.fromLTRB(0, SizeConfig.mediumMargin, SizeConfig.mediumSmallMargin, SizeConfig.smallMargin),
       child: TextWidget.titleBlackLargeBold(title),
     );
   }
@@ -407,24 +458,20 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   }
 
   Future<void> getAllWordStatus() async {
-    final database = await $FloorAppDatabase
-        .databaseBuilder(Config.dbName)
-        .addMigrations([migration1to2])
-        .build();
-
     final wordStatusDao = database.wordStatusDao;
     final wordStatus = await wordStatusDao.findAllWordStatus();
     setState(() => wordStatusList = wordStatus);
   }
 
   Future<void> getAllActivity() async {
-    final database = await $FloorAppDatabase
-        .databaseBuilder(Config.dbName)
-        .addMigrations([migration1to2])
-        .build();
-
     final activityDao = database.activityDao;
     final _activityList = await activityDao.findAllActivity();
     setState(() => activityList = _activityList);
+  }
+
+  Future<void> getBookmark() async {
+    final wordStatusDao = database.wordStatusDao;
+    final wordStatus = await wordStatusDao.findBookmarkWordStatus();
+    setState(() => bookmarkList = wordStatus);
   }
 }
