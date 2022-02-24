@@ -60,6 +60,20 @@ class TextWidget {
     );
   }
 
+  static Widget titleBlackSmallBold(String data, {int maxLines = 1}) {
+    return AutoSizeText(
+      data,
+      maxLines: maxLines,
+      minFontSize: 9,
+      maxFontSize: 14,
+      style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: ColorConfig.fontBlack,
+          fontSize: 12
+      ),
+    );
+  }
+
   static Widget titleGrayLargeBold(String data, {int maxLines = 1}) {
     return AutoSizeText(
       data,
@@ -84,6 +98,20 @@ class TextWidget {
           fontWeight: FontWeight.bold,
           color: ColorConfig.fontGrey,
           fontSize: 20
+      ),
+    );
+  }
+
+  static Widget titleGrayMediumSmallBold(String data, {int maxLines = 1}) {
+    return AutoSizeText(
+      data,
+      maxLines: maxLines,
+      minFontSize: 14,
+      maxFontSize: 20,
+      style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: ColorConfig.fontGrey,
+          fontSize: 18
       ),
     );
   }
