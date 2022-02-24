@@ -60,16 +60,6 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     getAllActivity();
   }
 
-  // void migrationCheck() async {
-  //   if (!(await PreferenceKey.isMigration1to2.getBool())) {
-  //     final database = await $FloorAppDatabase
-  //         .databaseBuilder('app_database.db')
-  //         .addMigrations([migration1to2])
-  //         .build();
-  //     PreferenceKey.isMigration1to2.setBool(true);
-  //   }
-  // }
-
   void initTangoList() async {
     final lectures = await ref.read(fileControllerProvider.notifier).getPossibleLectures();
     ref.read(tangoListControllerProvider.notifier).getAllTangoList(
@@ -418,7 +408,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
 
   Future<void> getAllWordStatus() async {
     final database = await $FloorAppDatabase
-        .databaseBuilder('app_database.db')
+        .databaseBuilder(Config.dbName)
         .addMigrations([migration1to2])
         .build();
 
@@ -429,7 +419,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
 
   Future<void> getAllActivity() async {
     final database = await $FloorAppDatabase
-        .databaseBuilder('app_database.db')
+        .databaseBuilder(Config.dbName)
         .addMigrations([migration1to2])
         .build();
 

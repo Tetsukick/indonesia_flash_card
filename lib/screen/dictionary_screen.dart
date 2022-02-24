@@ -17,6 +17,7 @@ import 'package:indonesia_flash_card/utils/logger.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
+import '../config/config.dart';
 import '../model/floor_database/database.dart';
 import '../model/floor_entity/word_status.dart';
 import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
@@ -47,7 +48,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
 
   Future<WordStatus?> getWordStatus(TangoEntity entity) async {
     final database = await $FloorAppDatabase
-        .databaseBuilder('app_database.db')
+        .databaseBuilder(Config.dbName)
         .addMigrations([migration1to2])
         .build();
 

@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
+import 'package:indonesia_flash_card/config/config.dart';
 import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
 import 'package:indonesia_flash_card/model/tango_master.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
@@ -135,7 +136,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
 
   Future<List<WordStatus>> getAllWordStatus() async {
     final database = await $FloorAppDatabase
-        .databaseBuilder('app_database.db')
+        .databaseBuilder(Config.dbName)
         .addMigrations([migration1to2])
         .build();
 
