@@ -45,16 +45,21 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
   LevelGroup? _selectedLevelGroup;
   WordStatusType? _selectedWordStatusType;
   List<TangoEntity> _searchedTango = [];
+  late AppDatabase database;
 
-  Future<WordStatus?> getWordStatus(TangoEntity entity) async {
-    final database = await $FloorAppDatabase
-        .databaseBuilder(Config.dbName)
-        .addMigrations([migration1to2])
-        .build();
-
-    final wordStatusDao = database.wordStatusDao;
-    final wordStatus = await wordStatusDao.findWordStatusById(entity.id!);
-    return wordStatus;
+  @override
+  void initState() {
+    initializeDB();
+    super.initState();
+  }
+  
+  void initializeDB() async {
+    setState(() async {
+      database = await $FloorAppDatabase
+          .databaseBuilder(Config.dbName)
+          .addMigrations([migration1to2])
+          .build();
+    });
   }
 
   @override
@@ -93,23 +98,66 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
           child: Container(
             width: double.infinity,
             height: itemCardHeight,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: SizeConfig.smallMargin, horizontal: SizeConfig.mediumSmallMargin),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  wordStatus(tango),
-                  SizedBox(height: SizeConfig.smallestMargin,),
-                  TextWidget.titleBlackMediumBold(tango.indonesian ?? ''),
-                  SizedBox(height: 2,),
-                  TextWidget.titleGraySmall(tango.japanese ?? ''),
-                ],
-              ),
+            child: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: SizeConfig.smallMargin, horizontal: SizeConfig.mediumSmallMargin),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      wordStatus(tango),
+                      SizedBox(height: SizeConfig.smallestMargin,),
+                      TextWidget.titleBlackMediumBold(tango.indonesian ?? ''),
+                      SizedBox(height: 2,),
+                      TextWidget.titleGraySmall(tango.japanese ?? ''),
+                    ],
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: bookmark(tango),
+                )
+              ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Future<WordStatus?> getWordStatus(TangoEntity entity) async {
+    final wordStatusDao = database.wordStatusDao;
+    final wordStatus = await wordStatusDao.findWordStatusById(entity.id!);
+    return wordStatus;
+  }
+
+  Future<WordStatus?> getBookmark(TangoEntity entity) async {
+    final wordStatusDao = database.wordStatusDao;
+    final wordStatus = await wordStatusDao.findWordStatusById(entity.id!);
+    return wordStatus;
+  }
+
+  Widget bookmark(TangoEntity entity) {
+    return FutureBuilder(
+        future: getBookmark(entity),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            WordStatus? status = snapshot.data as WordStatus?;
+            bool isBookmark = status == null ? false : status.isBookmarked;
+            return Visibility(
+              visible: isBookmark,
+              child: Padding(
+                padding: const EdgeInsets.only(right: SizeConfig.mediumSmallMargin),
+                child: Assets.png.bookmarkOn64.image(height: 24, width: 24),
+              ),
+            );
+          } else {
+            return  Padding(
+              padding: const EdgeInsets.only(right: SizeConfig.mediumSmallMargin),
+              child: ShimmerWidget.rectangular(width: 24, height: 24,),
+            );
+          }
+        });
   }
 
   Widget sortAndFilterButton() {
