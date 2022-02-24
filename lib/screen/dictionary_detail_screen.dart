@@ -9,7 +9,13 @@ import 'package:indonesia_flash_card/model/tango_entity.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:lottie/lottie.dart';
 
+import '../config/config.dart';
+import '../model/floor_database/database.dart';
+import '../model/floor_entity/word_status.dart';
+import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
+import '../model/word_status_type.dart';
 import '../utils/shared_preference.dart';
+import '../utils/shimmer.dart';
 
 class DictionaryDetail extends ConsumerStatefulWidget {
   final TangoEntity tangoEntity;
@@ -32,9 +38,11 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
   bool _isSoundOn = true;
   final _iconHeight = 20.0;
   final _iconWidth = 20.0;
+  late AppDatabase database;
 
   @override
   void initState() {
+    initializeDB();
     setTTS();
     loadSoundSetting();
     super.initState();
@@ -52,6 +60,14 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
     }
   }
 
+  void initializeDB() async {
+    final _database = await $FloorAppDatabase
+        .databaseBuilder(Config.dbName)
+        .addMigrations([migration1to2])
+        .build();;
+    setState(() => database = _database);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,42 +75,86 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(SizeConfig.smallMargin),
-          child: Card(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _topBarSection(),
-                    _partOfSpeech(),
-                    SizedBox(height: SizeConfig.smallMargin),
-                    _indonesian(),
-                    SizedBox(height: SizeConfig.smallestMargin),
-                    _separater(),
-                    _japanese(),
-                    SizedBox(height: SizeConfig.smallMargin),
-                    _english(),
-                    SizedBox(height: SizeConfig.smallMargin),
-                    _exampleHeader(),
-                    SizedBox(height: SizeConfig.smallMargin),
-                    _example(),
-                    SizedBox(height: SizeConfig.smallMargin),
-                    _exampleJp(),
-                    SizedBox(height: SizeConfig.smallMargin),
-                    _descriptionHeader(),
-                    SizedBox(height: SizeConfig.smallMargin),
-                    _description(),
-                    SizedBox(height: SizeConfig.smallMargin),
-                  ],
+          child: Stack(
+            children: [
+              Card(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _topBarSection(),
+                        _partOfSpeech(),
+                        SizedBox(height: SizeConfig.smallMargin),
+                        _indonesian(),
+                        SizedBox(height: SizeConfig.smallestMargin),
+                        _separater(),
+                        _japanese(),
+                        SizedBox(height: SizeConfig.smallMargin),
+                        _english(),
+                        SizedBox(height: SizeConfig.smallMargin),
+                        _exampleHeader(),
+                        SizedBox(height: SizeConfig.smallMargin),
+                        _example(),
+                        SizedBox(height: SizeConfig.smallMargin),
+                        _exampleJp(),
+                        SizedBox(height: SizeConfig.smallMargin),
+                        _descriptionHeader(),
+                        SizedBox(height: SizeConfig.smallMargin),
+                        _description(),
+                        SizedBox(height: SizeConfig.smallMargin),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
+              bookmark(this.widget.tangoEntity)
+            ],
           ),
         ),
       ),
     );
+  }
+
+  Widget bookmark(TangoEntity entity) {
+    final wordStatusDao = database.wordStatusDao;
+
+    return FutureBuilder(
+        future: getBookmark(entity),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            WordStatus? status = snapshot.data as WordStatus?;
+            bool isBookmark = status == null ? false : status.isBookmarked;
+            if (status == null) {
+              status = WordStatus(wordId: entity.id!, status: WordStatusType.notLearned.id, isBookmarked: false);
+              wordStatusDao.insertWordStatus(status);
+            }
+            return Padding(
+              padding: const EdgeInsets.only(left: SizeConfig.mediumSmallMargin),
+              child: InkWell(
+                onTap: () {
+                  wordStatusDao.updateWordStatus(status!..isBookmarked = !isBookmark);
+                  setState(() => isBookmark = !isBookmark);
+                },
+                child: isBookmark ? Assets.png.bookmarkOn64.image(height: 32, width: 32)
+                    : Assets.png.bookmarkOff64.image(height: 32, width: 32),
+              ),
+            );
+          } else {
+            return  Padding(
+              padding: const EdgeInsets.only(left: SizeConfig.mediumSmallMargin),
+              child: ShimmerWidget.rectangular(width: 24, height: 24,),
+            );
+          }
+        });
+  }
+
+  Future<WordStatus?> getBookmark(TangoEntity entity) async {
+    final wordStatusDao = database.wordStatusDao;
+    final wordStatus = await wordStatusDao.findWordStatusById(entity.id!);
+    return wordStatus;
   }
 
   Widget _topBarSection() {
