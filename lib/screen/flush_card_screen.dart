@@ -15,7 +15,9 @@ import 'package:indonesia_flash_card/utils/shimmer.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
 import 'package:lottie/lottie.dart';
 
+import '../config/config.dart';
 import '../model/floor_database/database.dart';
+import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
 import '../model/part_of_speech.dart';
 import '../utils/shared_preference.dart';
 
@@ -51,9 +53,11 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
   bool _isSoundOn = false;
   final _iconHeight = 20.0;
   final _iconWidth = 20.0;
+  late AppDatabase database;
   
   @override
   void initState() {
+    initializeDB();
     setTTS();
     loadSoundSetting();
     super.initState();
@@ -70,6 +74,14 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     if (_isSoundOn) {
       flutterTts.speak(questionAnswerList.lesson.tangos[currentIndex].indonesian ?? '');
     }
+  }
+
+  void initializeDB() async {
+    final _database = await $FloorAppDatabase
+        .databaseBuilder(Config.dbName)
+        .addMigrations([migration1to2])
+        .build();;
+    setState(() => database = _database);
   }
 
   @override
@@ -130,7 +142,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     }
     return _flashCard(
         title: 'インドネシア語',
-        data: questionAnswerList.lesson.tangos[currentIndex].indonesian ?? '');
+        tango: questionAnswerList.lesson.tangos[currentIndex]);
   }
 
   Widget _flashCardBack() {
@@ -168,7 +180,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     );
   }
 
-  Widget _flashCard({required String title, required String data, bool isFront = true}) {
+  Widget _flashCard({required String title, required TangoEntity tango, bool isFront = true}) {
     return Card(
       child: Container(
         height: _cardHeight,
@@ -181,7 +193,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   TextWidget.titleRedMedium(title),
-                  TextWidget.titleBlackLargestBold(data),
+                  TextWidget.titleBlackLargestBold(tango.indonesian!),
                 ],
               ),
             ),
@@ -189,13 +201,59 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
               visible: isFront,
               child: Align(
                 alignment: Alignment.bottomRight,
-                child: _soundButton(data),
+                child: _soundButton(tango.indonesian!),
               ),
-            )
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: SizeConfig.mediumSmallMargin),
+                child: bookmark(tango),
+              ),
+            ),
           ],
         )
       ),
     );
+  }
+
+  Widget bookmark(TangoEntity entity) {
+    final wordStatusDao = database.wordStatusDao;
+
+    return FutureBuilder(
+        future: getBookmark(entity),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            WordStatus? status = snapshot.data as WordStatus?;
+            bool isBookmark = status == null ? false : status.isBookmarked;
+            if (status == null) {
+              status = WordStatus(wordId: entity.id!, status: WordStatusType.notLearned.id, isBookmarked: false);
+              wordStatusDao.insertWordStatus(status);
+            }
+            return Padding(
+              padding: const EdgeInsets.only(left: SizeConfig.mediumSmallMargin),
+              child: InkWell(
+                  onTap: () {
+                    wordStatusDao.updateWordStatus(status!..isBookmarked = !isBookmark);
+                    setState(() => isBookmark = !isBookmark);
+                  },
+                  child: isBookmark ? Assets.png.bookmarkOn64.image(height: 24, width: 24)
+                      : Assets.png.bookmarkOff64.image(height: 24, width: 24),
+              ),
+            );
+          } else {
+            return  Padding(
+              padding: const EdgeInsets.only(left: SizeConfig.mediumSmallMargin),
+              child: ShimmerWidget.rectangular(width: 24, height: 24,),
+            );
+          }
+        });
+  }
+
+  Future<WordStatus?> getBookmark(TangoEntity entity) async {
+    final wordStatusDao = database.wordStatusDao;
+    final wordStatus = await wordStatusDao.findWordStatusById(entity.id!);
+    return wordStatus;
   }
 
   Widget _partOfSpeech(TangoEntity entity) {
@@ -280,7 +338,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
             padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
             child: Lottie.asset(
               Assets.lottie.speaker,
-              height: _cardHeight / 4,
+              height: _cardHeight / 3,
             ),
           ),
         ),
@@ -384,7 +442,10 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
   Future<void> registerWordStatus({required WordStatusType type}) async {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final currentTango = questionAnswerList.lesson.tangos[currentIndex];
-    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    final database = await $FloorAppDatabase
+        .databaseBuilder(Config.dbName)
+        .addMigrations([migration1to2])
+        .build();
 
     final wordStatusDao = database.wordStatusDao;
     final wordStatus = await wordStatusDao.findWordStatusById(currentTango.id!);
@@ -398,7 +459,10 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
   Future<void> registerActivity() async {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final currentTango = questionAnswerList.lesson.tangos[currentIndex];
-    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    final database = await $FloorAppDatabase
+        .databaseBuilder(Config.dbName)
+        .addMigrations([migration1to2])
+        .build();
 
     final activityDao = database.activityDao;
     final now = Utils.dateTimeToString(DateTime.now());

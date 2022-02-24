@@ -128,6 +128,14 @@ class $AssetsPngGen {
   AssetGenImage get addDocument128 =>
       const AssetGenImage('assets/png/add_document_128.png');
 
+  /// File path: assets/png/bookmark_off_64.png
+  AssetGenImage get bookmarkOff64 =>
+      const AssetGenImage('assets/png/bookmark_off_64.png');
+
+  /// File path: assets/png/bookmark_on_64.png
+  AssetGenImage get bookmarkOn64 =>
+      const AssetGenImage('assets/png/bookmark_on_64.png');
+
   /// File path: assets/png/cancel_red_128.png
   AssetGenImage get cancelRed128 =>
       const AssetGenImage('assets/png/cancel_red_128.png');

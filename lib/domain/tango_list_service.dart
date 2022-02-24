@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
+import 'package:indonesia_flash_card/config/config.dart';
 import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
 import 'package:indonesia_flash_card/model/tango_master.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
@@ -8,6 +9,7 @@ import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 
 import '../model/category.dart';
 import '../model/floor_database/database.dart';
+import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
 import '../model/level.dart';
 import '../model/part_of_speech.dart';
 import '../model/sort_type.dart';
@@ -107,7 +109,8 @@ class TangoListController extends StateNotifier<TangoMaster> {
     state = state
       ..lesson.category = category
       ..lesson.partOfSpeech = partOfSpeech
-      ..lesson.levelGroup = levelGroup;
+      ..lesson.levelGroup = levelGroup
+      ..lesson.isBookmark = false;
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
       await getAllTangoList(sheetRepo: sheetRepo);
     }
@@ -132,8 +135,23 @@ class TangoListController extends StateNotifier<TangoMaster> {
     return _filteredTangos;
   }
 
+  Future<List<TangoEntity>> setBookmarkLessonsData() async {
+    state = state..lesson.isBookmark = true;
+    if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
+      await getAllTangoList(sheetRepo: state.lesson.sheetRepo!);
+    }
+    List<TangoEntity> _filteredTangos = await filterTangoList(isBookmark: true);
+    _filteredTangos.shuffle();
+    state = state..lesson.tangos = _filteredTangos;
+
+    return _filteredTangos;
+  }
+
   Future<List<WordStatus>> getAllWordStatus() async {
-    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    final database = await $FloorAppDatabase
+        .databaseBuilder(Config.dbName)
+        .addMigrations([migration1to2])
+        .build();
 
     final wordStatusDao = database.wordStatusDao;
     final wordStatus = await wordStatusDao.findAllWordStatus();
@@ -145,6 +163,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
     PartOfSpeechEnum? partOfSpeech,
     LevelGroup? levelGroup,
     WordStatusType? wordStatusType,
+    bool isBookmark = false
   }) async {
     final _tmpTangos = state.dictionary.allTangos;
     List<TangoEntity> _filteredTangos = _tmpTangos.where((element) {
@@ -166,10 +185,24 @@ class TangoListController extends StateNotifier<TangoMaster> {
           }
         }).toList();
     }
+    if (isBookmark) {
+      final wordStatusList = await getAllWordStatus();
+      _filteredTangos = _filteredTangos.where((element) {
+        final targetWordStatus = wordStatusList.firstWhereOrNull((e) {
+          return e.wordId == element.id;
+        });
+        return targetWordStatus != null && targetWordStatus.isBookmarked;
+      }).toList();
+    }
     return _filteredTangos;
   }
 
   Future<List<TangoEntity>> resetLessonsData() async {
+    if (state.lesson.isBookmark) {
+      List<TangoEntity> _filteredTangos = state.lesson.tangos;
+      _filteredTangos.shuffle();
+      return _filteredTangos;
+    }
     List<TangoEntity> _filteredTangos = await filterTangoList(
         category: state.lesson.category,
         partOfSpeech: state.lesson.partOfSpeech,

@@ -68,7 +68,7 @@ class _$AppDatabase extends AppDatabase {
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 1,
+      version: 2,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -84,7 +84,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `WordStatus` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `wordId` INTEGER NOT NULL, `status` INTEGER NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `WordStatus` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `wordId` INTEGER NOT NULL, `status` INTEGER NOT NULL, `isBookmarked` INTEGER NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Activity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `wordId` INTEGER NOT NULL, `date` TEXT NOT NULL)');
 
@@ -114,7 +114,8 @@ class _$WordStatusDao extends WordStatusDao {
             (WordStatus item) => <String, Object?>{
                   'id': item.id,
                   'wordId': item.wordId,
-                  'status': item.status
+                  'status': item.status,
+                  'isBookmarked': item.isBookmarked ? 1 : 0
                 }),
         _wordStatusUpdateAdapter = UpdateAdapter(
             database,
@@ -123,7 +124,8 @@ class _$WordStatusDao extends WordStatusDao {
             (WordStatus item) => <String, Object?>{
                   'id': item.id,
                   'wordId': item.wordId,
-                  'status': item.status
+                  'status': item.status,
+                  'isBookmarked': item.isBookmarked ? 1 : 0
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -142,7 +144,8 @@ class _$WordStatusDao extends WordStatusDao {
         mapper: (Map<String, Object?> row) => WordStatus(
             id: row['id'] as int?,
             wordId: row['wordId'] as int,
-            status: row['status'] as int));
+            status: row['status'] as int,
+            isBookmarked: (row['isBookmarked'] as int) != 0));
   }
 
   @override
@@ -151,8 +154,20 @@ class _$WordStatusDao extends WordStatusDao {
         mapper: (Map<String, Object?> row) => WordStatus(
             id: row['id'] as int?,
             wordId: row['wordId'] as int,
-            status: row['status'] as int),
+            status: row['status'] as int,
+            isBookmarked: (row['isBookmarked'] as int) != 0),
         arguments: [id]);
+  }
+
+  @override
+  Future<List<WordStatus>> findBookmarkWordStatus() async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM WordStatus WHERE isBookmarked = 1',
+        mapper: (Map<String, Object?> row) => WordStatus(
+            id: row['id'] as int?,
+            wordId: row['wordId'] as int,
+            status: row['status'] as int,
+            isBookmarked: (row['isBookmarked'] as int) != 0));
   }
 
   @override

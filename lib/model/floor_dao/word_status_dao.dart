@@ -9,6 +9,9 @@ abstract class WordStatusDao {
   @Query('SELECT * FROM WordStatus WHERE wordId = :id')
   Future<WordStatus?> findWordStatusById(int id);
 
+  @Query('SELECT * FROM WordStatus WHERE isBookmarked = 1')
+  Future<List<WordStatus>> findBookmarkWordStatus();
+
   @update
   Future<void> updateWordStatus(WordStatus wordStatus);
 
