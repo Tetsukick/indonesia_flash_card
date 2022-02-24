@@ -184,6 +184,9 @@ class $AssetsPngGen {
   AssetGenImage get feedback128 =>
       const AssetGenImage('assets/png/feedback_128.png');
 
+  /// File path: assets/png/filter_64.png
+  AssetGenImage get filter64 => const AssetGenImage('assets/png/filter_64.png');
+
   /// File path: assets/png/flash_card_color.png
   AssetGenImage get flashCardColor =>
       const AssetGenImage('assets/png/flash_card_color.png');
@@ -239,6 +242,9 @@ class $AssetsPngGen {
 
   /// File path: assets/png/sort_128.png
   AssetGenImage get sort128 => const AssetGenImage('assets/png/sort_128.png');
+
+  /// File path: assets/png/sort_64.png
+  AssetGenImage get sort64 => const AssetGenImage('assets/png/sort_64.png');
 
   /// File path: assets/png/sound-off_64.png
   AssetGenImage get soundOff64 =>
