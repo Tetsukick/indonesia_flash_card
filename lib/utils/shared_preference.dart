@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum PreferenceKey {
-  isSoundOn
+  isSoundOn,
 }
 
 extension PreferenceKeyEx on PreferenceKey {

@@ -8,6 +8,7 @@ import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 
 import '../model/category.dart';
 import '../model/floor_database/database.dart';
+import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
 import '../model/level.dart';
 import '../model/part_of_speech.dart';
 import '../model/sort_type.dart';
@@ -133,7 +134,10 @@ class TangoListController extends StateNotifier<TangoMaster> {
   }
 
   Future<List<WordStatus>> getAllWordStatus() async {
-    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    final database = await $FloorAppDatabase
+        .databaseBuilder('app_database.db')
+        .addMigrations([migration1to2])
+        .build();
 
     final wordStatusDao = database.wordStatusDao;
     final wordStatus = await wordStatusDao.findAllWordStatus();

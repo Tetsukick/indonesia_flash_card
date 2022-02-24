@@ -15,11 +15,13 @@ import 'package:indonesia_flash_card/model/part_of_speech.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
+import 'package:indonesia_flash_card/utils/shared_preference.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
 import 'package:lottie/lottie.dart';
 
 import '../config/config.dart';
 import '../model/floor_database/database.dart';
+import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
 import 'flush_card_screen.dart';
 
 class LessonSelectorScreen extends ConsumerStatefulWidget {
@@ -57,6 +59,16 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     getAllWordStatus();
     getAllActivity();
   }
+
+  // void migrationCheck() async {
+  //   if (!(await PreferenceKey.isMigration1to2.getBool())) {
+  //     final database = await $FloorAppDatabase
+  //         .databaseBuilder('app_database.db')
+  //         .addMigrations([migration1to2])
+  //         .build();
+  //     PreferenceKey.isMigration1to2.setBool(true);
+  //   }
+  // }
 
   void initTangoList() async {
     final lectures = await ref.read(fileControllerProvider.notifier).getPossibleLectures();
@@ -405,7 +417,10 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   }
 
   Future<void> getAllWordStatus() async {
-    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    final database = await $FloorAppDatabase
+        .databaseBuilder('app_database.db')
+        .addMigrations([migration1to2])
+        .build();
 
     final wordStatusDao = database.wordStatusDao;
     final wordStatus = await wordStatusDao.findAllWordStatus();
@@ -413,7 +428,10 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   }
 
   Future<void> getAllActivity() async {
-    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    final database = await $FloorAppDatabase
+        .databaseBuilder('app_database.db')
+        .addMigrations([migration1to2])
+        .build();
 
     final activityDao = database.activityDao;
     final _activityList = await activityDao.findAllActivity();

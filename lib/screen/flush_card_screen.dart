@@ -16,6 +16,7 @@ import 'package:indonesia_flash_card/utils/utils.dart';
 import 'package:lottie/lottie.dart';
 
 import '../model/floor_database/database.dart';
+import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
 import '../model/part_of_speech.dart';
 import '../utils/shared_preference.dart';
 
@@ -130,7 +131,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     }
     return _flashCard(
         title: 'インドネシア語',
-        data: questionAnswerList.lesson.tangos[currentIndex].indonesian ?? '');
+        tango: questionAnswerList.lesson.tangos[currentIndex]);
   }
 
   Widget _flashCardBack() {
@@ -168,7 +169,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     );
   }
 
-  Widget _flashCard({required String title, required String data, bool isFront = true}) {
+  Widget _flashCard({required String title, required TangoEntity tango, bool isFront = true}) {
     return Card(
       child: Container(
         height: _cardHeight,
@@ -181,7 +182,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   TextWidget.titleRedMedium(title),
-                  TextWidget.titleBlackLargestBold(data),
+                  TextWidget.titleBlackLargestBold(tango.indonesian!),
                 ],
               ),
             ),
@@ -189,10 +190,16 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
               visible: isFront,
               child: Align(
                 alignment: Alignment.bottomRight,
-                child: _soundButton(data),
+                child: _soundButton(tango.indonesian!),
               ),
             ),
-            Align(),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: SizeConfig.mediumSmallMargin),
+                child: Assets.png.bookmarkOn64.image(height: 24, width: 24),
+              ),
+            ),
           ],
         )
       ),
@@ -385,7 +392,10 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
   Future<void> registerWordStatus({required WordStatusType type}) async {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final currentTango = questionAnswerList.lesson.tangos[currentIndex];
-    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    final database = await $FloorAppDatabase
+        .databaseBuilder('app_database.db')
+        .addMigrations([migration1to2])
+        .build();
 
     final wordStatusDao = database.wordStatusDao;
     final wordStatus = await wordStatusDao.findWordStatusById(currentTango.id!);
@@ -399,7 +409,10 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
   Future<void> registerActivity() async {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final currentTango = questionAnswerList.lesson.tangos[currentIndex];
-    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    final database = await $FloorAppDatabase
+        .databaseBuilder('app_database.db')
+        .addMigrations([migration1to2])
+        .build();
 
     final activityDao = database.activityDao;
     final now = Utils.dateTimeToString(DateTime.now());

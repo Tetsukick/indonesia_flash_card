@@ -19,6 +19,7 @@ import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import '../model/floor_database/database.dart';
 import '../model/floor_entity/word_status.dart';
+import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
 
 class DictionaryScreen extends ConsumerStatefulWidget {
   const DictionaryScreen({Key? key}) : super(key: key);
@@ -45,7 +46,10 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
   List<TangoEntity> _searchedTango = [];
 
   Future<WordStatus?> getWordStatus(TangoEntity entity) async {
-    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    final database = await $FloorAppDatabase
+        .databaseBuilder('app_database.db')
+        .addMigrations([migration1to2])
+        .build();
 
     final wordStatusDao = database.wordStatusDao;
     final wordStatus = await wordStatusDao.findWordStatusById(entity.id!);
