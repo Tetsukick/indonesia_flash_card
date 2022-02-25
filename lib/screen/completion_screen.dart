@@ -14,6 +14,7 @@ import '../model/floor_entity/word_status.dart';
 import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
 import '../model/tango_entity.dart';
 import '../model/word_status_type.dart';
+import '../utils/analytics/analytics_event_entity.dart';
 import '../utils/analytics/analytics_parameters.dart';
 import '../utils/analytics/firebase_analytics.dart';
 import '../utils/shimmer.dart';
@@ -85,6 +86,7 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
               children: [
                 _button(
                     onPressed: () {
+                      analytics(LessonCompItem.continueBtn);
                       ref.read(tangoListControllerProvider.notifier).resetLessonsData();
                       FlashCardScreen.navigateReplacementTo(context);
                     },
@@ -94,6 +96,7 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
                 const SizedBox(width: SizeConfig.smallMargin),
                 _button(
                     onPressed: () {
+                      analytics(LessonCompItem.backTop);
                       Navigator.of(context).popUntil((route) => route.isFirst);
                     },
                     img: Assets.png.home128,
@@ -112,6 +115,7 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: SizeConfig.mediumSmallMargin),
       child: InkWell(
         onTap: () {
+          analytics(LessonCompItem.tangoCard);
           DictionaryDetail.navigateTo(context, tangoEntity: tango);
         },
         child: Card(
@@ -226,5 +230,17 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
             );
           }
         });
+  }
+
+  void analytics(LessonCompItem item, {String? others = ''}) {
+    final eventDetail = AnalyticsEventAnalyticsEventDetail()
+      ..id = item.id.toString()
+      ..screen = AnalyticsScreen.lectureSelector.name
+      ..item = item.shortName
+      ..action = AnalyticsActionType.tap.name
+      ..others = others;
+    FirebaseAnalyticsUtils.eventsTrack(AnalyticsEventEntity()
+      ..name = item.name
+      ..analyticsEventDetail = eventDetail);
   }
 }
