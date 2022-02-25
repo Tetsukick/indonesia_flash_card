@@ -21,6 +21,7 @@ import '../config/config.dart';
 import '../model/floor_database/database.dart';
 import '../model/floor_entity/word_status.dart';
 import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
+import '../utils/analytics/analytics_event_entity.dart';
 import '../utils/analytics/analytics_parameters.dart';
 import '../utils/analytics/firebase_analytics.dart';
 
@@ -60,7 +61,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
     final _database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
         .addMigrations([migration1to2])
-        .build();;
+        .build();
     setState(() => database = _database);
   }
 
@@ -94,6 +95,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: SizeConfig.mediumSmallMargin),
       child: InkWell(
         onTap: () {
+          analytics(DictionaryItem.dictionaryItem);
           DictionaryDetail.navigateTo(context, tangoEntity: tango);
         },
         child: Card(
@@ -169,6 +171,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
         backgroundColor: ColorConfig.primaryRed900,
         child: Assets.png.sort128.image(width: 32, height: 32),
         onPressed: () {
+          analytics(DictionaryItem.showSortFilter);
           _key.currentState!.openEndDrawer();
         },
       ),
@@ -234,6 +237,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
           child: Card(
             child: InkWell(
               onTap: () async {
+                analytics(DictionaryItem.sort, others: sortType.name);
                 setState(() => _selectedSortType = sortType);
                 await ref.read(tangoListControllerProvider.notifier)
                     .getSortAndFilteredTangoList(
@@ -313,6 +317,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
           child: Card(
             child: InkWell(
               onTap: () async {
+                analytics(DictionaryItem.filter, others: 'wordStatus: ${wordStatusType.name}');
                 setState(() => _selectedWordStatusType = wordStatusType);
                 await ref.read(tangoListControllerProvider.notifier)
                     .getSortAndFilteredTangoList(
@@ -357,6 +362,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
           child: Card(
             child: InkWell(
               onTap: () async {
+                analytics(DictionaryItem.filter, others: 'tangoCategory: ${tangoCategory.name}');
                 setState(() => _selectedCategory = tangoCategory);
                 await ref.read(tangoListControllerProvider.notifier)
                     .getSortAndFilteredTangoList(
@@ -401,6 +407,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
           child: Card(
             child: InkWell(
               onTap: () async {
+                analytics(DictionaryItem.filter, others: 'levelGroup: ${levelGroup.name}');
                 setState(() => _selectedLevelGroup = levelGroup);
                 await ref.read(tangoListControllerProvider.notifier)
                     .getSortAndFilteredTangoList(
@@ -473,8 +480,10 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
       debounceDelay: const Duration(milliseconds: 500),
       onQueryChanged: (query) {
         logger.d(query);
+
         if (query.length >= 2) {
           search(query);
+          analytics(DictionaryItem.search, others: query);
         }
       },
       transition: CircularFloatingSearchBarTransition(),
@@ -505,5 +514,17 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
         .toList();
     setState(() => _searchedTango = searchTangos);
     return searchTangos;
+  }
+
+  void analytics(DictionaryItem item, {String? others = ''}) {
+    final eventDetail = AnalyticsEventAnalyticsEventDetail()
+      ..id = item.id.toString()
+      ..screen = AnalyticsScreen.lectureSelector.name
+      ..item = item.shortName
+      ..action = AnalyticsActionType.tap.name
+      ..others = others;
+    FirebaseAnalyticsUtils.eventsTrack(AnalyticsEventEntity()
+      ..name = item.name
+      ..analyticsEventDetail = eventDetail);
   }
 }
