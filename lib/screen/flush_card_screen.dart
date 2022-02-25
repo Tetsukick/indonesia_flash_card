@@ -89,19 +89,21 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     return Scaffold(
       backgroundColor: ColorConfig.bgPinkColor,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(SizeConfig.mediumMargin),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _topBarSection(),
-              SizedBox(height: SizeConfig.smallMargin),
-              _flashCardFront(),
-              SizedBox(height: SizeConfig.smallMargin),
-              _flashCardBack(),
-              _actionButtonSection()
-            ],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(SizeConfig.mediumMargin),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _topBarSection(),
+                SizedBox(height: SizeConfig.smallMargin),
+                _flashCardFront(),
+                SizedBox(height: SizeConfig.smallMargin),
+                _flashCardBack(),
+                _actionButtonSection()
+              ],
+            ),
           ),
         ),
       ),
@@ -193,14 +195,14 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   TextWidget.titleRedMedium(title),
-                  TextWidget.titleBlackLargestBold(tango.indonesian!),
+                  Flexible(child: TextWidget.titleBlackLargestBold(tango.indonesian!, maxLines: 2)),
                 ],
               ),
             ),
             Visibility(
               visible: isFront,
               child: Align(
-                alignment: Alignment.bottomRight,
+                alignment: Alignment.topRight,
                 child: _soundButton(tango.indonesian!),
               ),
             ),
@@ -237,8 +239,8 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
                     wordStatusDao.updateWordStatus(status!..isBookmarked = !isBookmark);
                     setState(() => isBookmark = !isBookmark);
                   },
-                  child: isBookmark ? Assets.png.bookmarkOn64.image(height: 24, width: 24)
-                      : Assets.png.bookmarkOff64.image(height: 24, width: 24),
+                  child: isBookmark ? Assets.png.bookmarkOn64.image(height: 32, width: 32)
+                      : Assets.png.bookmarkOff64.image(height: 32, width: 32),
               ),
             );
           } else {
