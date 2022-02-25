@@ -19,6 +19,7 @@ import '../config/config.dart';
 import '../model/floor_database/database.dart';
 import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
 import '../model/part_of_speech.dart';
+import '../utils/analytics/analytics_event_entity.dart';
 import '../utils/analytics/analytics_parameters.dart';
 import '../utils/analytics/firebase_analytics.dart';
 import '../utils/shared_preference.dart';
@@ -128,7 +129,10 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
         ),
         Spacer(),
         IconButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              analytics(FlushCardItem.back);
+              Navigator.pop(context);
+            },
             icon: Icon(Icons.close,
               color: ColorConfig.bgGrey,
               size: SizeConfig.largeSmallMargin,
@@ -239,6 +243,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
               padding: const EdgeInsets.only(left: SizeConfig.mediumSmallMargin),
               child: InkWell(
                   onTap: () {
+                    analytics(FlushCardItem.bookmark)
                     wordStatusDao.updateWordStatus(status!..isBookmarked = !isBookmark);
                     setState(() => isBookmark = !isBookmark);
                   },
@@ -337,6 +342,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
       children: [
         GestureDetector(
           onTap: () {
+            analytics(FlushCardItem.sound);
             flutterTts.speak(data);
           },
           child: Padding(
@@ -394,7 +400,10 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
               style: TextButton.styleFrom(
                 primary: ColorConfig.bgGreySeparater,
               ),
-              onPressed: () => setState(() => cardFlipped = true),
+              onPressed: () => setState(() {
+                analytics(FlushCardItem.openCard);
+                cardFlipped = true
+              }),
             ),
           ),
         )
@@ -436,6 +445,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
             )
         ),
         onTap: () async {
+          analytics(type.analyticsItem);
           await registerWordStatus(type: type);
           await registerActivity();
           getNextCard();
@@ -485,5 +495,17 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
       cardFlipped = false;
       currentIndex++;
     });
+  }
+
+  void analytics(FlushCardItem item, {String? others = ''}) {
+    final eventDetail = AnalyticsEventAnalyticsEventDetail()
+      ..id = item.id.toString()
+      ..screen = AnalyticsScreen.lectureSelector.name
+      ..item = item.shortName
+      ..action = AnalyticsActionType.tap.name
+      ..others = others;
+    FirebaseAnalyticsUtils.eventsTrack(AnalyticsEventEntity()
+      ..name = item.name
+      ..analyticsEventDetail = eventDetail);
   }
 }

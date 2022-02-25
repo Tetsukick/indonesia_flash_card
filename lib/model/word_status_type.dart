@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 
+import '../utils/analytics/analytics_parameters.dart';
+
 enum WordStatusType {
   notLearned,
   notRemembered,
@@ -55,6 +57,17 @@ extension WordStatusTypeExt on WordStatusType {
         return Assets.png.cancelRed128.image(height: _height, width: _width);
       case WordStatusType.remembered:
         return Assets.png.checkedGreen128.image(height: _height, width: _width);
+    }
+  }
+
+  FlushCardItem get analyticsItem {
+    switch (this) {
+      case WordStatusType.notLearned:
+        return FlushCardItem.unknown;
+      case WordStatusType.notRemembered:
+        return FlushCardItem.unknown;
+      case WordStatusType.remembered:
+        return FlushCardItem.remember;
     }
   }
 
