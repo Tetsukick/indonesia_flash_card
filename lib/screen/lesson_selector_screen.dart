@@ -15,6 +15,9 @@ import 'package:indonesia_flash_card/model/level.dart';
 import 'package:indonesia_flash_card/model/part_of_speech.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
+import 'package:indonesia_flash_card/utils/analytics/analytics_event_entity.dart';
+import 'package:indonesia_flash_card/utils/analytics/analytics_parameters.dart';
+import 'package:indonesia_flash_card/utils/analytics/firebase_analytics.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/shared_preference.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
@@ -57,6 +60,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
 
   @override
   void initState() {
+    FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: AnalyticsScreen.lectureSelector.name);
     initializeDB();
     super.initState();
     initTangoList();
@@ -163,6 +167,8 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
       child: Card(
           child: InkWell(
             onTap: () {
+              analytics(LectureSelectorItem.bookmarkLesson);
+
               ref.read(tangoListControllerProvider.notifier).setBookmarkLessonsData();
               FlashCardScreen.navigateTo(context);
             },
@@ -399,6 +405,9 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     return Card(
       child: InkWell(
         onTap: () {
+          analytics(LectureSelectorItem.lessonCard,
+            others: 'category: ${category?.id}, partOfSpeech: ${partOfSpeech?.id}, levelGroup: ${levelGroup?.index}');
+
           ref.read(tangoListControllerProvider.notifier)
               .setLessonsData(
                 sheetRepo: SheetRepo(lectures.first.spreadsheets.firstWhere((element) => element.name == Config.dictionarySpreadSheetName).id),
@@ -474,5 +483,17 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     final wordStatusDao = database.wordStatusDao;
     final wordStatus = await wordStatusDao.findBookmarkWordStatus();
     setState(() => bookmarkList = wordStatus);
+  }
+
+  void analytics(LectureSelectorItem item, {String? others = ''}) {
+    final eventDetail = AnalyticsEventAnalyticsEventDetail()
+      ..id = item.id.toString()
+      ..screen = AnalyticsScreen.lectureSelector.name
+      ..item = item.shortName
+      ..action = AnalyticsActionType.tap.name
+      ..others = others;
+    FirebaseAnalyticsUtils.eventsTrack(AnalyticsEventEntity()
+      ..name = item.name
+      ..analyticsEventDetail = eventDetail);
   }
 }

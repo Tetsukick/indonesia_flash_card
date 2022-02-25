@@ -14,6 +14,9 @@ import '../model/floor_database/database.dart';
 import '../model/floor_entity/word_status.dart';
 import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
 import '../model/word_status_type.dart';
+import '../utils/analytics/analytics_event_entity.dart';
+import '../utils/analytics/analytics_parameters.dart';
+import '../utils/analytics/firebase_analytics.dart';
 import '../utils/shared_preference.dart';
 import '../utils/shimmer.dart';
 
@@ -42,6 +45,7 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
 
   @override
   void initState() {
+    FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: AnalyticsScreen.dictionaryDetail.name);
     initializeDB();
     setTTS();
     loadSoundSetting();
@@ -135,6 +139,7 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
               padding: const EdgeInsets.only(left: SizeConfig.mediumSmallMargin),
               child: InkWell(
                 onTap: () {
+                  analytics(DictionaryDetailItem.bookmark);
                   wordStatusDao.updateWordStatus(status!..isBookmarked = !isBookmark);
                   setState(() => isBookmark = !isBookmark);
                 },
@@ -163,7 +168,10 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
       children: [
         _soundButton(this.widget.tangoEntity.indonesian!),
         IconButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              analytics(DictionaryDetailItem.close);
+              Navigator.pop(context);
+            },
             icon: Icon(Icons.close,
               color: ColorConfig.bgGrey,
               size: SizeConfig.largeSmallMargin,
@@ -284,6 +292,7 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
       children: [
         GestureDetector(
           onTap: () {
+            analytics(DictionaryDetailItem.sound);
             flutterTts.speak(data);
           },
           child: Padding(
@@ -296,5 +305,17 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
         ),
       ],
     );
+  }
+
+  void analytics(DictionaryDetailItem item, {String? others = ''}) {
+    final eventDetail = AnalyticsEventAnalyticsEventDetail()
+      ..id = item.id.toString()
+      ..screen = AnalyticsScreen.lectureSelector.name
+      ..item = item.shortName
+      ..action = AnalyticsActionType.tap.name
+      ..others = others;
+    FirebaseAnalyticsUtils.eventsTrack(AnalyticsEventEntity()
+      ..name = item.name
+      ..analyticsEventDetail = eventDetail);
   }
 }

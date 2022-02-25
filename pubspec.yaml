@@ -36,6 +36,7 @@ dependencies:
   firebase_core:
   firebase_crashlytics: ^2.5.3
   firebase_messaging:
+  firebase_analytics: ^9.1.2
 
   lottie: ^1.2.2
   carousel_slider: ^4.0.0

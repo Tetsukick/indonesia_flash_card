@@ -11,6 +11,9 @@ import 'package:indonesia_flash_card/utils/utils.dart';
 import 'package:lottie/lottie.dart';
 import 'package:package_info/package_info.dart';
 
+import '../utils/analytics/analytics_event_entity.dart';
+import '../utils/analytics/analytics_parameters.dart';
+import '../utils/analytics/firebase_analytics.dart';
 import '../utils/my_inapp_browser.dart';
 
 class MenuScreen extends ConsumerStatefulWidget {
@@ -26,6 +29,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
 
   @override
   void initState() {
+    FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: AnalyticsScreen.menu.name);
     loadSoundSetting();
     super.initState();
   }
@@ -69,6 +73,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
     return Card(
       child: InkWell(
         onTap: () async {
+          analytics(menuItem.analyticsItem);
           _isSoundOn = !_isSoundOn;
         },
         child: Container(
@@ -84,6 +89,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
               Spacer(),
               Utils.soundSettingSwitch(value: _isSoundOn,
                 onToggle: (val) {
+                  analytics(menuItem.analyticsItem);
                   setState(() => _isSoundOn = val);
                   PreferenceKey.isSoundOn.setBool(val);
                 }
@@ -99,6 +105,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
     return Card(
       child: InkWell(
         onTap: () async {
+          analytics(menuItem.analyticsItem);
           if (menuItem == MenuItem.licence) {
             final info = await PackageInfo.fromPlatform();
             showLicensePage(
@@ -148,6 +155,18 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
         ),
       ),
     );
+  }
+
+  void analytics(MenuAnalyticsItem item, {String? others = ''}) {
+    final eventDetail = AnalyticsEventAnalyticsEventDetail()
+      ..id = item.id.toString()
+      ..screen = AnalyticsScreen.lectureSelector.name
+      ..item = item.shortName
+      ..action = AnalyticsActionType.tap.name
+      ..others = others;
+    FirebaseAnalyticsUtils.eventsTrack(AnalyticsEventEntity()
+      ..name = item.name
+      ..analyticsEventDetail = eventDetail);
   }
 }
 
@@ -209,6 +228,23 @@ extension MenuItemExt on MenuItem {
         return Assets.png.developer128.image(height: _height, width: _width);
       case MenuItem.licence:
         return Assets.png.licence128.image(height: _height, width: _width);
+    }
+  }
+
+  MenuAnalyticsItem get analyticsItem {
+    switch (this) {
+      case MenuItem.settingSound:
+        return MenuAnalyticsItem.soundSetting;
+      case MenuItem.addNewTango:
+        return MenuAnalyticsItem.addTango;
+      case MenuItem.privacyPolicy:
+        return MenuAnalyticsItem.privacyPolicy;
+      case MenuItem.feedback:
+        return MenuAnalyticsItem.feedback;
+      case MenuItem.developerInfo:
+        return MenuAnalyticsItem.developer;
+      case MenuItem.licence:
+        return MenuAnalyticsItem.license;
     }
   }
 }
