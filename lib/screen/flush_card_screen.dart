@@ -243,7 +243,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
               padding: const EdgeInsets.only(left: SizeConfig.mediumSmallMargin),
               child: InkWell(
                   onTap: () {
-                    analytics(FlushCardItem.bookmark)
+                    analytics(FlushCardItem.bookmark);
                     wordStatusDao.updateWordStatus(status!..isBookmarked = !isBookmark);
                     setState(() => isBookmark = !isBookmark);
                   },
@@ -402,7 +402,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
               ),
               onPressed: () => setState(() {
                 analytics(FlushCardItem.openCard);
-                cardFlipped = true
+                cardFlipped = true;
               }),
             ),
           ),
