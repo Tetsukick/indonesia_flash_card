@@ -14,6 +14,8 @@ import '../model/floor_database/database.dart';
 import '../model/floor_entity/word_status.dart';
 import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
 import '../model/word_status_type.dart';
+import '../utils/analytics/analytics_parameters.dart';
+import '../utils/analytics/firebase_analytics.dart';
 import '../utils/shared_preference.dart';
 import '../utils/shimmer.dart';
 
@@ -42,6 +44,7 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
 
   @override
   void initState() {
+    FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: AnalyticsScreen.dictionaryDetail.name);
     initializeDB();
     setTTS();
     loadSoundSetting();

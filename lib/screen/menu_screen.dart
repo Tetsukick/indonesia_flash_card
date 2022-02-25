@@ -11,6 +11,8 @@ import 'package:indonesia_flash_card/utils/utils.dart';
 import 'package:lottie/lottie.dart';
 import 'package:package_info/package_info.dart';
 
+import '../utils/analytics/analytics_parameters.dart';
+import '../utils/analytics/firebase_analytics.dart';
 import '../utils/my_inapp_browser.dart';
 
 class MenuScreen extends ConsumerStatefulWidget {
@@ -26,6 +28,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
 
   @override
   void initState() {
+    FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: AnalyticsScreen.menu.name);
     loadSoundSetting();
     super.initState();
   }

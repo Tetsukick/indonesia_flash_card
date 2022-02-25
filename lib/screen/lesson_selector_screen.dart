@@ -15,6 +15,8 @@ import 'package:indonesia_flash_card/model/level.dart';
 import 'package:indonesia_flash_card/model/part_of_speech.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
+import 'package:indonesia_flash_card/utils/analytics/analytics_parameters.dart';
+import 'package:indonesia_flash_card/utils/analytics/firebase_analytics.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/shared_preference.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
@@ -57,6 +59,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
 
   @override
   void initState() {
+    FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: AnalyticsScreen.lectureSelector.name);
     initializeDB();
     super.initState();
     initTangoList();

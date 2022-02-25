@@ -19,6 +19,8 @@ import '../config/config.dart';
 import '../model/floor_database/database.dart';
 import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
 import '../model/part_of_speech.dart';
+import '../utils/analytics/analytics_parameters.dart';
+import '../utils/analytics/firebase_analytics.dart';
 import '../utils/shared_preference.dart';
 
 class FlashCardScreen extends ConsumerStatefulWidget {
@@ -57,6 +59,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
   
   @override
   void initState() {
+    FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: AnalyticsScreen.flushCard.name);
     initializeDB();
     setTTS();
     loadSoundSetting();

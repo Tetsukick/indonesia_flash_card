@@ -21,6 +21,8 @@ import '../config/config.dart';
 import '../model/floor_database/database.dart';
 import '../model/floor_entity/word_status.dart';
 import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
+import '../utils/analytics/analytics_parameters.dart';
+import '../utils/analytics/firebase_analytics.dart';
 
 class DictionaryScreen extends ConsumerStatefulWidget {
   const DictionaryScreen({Key? key}) : super(key: key);
@@ -49,6 +51,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
 
   @override
   void initState() {
+    FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: AnalyticsScreen.dictionary.name);
     initializeDB();
     super.initState();
   }
