@@ -12,6 +12,7 @@ import 'package:indonesia_flash_card/screen/lesson_selector_screen.dart';
 import 'package:indonesia_flash_card/utils/analytics/firebase_analytics.dart';
 import 'package:indonesia_flash_card/utils/crash_reporter.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
@@ -19,6 +20,7 @@ import 'package:indonesia_flash_card/utils/analytics/analytics_event_entity.dart
 import 'package:indonesia_flash_card/utils/analytics/analytics_parameters.dart';
 import 'package:indonesia_flash_card/utils/analytics/firebase_analytics.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
+import 'package:indonesia_flash_card/utils/logger.dart';
 import 'package:indonesia_flash_card/utils/shared_preference.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
 import 'package:lottie/lottie.dart';
@@ -64,6 +66,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     initializeDB();
     super.initState();
     initTangoList();
+    initFCM();
   }
 
   void initializeDB() async {
@@ -82,6 +85,25 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     final lectures = await ref.read(fileControllerProvider.notifier).getPossibleLectures();
     ref.read(tangoListControllerProvider.notifier).getAllTangoList(
         sheetRepo: SheetRepo(lectures.first.spreadsheets.firstWhere((element) => element.name == Config.dictionarySpreadSheetName).id));
+  }
+
+  void initFCM() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    logger.d('FCM User granted permission: ${settings.authorizationStatus}');
+
+    final fcmToken = await messaging.getToken();
+    logger.d('FCM token: $fcmToken');
   }
 
   @override
