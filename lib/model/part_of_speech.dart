@@ -11,7 +11,6 @@ enum PartOfSpeechEnum {
   interrogatives,
   numerals,
   auxiliaryVerbs,
-  other
 }
 
 extension PartOfSpeechExt on PartOfSpeechEnum {
@@ -94,7 +93,7 @@ extension PartOfSpeechExt on PartOfSpeechEnum {
       case 10:
         return PartOfSpeechEnum.auxiliaryVerbs;
       default:
-        return PartOfSpeechEnum.other;
+        return PartOfSpeechEnum.noun;
     }
   }
 }
