@@ -35,7 +35,7 @@ dependencies:
   ## Firebase packages
   firebase_core:
   firebase_crashlytics: ^2.5.3
-  firebase_messaging:
+  firebase_messaging: ^11.2.8
   firebase_analytics: ^9.1.2
 
   lottie: ^1.2.2
