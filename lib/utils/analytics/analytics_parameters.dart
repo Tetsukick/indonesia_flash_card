@@ -66,7 +66,7 @@ extension DictionaryDetailItemExt on DictionaryDetailItem {
       '${this.screenId}${(this.index + 1).toString().padLeft(2, '0')}';
 }
 
-enum MenuItem {
+enum MenuAnalyticsItem {
   soundSetting,
   addTango,
   privacyPolicy,
@@ -75,7 +75,7 @@ enum MenuItem {
   license
 }
 
-extension MenuItemExt on MenuItem {
+extension MenuAnalyticsItemExt on MenuAnalyticsItem {
   AnalyticsScreen get screen => AnalyticsScreen.menu;
   String get shortName => this.toString().split(".").last;
   String get name => '${this.screen.name}_${this.shortName}';
