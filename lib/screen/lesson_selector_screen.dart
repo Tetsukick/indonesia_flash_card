@@ -405,7 +405,8 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     return Card(
       child: InkWell(
         onTap: () {
-          analytics(LectureSelectorItem.lessonCard);
+          analytics(LectureSelectorItem.lessonCard,
+            others: 'category: ${category?.id}, partOfSpeech: ${partOfSpeech?.id}, levelGroup: ${levelGroup?.index}');
 
           ref.read(tangoListControllerProvider.notifier)
               .setLessonsData(
@@ -484,12 +485,13 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     setState(() => bookmarkList = wordStatus);
   }
 
-  void analytics(LectureSelectorItem item) {
+  void analytics(LectureSelectorItem item, {String? others = ''}) {
     final eventDetail = AnalyticsEventAnalyticsEventDetail()
       ..id = item.id.toString()
       ..screen = AnalyticsScreen.lectureSelector.name
       ..item = item.shortName
-      ..action = AnalyticsActionType.tap.name;
+      ..action = AnalyticsActionType.tap.name
+      ..others = others;
     FirebaseAnalyticsUtils.eventsTrack(AnalyticsEventEntity()
       ..name = item.name
       ..analyticsEventDetail = eventDetail);
