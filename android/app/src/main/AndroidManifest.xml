@@ -3,7 +3,11 @@
    <application
         android:label="単語ネシア"
         android:name="${applicationName}"
+        android:usesCleartextTraffic="false"
         android:icon="@mipmap/launcher_icon">
+       <meta-data
+           android:name="com.google.android.gms.ads.APPLICATION_ID"
+           android:value="ca-app-pub-8604906384604870~9527559556"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
