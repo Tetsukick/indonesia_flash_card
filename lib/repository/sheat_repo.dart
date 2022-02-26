@@ -1,10 +1,13 @@
 import 'package:googleapis/sheets/v4.dart';
+import 'package:indonesia_flash_card/utils/utils.dart';
 
 import 'auth_repo.dart';
+import 'package:http/http.dart' as http;
 
 class SheetRepo {
   AuthRepo authRepo = AuthRepo();
   late SheetsApi sheetsApi;
+  late http.Client client;
   late Future<void> init;
   final String spreadsheetId;
 
@@ -20,7 +23,7 @@ class SheetRepo {
   }
 
   Future<void> initSheetRepo() async {
-    final client = await authRepo.getRegisteredHTTPClient();
+    final client = await Utils.retry(retries: 5, aFuture: authRepo.getRegisteredHTTPClient());
     sheetsApi = SheetsApi(client);
   }
 }

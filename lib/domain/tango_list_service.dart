@@ -7,6 +7,8 @@ import 'package:indonesia_flash_card/model/tango_master.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
+import 'package:indonesia_flash_card/utils/logger.dart';
+import 'package:indonesia_flash_card/utils/utils.dart';
 
 import '../model/category.dart';
 import '../model/floor_database/database.dart';
@@ -24,9 +26,20 @@ class TangoListController extends StateNotifier<TangoMaster> {
 
   Future<List<TangoEntity>> getAllTangoList({required LectureFolder folder}) async {
     state = state..lesson.folder = folder;
-    final sheetRepo = SheetRepo(folder.spreadsheets.firstWhere((element) => element.name == Config.dictionarySpreadSheetName).id);
-    List<List<Object?>>? entryList = await sheetRepo.getEntriesFromRange("A2:J501");
-    if (entryList == null) {
+
+    final sheetRepos = folder.spreadsheets.where((element) => element.name.contains(Config.dictionarySpreadSheetName)).map((e) => SheetRepo(e.id));
+    List<List<Object?>> entryList = [];
+    await Future.forEach<SheetRepo>(sheetRepos, (element) async {
+      List<List<Object?>>? _entryList = await Utils.retry(retries: 3, aFuture: element.getEntriesFromRange("A2:J501"));
+      logger.d('SheetId ${element.spreadsheetId}: ${_entryList?.length ?? 0}');
+      if (_entryList != null) {
+        entryList.addAll(_entryList);
+        logger.d('entryList: ${entryList.length}');
+      }
+    });
+
+    logger.d('entryList: ${entryList.length}');
+    if (entryList.isEmpty) {
       throw UnsupportedError("There are no questions nor answers.");
     }
 
@@ -34,7 +47,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
 
     for (var element in entryList) {
       if (element.isEmpty) continue;
-      if (element.length == 1) continue;
+      if (element.length <= 1) continue;
 
       if (element.length < 9) {
         throw UnsupportedError("The csv must have exactly 2 columns");
