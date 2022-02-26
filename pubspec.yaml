@@ -17,6 +17,7 @@ dependencies:
   ## Google API package
   googleapis: ^5.0.1
   googleapis_auth: ^1.1.0
+  google_mobile_ads: ^1.1.0
 
   ## basic packages
   auto_size_text:

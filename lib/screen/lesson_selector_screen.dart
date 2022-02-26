@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/domain/file_service.dart';
@@ -59,6 +62,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   List<WordStatus> bookmarkList = [];
   List<Activity> activityList = [];
   late AppDatabase database;
+  late BannerAd bannerAd;
 
   @override
   void initState() {
@@ -67,6 +71,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     super.initState();
     initTangoList();
     initFCM();
+    initializeBannerAd();
   }
 
   void initializeDB() async {
@@ -126,6 +131,11 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                 _bookMarkLecture(),
                 _sectionTitle('レベル別'),
                 _carouselLevelLectures(),
+                Container(
+                  height: 50,
+                  width: double.infinity,
+                  child: AdWidget(ad: bannerAd),
+                ),
                 _sectionTitle('カテゴリー別'),
                 _carouselCategoryLectures(),
                 _sectionTitle('品詞別'),
@@ -517,5 +527,29 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     FirebaseAnalyticsUtils.eventsTrack(AnalyticsEventEntity()
       ..name = item.name
       ..analyticsEventDetail = eventDetail);
+  }
+
+  void initializeBannerAd() {
+    final BannerAdListener listener = BannerAdListener(
+      onAdLoaded: (Ad ad) => logger.d('Ad loaded.${ad}'),
+      onAdFailedToLoad: (Ad ad, LoadAdError error) {
+        ad.dispose();
+        logger.d('Ad failed to load: $error');
+      },
+      onAdOpened: (Ad ad) => logger.d('Ad opened.'),
+      onAdClosed: (Ad ad) => logger.d('Ad closed.'),
+      onAdImpression: (Ad ad) => logger.d('Ad impression.'),
+    );
+
+    setState(() {
+      bannerAd = BannerAd(
+        adUnitId: Platform.isIOS ? Config.adUnitIdIosBanner : Config.adUnitIdAndroidBanner,
+        size: AdSize.banner,
+        request: AdRequest(),
+        listener: listener,
+      );
+    });
+
+    bannerAd.load();
   }
 }
