@@ -1,4 +1,5 @@
 import 'package:indonesia_flash_card/model/category.dart';
+import 'package:indonesia_flash_card/model/lecture.dart';
 import 'package:indonesia_flash_card/model/level.dart';
 import 'package:indonesia_flash_card/model/part_of_speech.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
@@ -15,7 +16,7 @@ class Dictionary {
 }
 
 class Lesson {
-  SheetRepo? sheetRepo;
+  LectureFolder? folder;
   TangoCategory? category;
   PartOfSpeechEnum? partOfSpeech;
   LevelGroup? levelGroup;

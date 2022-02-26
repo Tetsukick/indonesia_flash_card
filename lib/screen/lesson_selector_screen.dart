@@ -88,8 +88,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
 
   void initTangoList() async {
     final lectures = await ref.read(fileControllerProvider.notifier).getPossibleLectures();
-    ref.read(tangoListControllerProvider.notifier).getAllTangoList(
-        sheetRepo: SheetRepo(lectures.first.spreadsheets.firstWhere((element) => element.name == Config.dictionarySpreadSheetName).id));
+    ref.read(tangoListControllerProvider.notifier).getAllTangoList(folder: lectures.first);
   }
 
   void initFCM() async {
@@ -442,7 +441,6 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
 
           ref.read(tangoListControllerProvider.notifier)
               .setLessonsData(
-                sheetRepo: SheetRepo(lectures.first.spreadsheets.firstWhere((element) => element.name == Config.dictionarySpreadSheetName).id),
                 category: category,
                 partOfSpeech: partOfSpeech,
                 levelGroup: levelGroup,

@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
 import 'package:indonesia_flash_card/config/config.dart';
 import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
+import 'package:indonesia_flash_card/model/lecture.dart';
 import 'package:indonesia_flash_card/model/tango_master.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
@@ -21,10 +22,10 @@ final tangoListControllerProvider = StateNotifierProvider<TangoListController, T
 class TangoListController extends StateNotifier<TangoMaster> {
   TangoListController({required TangoMaster initialTangoMaster}) : super(initialTangoMaster);
 
-  Future<List<TangoEntity>> getAllTangoList({required SheetRepo sheetRepo}) async {
-    state = state..lesson.sheetRepo = sheetRepo;
-    List<List<Object?>>? entryList =
-      await sheetRepo.getEntriesFromRange("A2:J1000");
+  Future<List<TangoEntity>> getAllTangoList({required LectureFolder folder}) async {
+    state = state..lesson.folder = folder;
+    final sheetRepo = SheetRepo(folder.spreadsheets.firstWhere((element) => element.name == Config.dictionarySpreadSheetName).id);
+    List<List<Object?>>? entryList = await sheetRepo.getEntriesFromRange("A2:J501");
     if (entryList == null) {
       throw UnsupportedError("There are no questions nor answers.");
     }
@@ -74,7 +75,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
     SortType? sortType
   }) async {
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
-      await getAllTangoList(sheetRepo: state.lesson.sheetRepo!);
+      await getAllTangoList(folder: state.lesson.folder!);
     }
     List<TangoEntity> _filteredTangos = await filterTangoList(category: category, partOfSpeech: partOfSpeech, levelGroup: levelGroup, wordStatusType: wordStatusType);
     if (sortType != null) {
@@ -100,19 +101,17 @@ class TangoListController extends StateNotifier<TangoMaster> {
   }
 
   Future<List<TangoEntity>> setLessonsData({
-    required SheetRepo sheetRepo,
     TangoCategory? category,
     PartOfSpeechEnum? partOfSpeech,
     LevelGroup? levelGroup
   }) async {
-    state = state..lesson.sheetRepo = sheetRepo;
     state = state
       ..lesson.category = category
       ..lesson.partOfSpeech = partOfSpeech
       ..lesson.levelGroup = levelGroup
       ..lesson.isBookmark = false;
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
-      await getAllTangoList(sheetRepo: sheetRepo);
+      await getAllTangoList(folder: state.lesson.folder!);
     }
     List<TangoEntity> _filteredTangos = await filterTangoList(category: category, partOfSpeech: partOfSpeech, levelGroup: levelGroup);
     _filteredTangos.shuffle();
@@ -138,7 +137,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
   Future<List<TangoEntity>> setBookmarkLessonsData() async {
     state = state..lesson.isBookmark = true;
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
-      await getAllTangoList(sheetRepo: state.lesson.sheetRepo!);
+      await getAllTangoList(folder: state.lesson.folder!);
     }
     List<TangoEntity> _filteredTangos = await filterTangoList(isBookmark: true);
     _filteredTangos.shuffle();
