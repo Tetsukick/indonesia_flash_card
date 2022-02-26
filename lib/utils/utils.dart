@@ -56,4 +56,16 @@ class Utils {
       onToggle: onToggle,
     );
   }
+
+  static Future<T> retry<T>({required int retries, required Future<T> aFuture}) async {
+    try {
+      return await aFuture;
+    } catch (e) {
+      if (retries > 1) {
+        return Utils.retry(retries: retries - 1, aFuture: aFuture);
+      }
+
+      rethrow;
+    }
+  }
 }
