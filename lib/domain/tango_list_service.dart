@@ -23,8 +23,8 @@ class TangoListController extends StateNotifier<TangoMaster> {
 
   Future<List<TangoEntity>> getAllTangoList({required SheetRepo sheetRepo}) async {
     state = state..lesson.sheetRepo = sheetRepo;
-    List<List<Object>>? entryList =
-    await sheetRepo.getEntriesFromRange("A2:J1000");
+    List<List<Object?>>? entryList =
+      await sheetRepo.getEntriesFromRange("A2:J1000");
     if (entryList == null) {
       throw UnsupportedError("There are no questions nor answers.");
     }
