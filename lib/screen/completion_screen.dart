@@ -36,7 +36,7 @@ class CompletionScreen extends ConsumerStatefulWidget {
 }
 
 class _CompletionScreenState extends ConsumerState<CompletionScreen> {
-  final itemCardHeight = 80.0;
+  final itemCardHeight = 88.0;
   late AppDatabase database;
 
   @override
