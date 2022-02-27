@@ -23,10 +23,10 @@ import 'dictionary_detail_screen.dart';
 class CompletionScreen extends ConsumerStatefulWidget {
   const CompletionScreen({Key? key}) : super(key: key);
 
-  static navigateTo(context) {
-    Navigator.pushReplacement(context, MaterialPageRoute(
+  static void navigateTo(BuildContext context) {
+    Navigator.pushReplacement<void, void>(context, MaterialPageRoute(
       builder: (context) {
-        return CompletionScreen();
+        return const CompletionScreen();
       },
     ));
   }
