@@ -25,16 +25,17 @@ import '../utils/analytics/firebase_analytics.dart';
 import '../utils/shared_preference.dart';
 
 class FlashCardScreen extends ConsumerStatefulWidget {
-  static navigateTo(context) {
-    Navigator.push(context, MaterialPageRoute(
+
+  static void navigateTo(BuildContext context) {
+    Navigator.push<void>(context, MaterialPageRoute(
       builder: (context) {
         return FlashCardScreen();
       },
     ));
   }
 
-  static navigateReplacementTo(context) {
-    Navigator.pushReplacement(context, MaterialPageRoute(
+  static void navigateReplacementTo(BuildContext context) {
+    Navigator.pushReplacement<void, void>(context, MaterialPageRoute(
       builder: (context) {
         return FlashCardScreen();
       },

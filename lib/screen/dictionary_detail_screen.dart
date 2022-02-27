@@ -22,8 +22,11 @@ import '../utils/shimmer.dart';
 
 class DictionaryDetail extends ConsumerStatefulWidget {
   final TangoEntity tangoEntity;
-  static navigateTo(context, {required TangoEntity tangoEntity}) {
-    Navigator.push(context, MaterialPageRoute(
+
+  static void navigateTo(
+      BuildContext context,
+      {required TangoEntity tangoEntity}) {
+    Navigator.push<void>(context, MaterialPageRoute(
       builder: (context) {
         return DictionaryDetail(tangoEntity: tangoEntity);
       },

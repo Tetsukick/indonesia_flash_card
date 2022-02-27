@@ -35,7 +35,7 @@ class DictionaryScreen extends ConsumerStatefulWidget {
   ConsumerState<DictionaryScreen> createState() => _DictionaryScreenState();
 
   static void navigateTo(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(
+    Navigator.push<void>(context, MaterialPageRoute(
       builder: (context) {
         return const DictionaryScreen();
       },
