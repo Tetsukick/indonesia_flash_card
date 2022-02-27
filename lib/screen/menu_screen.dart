@@ -113,7 +113,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
               applicationName: info.appName,
               applicationVersion: info.version,
               applicationIcon: Assets.icon.appIcon.image(),
-              applicationLegalese: "単語ネシアアプリのライセンス情報",
+              applicationLegalese: "BINTANGOアプリのライセンス情報",
             );
           } else {
             setBrowserPage(menuItem.url);

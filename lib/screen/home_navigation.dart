@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
@@ -26,6 +29,12 @@ class _HomeNavigationState extends State<HomeNavigation> {
   GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
   @override
+  void initState() {
+    super.initState();
+    confirmATTStatus();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
@@ -44,5 +53,12 @@ class _HomeNavigationState extends State<HomeNavigation> {
           bottom: false,
           child: _pages[_pageIndex]),
     );
+  }
+
+  Future<void> confirmATTStatus() async {
+    if (Platform.isIOS) {
+      final status = await AppTrackingTransparency.requestTrackingAuthorization();
+      print('ATT Status = $status');
+    }
   }
 }
