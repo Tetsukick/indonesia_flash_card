@@ -24,6 +24,7 @@ import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
 import 'package:lottie/lottie.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../config/config.dart';
 import '../model/floor_database/database.dart';
@@ -60,6 +61,8 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   List<Activity> activityList = [];
   late AppDatabase database;
   late BannerAd bannerAd;
+  final RefreshController _refreshController =
+    RefreshController(initialRefresh: false);
 
   @override
   void initState() {
@@ -83,9 +86,9 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     getBookmark();
   }
 
-  void initTangoList() async {
+  Future<void> initTangoList() async {
     final lectures = await ref.read(fileControllerProvider.notifier).getPossibleLectures();
-    ref.read(tangoListControllerProvider.notifier).getAllTangoList(folder: lectures.first);
+    await ref.read(tangoListControllerProvider.notifier).getAllTangoList(folder: lectures.first);
   }
 
   void initFCM() async {
@@ -112,31 +115,39 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     final tangoMaster = ref.watch(tangoListControllerProvider);
     return Stack(
       children: [
-        SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(
-                SizeConfig.mediumMargin,
-                SizeConfig.mediumMargin,
-                SizeConfig.mediumMargin,
-                SizeConfig.bottomBarHeight),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                _userSection(),
-                _bookMarkLecture(),
-                _sectionTitle('レベル別'),
-                _carouselLevelLectures(),
-                Container(
-                  height: 50,
-                  width: double.infinity,
-                  child: AdWidget(ad: bannerAd),
-                ),
-                _sectionTitle('カテゴリー別'),
-                _carouselCategoryLectures(),
-                _sectionTitle('品詞別'),
-                _carouselPartOfSpeechLectures(),
-              ],
+        SmartRefresher(
+          enablePullDown: true,
+          controller: _refreshController,
+          header: WaterDropMaterialHeader(
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
+          onRefresh: _onRefresh,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                  SizeConfig.mediumMargin,
+                  SizeConfig.mediumMargin,
+                  SizeConfig.mediumMargin,
+                  SizeConfig.bottomBarHeight),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  _userSection(),
+                  _bookMarkLecture(),
+                  _sectionTitle('レベル別'),
+                  _carouselLevelLectures(),
+                  Container(
+                    height: 50,
+                    width: double.infinity,
+                    child: AdWidget(ad: bannerAd),
+                  ),
+                  _sectionTitle('カテゴリー別'),
+                  _carouselCategoryLectures(),
+                  _sectionTitle('品詞別'),
+                  _carouselPartOfSpeechLectures(),
+                ],
+              ),
             ),
           ),
         ),
@@ -546,5 +557,11 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     });
 
     bannerAd.load();
+  }
+
+  void _onRefresh() async{
+    initializeDB();
+    await initTangoList();
+    _refreshController.refreshCompleted();
   }
 }
