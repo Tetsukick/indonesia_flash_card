@@ -265,10 +265,12 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     setState(() {
       currentText = '';
       textEditingController.clear();
+    });
+    final entity = questionAnswerList.lesson.tangos[currentIndex + 1];
+    setPinCodeTextField(entity);
+    setState(() {
       currentIndex++;
     });
-    final entity = questionAnswerList.lesson.tangos[currentIndex];
-    setPinCodeTextField(entity);
   }
 
   void analytics(FlushCardItem item, {String? others = ''}) {
