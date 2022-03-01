@@ -5,6 +5,7 @@ enum AnalyticsScreen {
   menu,
   flushCard,
   lessonComp,
+  quiz
 }
 
 extension AnalyticsScreenExt on AnalyticsScreen {

@@ -10,6 +10,7 @@ import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/screen/completion_screen.dart';
+import 'package:indonesia_flash_card/screen/quiz_screen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
@@ -489,7 +490,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     if (questionAnswerList.lesson.tangos.length <= currentIndex + 1) {
       setState(() => allCardsFinished = true);
-      CompletionScreen.navigateTo(context);
+      QuizScreen.navigateReplacementTo(context);
       return;
     }
     setState(() {
