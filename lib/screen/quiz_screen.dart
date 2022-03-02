@@ -59,7 +59,6 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   final _iconHeight = 20.0;
   final _iconWidth = 20.0;
   late AppDatabase database;
-  TextEditingController textEditingController = TextEditingController();
   StreamController<ErrorAnimationType>? errorController;
   String currentText = "";
   PinCodeTextField? pinCodeTextField;
@@ -68,8 +67,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   void initState() {
     FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: AnalyticsScreen.quiz.name);
     initializeDB();
-    errorController = StreamController<ErrorAnimationType>();
     super.initState();
+    initializePinCodeTextField();
   }
 
   void initializeDB() async {
@@ -80,7 +79,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     setState(() => database = _database);
   }
 
-  void initializePinCodeTextField() {
+  void initializePinCodeTextField() async {
+    await Future<void>.delayed(Duration(seconds: 1));
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final entity = questionAnswerList.lesson.tangos[currentIndex];
     setPinCodeTextField(entity);
@@ -94,7 +94,6 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
 
   @override
   Widget build(BuildContext context) {
-    initializePinCodeTextField();
     return Scaffold(
       backgroundColor: ColorConfig.bgPinkColor,
       body: SafeArea(
@@ -264,13 +263,12 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     }
     setState(() {
       currentText = '';
-      textEditingController.clear();
     });
-    final entity = questionAnswerList.lesson.tangos[currentIndex + 1];
-    setPinCodeTextField(entity);
     setState(() {
       currentIndex++;
     });
+    final entity = questionAnswerList.lesson.tangos[currentIndex];
+    setPinCodeTextField(entity);
   }
 
   void analytics(FlushCardItem item, {String? others = ''}) {
@@ -285,9 +283,17 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       ..analyticsEventDetail = eventDetail);
   }
 
-  void setPinCodeTextField(TangoEntity entity) {
-    pinCodeTextField = null;
+  void setPinCodeTextField(TangoEntity entity) async {
     setState(() {
+      pinCodeTextField = null;
+      errorController?.close();
+      errorController = null;
+    });
+
+    await Future<void>.delayed(Duration(seconds: 1));
+
+    setState(() {
+      errorController = StreamController<ErrorAnimationType>();
       pinCodeTextField = PinCodeTextField(
         length: entity.indonesian?.length ?? 0,
         obscureText: false,
@@ -307,7 +313,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         animationDuration: Duration(milliseconds: 300),
         enableActiveFill: true,
         errorAnimationController: errorController,
-        controller: textEditingController,
+        controller: TextEditingController(),
         onCompleted: (v) {
           logger.d(v);
           _answer(v);
