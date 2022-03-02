@@ -99,6 +99,9 @@ class $AssetsLottieGen {
   /// File path: assets/lottie/bicycle_indonesia.json
   String get bicycleIndonesia => 'assets/lottie/bicycle_indonesia.json';
 
+  /// File path: assets/lottie/check_green.json
+  String get checkGreen => 'assets/lottie/check_green.json';
+
   /// File path: assets/lottie/complete.json
   String get complete => 'assets/lottie/complete.json';
 
@@ -107,6 +110,9 @@ class $AssetsLottieGen {
 
   /// File path: assets/lottie/countdown_10s.json
   String get countdown10s => 'assets/lottie/countdown_10s.json';
+
+  /// File path: assets/lottie/cross_red.json
+  String get crossRed => 'assets/lottie/cross_red.json';
 
   /// File path: assets/lottie/kanpai.json
   String get kanpai => 'assets/lottie/kanpai.json';
