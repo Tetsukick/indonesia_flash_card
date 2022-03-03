@@ -34,6 +34,8 @@ extension WordStatusTypeExt on WordStatusType {
         return '知らない';
       case WordStatusType.remembered:
         return '覚えた';
+      case WordStatusType.perfectRemembered:
+        return '完全暗記';
     }
   }
 
