@@ -48,7 +48,7 @@ extension WordStatusTypeExt on WordStatusType {
       case WordStatusType.remembered:
         return Assets.png.checkedGreen128.image(height: _height, width: _width);
       case WordStatusType.perfectRemembered:
-        return Assets.png.checkedGreen128.image(height: _height, width: _width);
+        return Assets.png.checkGreenRich64.image(height: _height, width: _width);
     }
   }
 
@@ -62,6 +62,8 @@ extension WordStatusTypeExt on WordStatusType {
         return Assets.png.cancelRed128.image(height: _height, width: _width);
       case WordStatusType.remembered:
         return Assets.png.checkedGreen128.image(height: _height, width: _width);
+      case WordStatusType.remembered:
+        return Assets.png.checkGreenRich64.image(height: _height, width: _width);
     }
   }
 
@@ -72,6 +74,8 @@ extension WordStatusTypeExt on WordStatusType {
       case WordStatusType.notRemembered:
         return FlushCardItem.unknown;
       case WordStatusType.remembered:
+        return FlushCardItem.remember;
+      case WordStatusType.perfectRemembered:
         return FlushCardItem.remember;
     }
   }
@@ -84,6 +88,8 @@ extension WordStatusTypeExt on WordStatusType {
         return WordStatusType.notRemembered;
       case 2:
         return WordStatusType.remembered;
+      case 3:
+        return WordStatusType.perfectRemembered;
       default:
         return WordStatusType.notLearned;
     }
