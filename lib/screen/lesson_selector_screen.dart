@@ -185,7 +185,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                 _separater(),
                 _userSectionItem(
                   title: '覚えた単語数',
-                  data: wordStatusList.where((element) => element.status == WordStatusType.remembered.id).length,
+                  data: wordStatusList.where((element) => element.status == WordStatusType.perfectRemembered.id).length,
                   unitTitle: '単語'
                 ),
                 _separater(),
