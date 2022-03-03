@@ -12,6 +12,7 @@ import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/floor_entity/activity.dart';
 import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
+import 'package:indonesia_flash_card/model/tango_master.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/screen/completion_screen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
@@ -180,6 +181,11 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     final entity = questionAnswerList.lesson.tangos[currentIndex];
     if (entity.indonesian!.toLowerCase() == input.toLowerCase()) {
       final remainTime = endTime - DateTime.now().millisecondsSinceEpoch;
+      final result = QuizResult()
+        ..entity = entity
+        ..isCorrect = true
+        ..answerTime = baseQuestionTime - remainTime;
+      ref.read(tangoListControllerProvider.notifier).addQuizResult(result);
       showTrueFalseDialog(true, entity: entity, remainTime: remainTime);
       getNextCard();
     } else {
@@ -358,6 +364,10 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         endTime: endTime,
         onEnd: () {
           showTrueFalseDialog(false, entity: entity);
+          final result = QuizResult()
+            ..entity = entity
+            ..isCorrect = false;
+          ref.read(tangoListControllerProvider.notifier).addQuizResult(result);
           getNextCard();
         },
       );
