@@ -383,7 +383,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                   visible: remainTime != null,
                     child: Padding(
                       padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
-                      child: TextWidget.titleWhiteLargeBold('回答速度: ${(baseQuestionTime - (remainTime ?? 0)).toString()} ms'),
+                      child: TextWidget.titleWhiteLargeBold('回答時間: ${(baseQuestionTime - (remainTime ?? 0)).toString()} ms'),
                     ),
                 ),
                 Visibility(
