@@ -22,4 +22,11 @@ class Lesson {
   LevelGroup? levelGroup;
   bool isBookmark = false;
   List<TangoEntity> tangos = [];
+  List<QuizResult> quizResults = [];
+}
+
+class QuizResult {
+  TangoEntity? entity;
+  bool isCorrect = false;
+  int answerTime = 15 * 1000;
 }

@@ -12,6 +12,7 @@ import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/floor_entity/activity.dart';
 import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
+import 'package:indonesia_flash_card/model/tango_master.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/screen/completion_screen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
@@ -65,7 +66,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   String currentText = "";
   PinCodeTextField? pinCodeTextField;
   CountdownTimerController? countDownController;
-  int endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 15;
+  final baseQuestionTime = 1000 * 15;
+  late int endTime = DateTime.now().millisecondsSinceEpoch + baseQuestionTime;
 
   @override
   void initState() {
@@ -178,7 +180,13 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final entity = questionAnswerList.lesson.tangos[currentIndex];
     if (entity.indonesian!.toLowerCase() == input.toLowerCase()) {
-      showTrueFalseDialog(true, entity: entity);
+      final remainTime = endTime - DateTime.now().millisecondsSinceEpoch;
+      final result = QuizResult()
+        ..entity = entity
+        ..isCorrect = true
+        ..answerTime = baseQuestionTime - remainTime;
+      ref.read(tangoListControllerProvider.notifier).addQuizResult(result);
+      showTrueFalseDialog(true, entity: entity, remainTime: remainTime);
       getNextCard();
     } else {
       errorController?.add(ErrorAnimationType.shake);
@@ -356,13 +364,17 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         endTime: endTime,
         onEnd: () {
           showTrueFalseDialog(false, entity: entity);
+          final result = QuizResult()
+            ..entity = entity
+            ..isCorrect = false;
+          ref.read(tangoListControllerProvider.notifier).addQuizResult(result);
           getNextCard();
         },
       );
     });
   }
 
-  void showTrueFalseDialog(bool isTrue, {required TangoEntity entity}) async {
+  void showTrueFalseDialog(bool isTrue, {required TangoEntity entity, int? remainTime}) async {
     showGeneralDialog(
         context: context,
         barrierDismissible: false,
@@ -376,6 +388,13 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                 Lottie.asset(
                   isTrue ? Assets.lottie.checkGreen : Assets.lottie.crossRed,
                   height: _cardHeight * 2,
+                ),
+                Visibility(
+                  visible: remainTime != null,
+                    child: Padding(
+                      padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
+                      child: TextWidget.titleWhiteLargeBold('回答時間: ${(baseQuestionTime - (remainTime ?? 0)).toString()} ms'),
+                    ),
                 ),
                 Visibility(
                   visible: !isTrue,

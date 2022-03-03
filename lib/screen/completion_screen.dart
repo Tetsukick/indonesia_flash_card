@@ -13,6 +13,7 @@ import '../model/floor_database/database.dart';
 import '../model/floor_entity/word_status.dart';
 import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
 import '../model/tango_entity.dart';
+import '../model/tango_master.dart';
 import '../model/word_status_type.dart';
 import '../utils/analytics/analytics_event_entity.dart';
 import '../utils/analytics/analytics_parameters.dart';
@@ -37,6 +38,8 @@ class CompletionScreen extends ConsumerStatefulWidget {
 
 class _CompletionScreenState extends ConsumerState<CompletionScreen> {
   final itemCardHeight = 88.0;
+  final baseQuestionTime = 1000 * 15;
+  final _baseScore = 10.0;
   late AppDatabase database;
 
   @override
@@ -50,7 +53,7 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
     final _database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
         .addMigrations([migration1to2])
-        .build();;
+        .build();
     setState(() => database = _database);
   }
 
@@ -69,6 +72,15 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
             Assets.gif.birBintangKanpai.image(height: 150),
             const SizedBox(height: SizeConfig.mediumSmallMargin),
             TextWidget.titleGraySmallBold('おつかれさまでした!'),
+            const SizedBox(height: SizeConfig.smallMargin),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextWidget.titleGrayLargeBold('総合スコア: '),
+                TextWidget.titleRedLargestBold(calculateTotalScore(tangoList.lesson.quizResults)),
+                TextWidget.titleGrayLargeBold(' 点'),
+              ]
+            ),
             const SizedBox(height: SizeConfig.smallMargin),
             Flexible(
               child: ListView.builder(
@@ -242,5 +254,16 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
     FirebaseAnalyticsUtils.eventsTrack(AnalyticsEventEntity()
       ..name = item.name
       ..analyticsEventDetail = eventDetail);
+  }
+
+  String calculateTotalScore(List<QuizResult> results) {
+    double score = 0;
+    results.forEach((result) {
+      if (result.isCorrect) {
+        score += _baseScore;
+        score += _baseScore * ((baseQuestionTime - result.answerTime) / baseQuestionTime);
+      }
+    });
+    return score.toStringAsFixed(3);
   }
 }

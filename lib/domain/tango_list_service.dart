@@ -122,7 +122,8 @@ class TangoListController extends StateNotifier<TangoMaster> {
       ..lesson.category = category
       ..lesson.partOfSpeech = partOfSpeech
       ..lesson.levelGroup = levelGroup
-      ..lesson.isBookmark = false;
+      ..lesson.isBookmark = false
+      ..lesson.quizResults = [];
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
       await getAllTangoList(folder: state.lesson.folder!);
     }
@@ -145,6 +146,10 @@ class TangoListController extends StateNotifier<TangoMaster> {
     state = state..lesson.tangos = _filteredTangos;
 
     return _filteredTangos;
+  }
+
+  void addQuizResult(QuizResult result) {
+    state = state..lesson.quizResults.add(result);
   }
 
   Future<List<TangoEntity>> setBookmarkLessonsData() async {
