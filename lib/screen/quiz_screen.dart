@@ -84,7 +84,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   }
 
   void initializePinCodeTextField() async {
-    await Future<void>.delayed(Duration(seconds: 1));
+    await Future<void>.delayed(Duration(milliseconds: 500));
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final entity = questionAnswerList.lesson.tangos[currentIndex];
     setPinCodeTextField(entity);
@@ -178,6 +178,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final entity = questionAnswerList.lesson.tangos[currentIndex];
     if (entity.indonesian!.toLowerCase() == input.toLowerCase()) {
+      showTrueFalseDialog(true);
       getNextCard();
     } else {
       errorController?.add(ErrorAnimationType.shake);
@@ -267,6 +268,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     if (questionAnswerList.lesson.tangos.length <= currentIndex + 1) {
       setState(() => allCardsFinished = true);
+      await Future<void>.delayed(Duration(milliseconds: 1500));
       CompletionScreen.navigateTo(context);
       return;
     }
@@ -300,7 +302,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       countDownController = null;
     });
 
-    await Future<void>.delayed(Duration(seconds: 1));
+    await Future<void>.delayed(Duration(milliseconds: 1200));
 
     setCountDownController();
     setState(() {
@@ -341,13 +343,33 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
 
   void setCountDownController() {
     setState(() {
-      endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 15;
+      endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 15 + 500;
       countDownController = CountdownTimerController(
         endTime: endTime,
         onEnd: () {
+          showTrueFalseDialog(false);
           getNextCard();
         },
       );
     });
+  }
+
+  void showTrueFalseDialog(bool isTrue) async {
+    showGeneralDialog(
+        context: context,
+        barrierDismissible: false,
+        transitionDuration: Duration(milliseconds: 300),
+        barrierColor: Colors.black.withOpacity(0.5),
+        pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
+          return Center(
+            child: Lottie.asset(
+              isTrue ? Assets.lottie.checkGreen : Assets.lottie.crossRed,
+              height: _cardHeight * 2,
+            ),
+          );
+        }
+    );
+    await Future<void>.delayed(Duration(seconds: 1));
+    Navigator.of(context).pop();
   }
 }
