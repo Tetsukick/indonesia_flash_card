@@ -18,6 +18,20 @@ class TextWidget {
     );
   }
 
+  static Widget titleRedLargestBold(String data, {int maxLines = 1}) {
+    return AutoSizeText(
+      data,
+      maxLines: maxLines,
+      minFontSize: 24,
+      maxFontSize: 32,
+      style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: ColorConfig.primaryRed900,
+          fontSize: 32
+      ),
+    );
+  }
+
   static Widget titleBlackLargeBold(String data, {int maxLines = 1}) {
     return AutoSizeText(
       data,

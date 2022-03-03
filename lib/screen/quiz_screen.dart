@@ -66,7 +66,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   String currentText = "";
   PinCodeTextField? pinCodeTextField;
   CountdownTimerController? countDownController;
-  int baseQuestionTime = 1000 * 15;
+  final baseQuestionTime = 1000 * 15;
   late int endTime = DateTime.now().millisecondsSinceEpoch + baseQuestionTime;
 
   @override
