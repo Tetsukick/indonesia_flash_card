@@ -33,7 +33,7 @@ extension WordStatusTypeExt on WordStatusType {
       case WordStatusType.notRemembered:
         return '知らない';
       case WordStatusType.remembered:
-        return '覚えた';
+        return '確認済み';
       case WordStatusType.perfectRemembered:
         return '完全暗記';
     }

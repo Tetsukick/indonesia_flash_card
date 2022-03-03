@@ -448,7 +448,9 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
         ),
         onTap: () async {
           analytics(type.analyticsItem);
-          await registerWordStatus(type: type);
+          if (type == WordStatusType.notRemembered) {
+            await registerWordStatus(type: type);
+          }
           getNextCard();
         },
       ),
