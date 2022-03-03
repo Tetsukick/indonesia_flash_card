@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
@@ -62,6 +64,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   StreamController<ErrorAnimationType>? errorController;
   String currentText = "";
   PinCodeTextField? pinCodeTextField;
+  CountdownTimerController? countDownController;
+  int endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 15;
 
   @override
   void initState() {
@@ -88,7 +92,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
 
   @override
   void dispose() {
-    errorController!.close();
+    errorController?.close();
+    countDownController?.dispose();
     super.dispose();
   }
 
@@ -124,6 +129,10 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       children: [
         TextWidget.titleGraySmallBold('${currentIndex + 1} / ${questionAnswerList.lesson.tangos.length} 問目'),
         SizedBox(width: SizeConfig.smallMargin),
+        CountdownTimer(
+          controller: countDownController,
+          endTime: endTime,
+        ),
         Spacer(),
         IconButton(
             onPressed: () {
@@ -288,10 +297,12 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       pinCodeTextField = null;
       errorController?.close();
       errorController = null;
+      countDownController = null;
     });
 
     await Future<void>.delayed(Duration(seconds: 1));
 
+    setCountDownController();
     setState(() {
       errorController = StreamController<ErrorAnimationType>();
       pinCodeTextField = PinCodeTextField(
@@ -324,6 +335,18 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
           });
         },
         appContext: context,
+      );
+    });
+  }
+
+  void setCountDownController() {
+    setState(() {
+      endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 15;
+      countDownController = CountdownTimerController(
+        endTime: endTime,
+        onEnd: () {
+          getNextCard();
+        },
       );
     });
   }
