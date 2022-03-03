@@ -174,11 +174,11 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     );
   }
 
-  void _answer(String input) {
+  void _answer(String input, {required TangoEntity entity}) {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final entity = questionAnswerList.lesson.tangos[currentIndex];
     if (entity.indonesian!.toLowerCase() == input.toLowerCase()) {
-      showTrueFalseDialog(true);
+      showTrueFalseDialog(true, entity: entity);
       getNextCard();
     } else {
       errorController?.add(ErrorAnimationType.shake);
@@ -194,7 +194,10 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               TextWidget.titleRedMedium(title),
-              Flexible(child: TextWidget.titleBlackLargestBold(tango.japanese!, maxLines: 2)),
+              Flexible(
+                child: TextWidget.titleBlackLargestBold(
+                  isFront ? tango.japanese! : tango.indonesian!, maxLines: 2)
+              ),
             ],
           )
       ),
@@ -304,18 +307,22 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
 
     await Future<void>.delayed(Duration(milliseconds: 1200));
 
-    setCountDownController();
+    setCountDownController(entity);
+    final pinHeight = (entity.indonesian?.length ?? 0)  > 8 ? 25.0 : 40.0;
+    final pinWidth = (entity.indonesian?.length ?? 0)  > 8 ? 15.0 : 30.0;
+    final fontSize = (entity.indonesian?.length ?? 0)  > 8 ? 9.0 : 16.0;
     setState(() {
       errorController = StreamController<ErrorAnimationType>();
       pinCodeTextField = PinCodeTextField(
         length: entity.indonesian?.length ?? 0,
         obscureText: false,
         animationType: AnimationType.fade,
+        autoFocus: true,
         pinTheme: PinTheme(
           shape: PinCodeFieldShape.box,
           borderRadius: BorderRadius.circular(5),
-          fieldHeight: 40,
-          fieldWidth: 30,
+          fieldHeight: pinHeight,
+          fieldWidth: pinWidth,
           activeFillColor: Colors.white,
           activeColor: ColorConfig.green,
           inactiveColor: ColorConfig.green,
@@ -323,13 +330,14 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
           selectedColor: ColorConfig.primaryRed900,
           selectedFillColor: Colors.white,
         ),
+        textStyle: TextStyle(fontSize: fontSize),
         animationDuration: Duration(milliseconds: 300),
         enableActiveFill: true,
         errorAnimationController: errorController,
         controller: TextEditingController(),
         onCompleted: (v) {
           logger.d(v);
-          _answer(v);
+          _answer(v, entity: entity);
         },
         onChanged: (value) {
           setState(() {
@@ -341,20 +349,20 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     });
   }
 
-  void setCountDownController() {
+  void setCountDownController(TangoEntity entity) {
     setState(() {
       endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 15 + 500;
       countDownController = CountdownTimerController(
         endTime: endTime,
         onEnd: () {
-          showTrueFalseDialog(false);
+          showTrueFalseDialog(false, entity: entity);
           getNextCard();
         },
       );
     });
   }
 
-  void showTrueFalseDialog(bool isTrue) async {
+  void showTrueFalseDialog(bool isTrue, {required TangoEntity entity}) async {
     showGeneralDialog(
         context: context,
         barrierDismissible: false,
@@ -362,9 +370,22 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         barrierColor: Colors.black.withOpacity(0.5),
         pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
           return Center(
-            child: Lottie.asset(
-              isTrue ? Assets.lottie.checkGreen : Assets.lottie.crossRed,
-              height: _cardHeight * 2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Lottie.asset(
+                  isTrue ? Assets.lottie.checkGreen : Assets.lottie.crossRed,
+                  height: _cardHeight * 2,
+                ),
+                Visibility(
+                  visible: !isTrue,
+                  child: _flashCard(
+                    title: 'インドネシア語',
+                    tango: entity,
+                    isFront: false
+                  ),
+                ),
+              ],
             ),
           );
         }
