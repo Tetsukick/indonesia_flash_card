@@ -65,7 +65,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   String currentText = "";
   PinCodeTextField? pinCodeTextField;
   CountdownTimerController? countDownController;
-  int endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 15;
+  int baseQuestionTime = 1000 * 15;
+  late int endTime = DateTime.now().millisecondsSinceEpoch + baseQuestionTime;
 
   @override
   void initState() {
@@ -178,7 +179,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final entity = questionAnswerList.lesson.tangos[currentIndex];
     if (entity.indonesian!.toLowerCase() == input.toLowerCase()) {
-      showTrueFalseDialog(true, entity: entity);
+      final remainTime = endTime - DateTime.now().millisecondsSinceEpoch;
+      showTrueFalseDialog(true, entity: entity, remainTime: remainTime);
       getNextCard();
     } else {
       errorController?.add(ErrorAnimationType.shake);
@@ -362,7 +364,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     });
   }
 
-  void showTrueFalseDialog(bool isTrue, {required TangoEntity entity}) async {
+  void showTrueFalseDialog(bool isTrue, {required TangoEntity entity, int? remainTime}) async {
     showGeneralDialog(
         context: context,
         barrierDismissible: false,
@@ -376,6 +378,13 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                 Lottie.asset(
                   isTrue ? Assets.lottie.checkGreen : Assets.lottie.crossRed,
                   height: _cardHeight * 2,
+                ),
+                Visibility(
+                  visible: remainTime != null,
+                    child: Padding(
+                      padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
+                      child: TextWidget.titleWhiteLargeBold('回答速度: ${(baseQuestionTime - (remainTime ?? 0)).toString()} ms'),
+                    ),
                 ),
                 Visibility(
                   visible: !isTrue,
