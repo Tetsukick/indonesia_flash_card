@@ -62,7 +62,7 @@ extension WordStatusTypeExt on WordStatusType {
         return Assets.png.cancelRed128.image(height: _height, width: _width);
       case WordStatusType.remembered:
         return Assets.png.checkedGreen128.image(height: _height, width: _width);
-      case WordStatusType.remembered:
+      case WordStatusType.perfectRemembered:
         return Assets.png.checkGreenRich64.image(height: _height, width: _width);
     }
   }
