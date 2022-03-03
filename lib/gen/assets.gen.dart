@@ -125,6 +125,9 @@ class $AssetsLottieGen {
 
   /// File path: assets/lottie/tap.json
   String get tap => 'assets/lottie/tap.json';
+
+  /// File path: assets/lottie/timer_bomb_15s.json
+  String get timerBomb15s => 'assets/lottie/timer_bomb_15s.json';
 }
 
 class $AssetsPngGen {
