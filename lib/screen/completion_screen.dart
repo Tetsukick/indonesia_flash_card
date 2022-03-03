@@ -50,7 +50,7 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
     final _database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
         .addMigrations([migration1to2])
-        .build();;
+        .build();
     setState(() => database = _database);
   }
 
