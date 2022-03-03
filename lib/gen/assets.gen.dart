@@ -157,6 +157,10 @@ class $AssetsPngGen {
   AssetGenImage get cardGames =>
       const AssetGenImage('assets/png/card_games.png');
 
+  /// File path: assets/png/check_green_rich_64.png
+  AssetGenImage get checkGreenRich64 =>
+      const AssetGenImage('assets/png/check_green_rich_64.png');
+
   /// File path: assets/png/checked_green_128.png
   AssetGenImage get checkedGreen128 =>
       const AssetGenImage('assets/png/checked_green_128.png');

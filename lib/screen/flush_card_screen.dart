@@ -448,8 +448,9 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
         ),
         onTap: () async {
           analytics(type.analyticsItem);
-          await registerWordStatus(type: type);
-          await registerActivity();
+          if (type == WordStatusType.notRemembered) {
+            await registerWordStatus(type: type);
+          }
           getNextCard();
         },
       ),
@@ -471,19 +472,6 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     } else {
       await wordStatusDao.insertWordStatus(WordStatus(wordId: currentTango.id!, status: type.id));
     }
-  }
-
-  Future<void> registerActivity() async {
-    final questionAnswerList = ref.watch(tangoListControllerProvider);
-    final currentTango = questionAnswerList.lesson.tangos[currentIndex];
-    final database = await $FloorAppDatabase
-        .databaseBuilder(Config.dbName)
-        .addMigrations([migration1to2])
-        .build();
-
-    final activityDao = database.activityDao;
-    final now = Utils.dateTimeToString(DateTime.now());
-    await activityDao.insertActivity(Activity(date: now, wordId: currentTango.id!));
   }
 
   void getNextCard() {

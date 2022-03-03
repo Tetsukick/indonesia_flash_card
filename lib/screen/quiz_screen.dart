@@ -176,11 +176,13 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     );
   }
 
-  void _answer(String input, {required TangoEntity entity}) {
+  Future<void> _answer(String input, {required TangoEntity entity}) async {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final entity = questionAnswerList.lesson.tangos[currentIndex];
     if (entity.indonesian!.toLowerCase() == input.toLowerCase()) {
       final remainTime = endTime - DateTime.now().millisecondsSinceEpoch;
+      await registerWordStatus(isCorrect: true);
+      await registerActivity();
       final result = QuizResult()
         ..entity = entity
         ..isCorrect = true
@@ -245,7 +247,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     );
   }
 
-  Future<void> registerWordStatus({required WordStatusType type}) async {
+  Future<void> registerWordStatus({required bool isCorrect}) async {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final currentTango = questionAnswerList.lesson.tangos[currentIndex];
     final database = await $FloorAppDatabase
@@ -256,9 +258,21 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     final wordStatusDao = database.wordStatusDao;
     final wordStatus = await wordStatusDao.findWordStatusById(currentTango.id!);
     if (wordStatus != null) {
-      await wordStatusDao.updateWordStatus(wordStatus..status = type.id);
+      if (isCorrect) {
+        if (wordStatus.status == WordStatusType.remembered.id || wordStatus.status == WordStatusType.perfectRemembered.id) {
+          await wordStatusDao.updateWordStatus(wordStatus..status = WordStatusType.perfectRemembered.id);
+        } else {
+          await wordStatusDao.updateWordStatus(wordStatus..status = WordStatusType.remembered.id);
+        }
+      } else {
+        await wordStatusDao.updateWordStatus(wordStatus..status = WordStatusType.notRemembered.id);
+      }
     } else {
-      await wordStatusDao.insertWordStatus(WordStatus(wordId: currentTango.id!, status: type.id));
+      if (isCorrect) {
+        await wordStatusDao.insertWordStatus(WordStatus(wordId: currentTango.id!, status: WordStatusType.remembered.id));
+      } else {
+        await wordStatusDao.insertWordStatus(WordStatus(wordId: currentTango.id!, status: WordStatusType.notRemembered.id));
+      }
     }
   }
 
@@ -362,7 +376,9 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 15 + 500;
       countDownController = CountdownTimerController(
         endTime: endTime,
-        onEnd: () {
+        onEnd: () async {
+          await registerWordStatus(isCorrect: false);
+          await registerActivity();
           showTrueFalseDialog(false, entity: entity);
           final result = QuizResult()
             ..entity = entity
