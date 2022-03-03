@@ -7,6 +7,7 @@ enum WordStatusType {
   notLearned,
   notRemembered,
   remembered,
+  perfectRemembered,
 }
 
 extension WordStatusTypeExt on WordStatusType {
@@ -19,7 +20,9 @@ extension WordStatusTypeExt on WordStatusType {
       case WordStatusType.notRemembered:
         return '未暗記';
       case WordStatusType.remembered:
-        return '暗記済み';
+        return 'ほぼ暗記';
+      case WordStatusType.perfectRemembered:
+        return '完全暗記';
     }
   }
 
@@ -43,6 +46,8 @@ extension WordStatusTypeExt on WordStatusType {
       case WordStatusType.notRemembered:
         return Assets.png.cancelRed128.image(height: _height, width: _width);
       case WordStatusType.remembered:
+        return Assets.png.checkedGreen128.image(height: _height, width: _width);
+      case WordStatusType.perfectRemembered:
         return Assets.png.checkedGreen128.image(height: _height, width: _width);
     }
   }
