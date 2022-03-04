@@ -311,7 +311,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
           children: [
             wordStatus(WordStatusType.perfectRemembered),
             SizedBox(width: SizeConfig.smallestMargin),
-            TextWidget.titleBlackLargeBold(
+            TextWidget.titleBlackMediumBold(
                 wordStatusList.where((element)
                   => element.status == WordStatusType.perfectRemembered.id)
                     .length.toString()),
@@ -322,7 +322,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
           children: [
             wordStatus(WordStatusType.remembered),
             SizedBox(width: SizeConfig.smallestMargin),
-            TextWidget.titleBlackLargeBold(
+            TextWidget.titleBlackMediumBold(
                 wordStatusList.where((element)
                 => element.status == WordStatusType.remembered.id)
                     .length.toString()),
