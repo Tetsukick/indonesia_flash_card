@@ -58,4 +58,23 @@ Android: https://play.google.com/store/apps/details?id=com.tetsukick.indonesia.f
 - FlutterBeanFactory
 - FlutterGen
 
+## 必要ファイル
+/lib/config/credentials.dart にGoogleAPI用のServiceアカウントが必要です。  
+
+例)
+
+```
+const credentials = {
+  "type": "service_account",
+  "project_id": "",
+  "private_key_id": "",
+  "private_key": "",
+  "client_email": "",
+  "client_id": "",
+  "auth_uri": "",
+  "token_uri": "",
+  "auth_provider_x509_cert_url": "",
+  "client_x509_cert_url": ""
+};
+```
 
