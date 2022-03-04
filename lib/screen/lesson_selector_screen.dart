@@ -172,7 +172,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     final tangoMaster = ref.watch(tangoListControllerProvider);
     return Card(
         child: Container(
-            height: 80,
+            height: 90,
             width: double.infinity,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -184,11 +184,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                   unitTitle: '単語'
                 ),
                 _separater(),
-                _userSectionItem(
-                  title: '覚えた単語数',
-                  data: wordStatusList.where((element) => element.status == WordStatusType.perfectRemembered.id).length,
-                  unitTitle: '単語'
-                ),
+                _userSectionItemTangoStatus(title: '覚えた単語数'),
                 _separater(),
                 _userSectionItem(
                   title: '累計学習日数',
@@ -297,6 +293,51 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
             ),
           ),
         )
+      ],
+    );
+  }
+
+  Widget _userSectionItemTangoStatus({required String title}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(SizeConfig.smallMargin),
+          child: TextWidget.titleRedMedium(title),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            wordStatus(WordStatusType.perfectRemembered),
+            SizedBox(width: SizeConfig.smallestMargin),
+            TextWidget.titleBlackLargeBold(
+                wordStatusList.where((element)
+                  => element.status == WordStatusType.perfectRemembered.id)
+                    .length.toString()),
+          ],
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            wordStatus(WordStatusType.remembered),
+            SizedBox(width: SizeConfig.smallestMargin),
+            TextWidget.titleBlackLargeBold(
+                wordStatusList.where((element)
+                => element.status == WordStatusType.remembered.id)
+                    .length.toString()),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget wordStatus(WordStatusType statusType) {
+    return Row(
+      children: [
+        statusType.icon,
+        SizedBox(width: SizeConfig.smallestMargin),
+        TextWidget.titleGraySmallest(statusType.title),
       ],
     );
   }
