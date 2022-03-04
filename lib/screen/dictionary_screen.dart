@@ -522,7 +522,10 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
     final tangoList = ref.watch(tangoListControllerProvider);
     final allTangoList = tangoList.dictionary.allTangos;
     var searchTangos = allTangoList
-        .where((tango) => tango.indonesian!.toLowerCase().contains(search.toLowerCase()))
+        .where((tango) {
+          return tango.indonesian!.toLowerCase().contains(search.toLowerCase())
+            || tango.japanese!.contains(search);
+        })
         .toList();
     setState(() => _searchedTango = searchTangos);
     return searchTangos;
