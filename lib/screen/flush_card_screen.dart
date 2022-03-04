@@ -5,11 +5,9 @@ import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/domain/tango_list_service.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
-import 'package:indonesia_flash_card/model/floor_entity/activity.dart';
 import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
-import 'package:indonesia_flash_card/screen/completion_screen.dart';
 import 'package:indonesia_flash_card/screen/quiz_screen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
@@ -58,7 +56,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
   bool _isSoundOn = false;
   final _iconHeight = 20.0;
   final _iconWidth = 20.0;
-  late AppDatabase database;
+  AppDatabase? database;
   
   @override
   void initState() {
@@ -229,7 +227,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
   }
 
   Widget bookmark(TangoEntity entity) {
-    final wordStatusDao = database.wordStatusDao;
+    final wordStatusDao = database?.wordStatusDao;
 
     return FutureBuilder(
         future: getBookmark(entity),
@@ -239,14 +237,14 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
             bool isBookmark = status == null ? false : status.isBookmarked;
             if (status == null) {
               status = WordStatus(wordId: entity.id!, status: WordStatusType.notLearned.id, isBookmarked: false);
-              wordStatusDao.insertWordStatus(status);
+              wordStatusDao?.insertWordStatus(status);
             }
             return Padding(
               padding: const EdgeInsets.only(left: SizeConfig.mediumSmallMargin),
               child: InkWell(
                   onTap: () {
                     analytics(FlushCardItem.bookmark);
-                    wordStatusDao.updateWordStatus(status!..isBookmarked = !isBookmark);
+                    wordStatusDao?.updateWordStatus(status!..isBookmarked = !isBookmark);
                     setState(() => isBookmark = !isBookmark);
                   },
                   child: isBookmark ? Assets.png.bookmarkOn64.image(height: 32, width: 32)
@@ -263,8 +261,8 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
   }
 
   Future<WordStatus?> getBookmark(TangoEntity entity) async {
-    final wordStatusDao = database.wordStatusDao;
-    final wordStatus = await wordStatusDao.findWordStatusById(entity.id!);
+    final wordStatusDao = database?.wordStatusDao;
+    final wordStatus = await wordStatusDao?.findWordStatusById(entity.id!);
     return wordStatus;
   }
 
