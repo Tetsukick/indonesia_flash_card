@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/domain/tango_list_service.dart';
@@ -25,18 +24,16 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import '../config/config.dart';
 import '../model/floor_database/database.dart';
 import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
-import '../model/part_of_speech.dart';
 import '../utils/analytics/analytics_event_entity.dart';
 import '../utils/analytics/analytics_parameters.dart';
 import '../utils/analytics/firebase_analytics.dart';
-import '../utils/shared_preference.dart';
 
 class QuizScreen extends ConsumerStatefulWidget {
 
   static void navigateTo(BuildContext context) {
     Navigator.push<void>(context, MaterialPageRoute(
       builder: (context) {
-        return QuizScreen();
+        return const QuizScreen();
       },
     ));
   }
@@ -44,7 +41,7 @@ class QuizScreen extends ConsumerStatefulWidget {
   static void navigateReplacementTo(BuildContext context) {
     Navigator.pushReplacement<void, void>(context, MaterialPageRoute(
       builder: (context) {
-        return QuizScreen();
+        return const QuizScreen();
       },
     ));
   }
@@ -59,11 +56,9 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   int currentIndex = 0;
   bool allCardsFinished = false;
   final _cardHeight = 100.0;
-  final _iconHeight = 20.0;
-  final _iconWidth = 20.0;
-  late AppDatabase database;
+  AppDatabase? database;
   StreamController<ErrorAnimationType>? errorController;
-  String currentText = "";
+  String currentText = '';
   PinCodeTextField? pinCodeTextField;
   CountdownTimerController? countDownController;
   final baseQuestionTime = 1000 * 15;
@@ -250,28 +245,24 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   Future<void> registerWordStatus({required bool isCorrect}) async {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final currentTango = questionAnswerList.lesson.tangos[currentIndex];
-    final database = await $FloorAppDatabase
-        .databaseBuilder(Config.dbName)
-        .addMigrations([migration1to2])
-        .build();
 
-    final wordStatusDao = database.wordStatusDao;
-    final wordStatus = await wordStatusDao.findWordStatusById(currentTango.id!);
+    final wordStatusDao = database?.wordStatusDao;
+    final wordStatus = await wordStatusDao?.findWordStatusById(currentTango.id!);
     if (wordStatus != null) {
       if (isCorrect) {
         if (wordStatus.status == WordStatusType.remembered.id || wordStatus.status == WordStatusType.perfectRemembered.id) {
-          await wordStatusDao.updateWordStatus(wordStatus..status = WordStatusType.perfectRemembered.id);
+          await wordStatusDao?.updateWordStatus(wordStatus..status = WordStatusType.perfectRemembered.id);
         } else {
-          await wordStatusDao.updateWordStatus(wordStatus..status = WordStatusType.remembered.id);
+          await wordStatusDao?.updateWordStatus(wordStatus..status = WordStatusType.remembered.id);
         }
       } else {
-        await wordStatusDao.updateWordStatus(wordStatus..status = WordStatusType.notRemembered.id);
+        await wordStatusDao?.updateWordStatus(wordStatus..status = WordStatusType.notRemembered.id);
       }
     } else {
       if (isCorrect) {
-        await wordStatusDao.insertWordStatus(WordStatus(wordId: currentTango.id!, status: WordStatusType.remembered.id));
+        await wordStatusDao?.insertWordStatus(WordStatus(wordId: currentTango.id!, status: WordStatusType.remembered.id));
       } else {
-        await wordStatusDao.insertWordStatus(WordStatus(wordId: currentTango.id!, status: WordStatusType.notRemembered.id));
+        await wordStatusDao?.insertWordStatus(WordStatus(wordId: currentTango.id!, status: WordStatusType.notRemembered.id));
       }
     }
   }
@@ -279,14 +270,10 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   Future<void> registerActivity() async {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final currentTango = questionAnswerList.lesson.tangos[currentIndex];
-    final database = await $FloorAppDatabase
-        .databaseBuilder(Config.dbName)
-        .addMigrations([migration1to2])
-        .build();
 
-    final activityDao = database.activityDao;
+    final activityDao = database?.activityDao;
     final now = Utils.dateTimeToString(DateTime.now());
-    await activityDao.insertActivity(Activity(date: now, wordId: currentTango.id!));
+    await activityDao?.insertActivity(Activity(date: now, wordId: currentTango.id!));
   }
 
   void getNextCard() async {

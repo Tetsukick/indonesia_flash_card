@@ -241,7 +241,8 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
 
   Widget _notRememberTangoLecture() {
     return Visibility(
-      visible: (wordStatusList.where((element) => element.status == WordStatusType.notRemembered.id).length ?? 0) != 0,
+      visible: wordStatusList.where((element)
+        => element.status == WordStatusType.notRemembered.id).isNotEmpty,
       child: Card(
           child: InkWell(
             onTap: () {
