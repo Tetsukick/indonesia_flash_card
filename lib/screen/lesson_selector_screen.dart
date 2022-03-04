@@ -135,6 +135,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                 children: [
                   _userSection(),
                   _bookMarkLecture(),
+                  _notRememberTangoLecture(),
                   _sectionTitle('レベル別'),
                   _carouselLevelLectures(),
                   Container(
@@ -207,7 +208,6 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
           child: InkWell(
             onTap: () {
               analytics(LectureSelectorItem.bookmarkLesson);
-
               ref.read(tangoListControllerProvider.notifier).setBookmarkLessonsData();
               FlashCardScreen.navigateTo(context);
             },
@@ -225,6 +225,43 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                           child: Assets.png.bookmarkOn64.image(height: 20, width: 20),
                         ),
                         TextWidget.titleGraySmallBold('ブックマークの復習 ${bookmarkList.length}語'),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
+                      child: Icon(Icons.arrow_forward_ios_sharp, size: 20),
+                    )
+                  ],
+                )
+            ),
+          )
+      ),
+    );
+  }
+
+  Widget _notRememberTangoLecture() {
+    return Visibility(
+      visible: (wordStatusList.where((element) => element.status == WordStatusType.notRemembered.id).length ?? 0) != 0,
+      child: Card(
+          child: InkWell(
+            onTap: () {
+              ref.read(tangoListControllerProvider.notifier).setNotRememberedTangoLessonsData();
+              FlashCardScreen.navigateTo(context);
+            },
+            child: Container(
+                height: 40,
+                width: double.infinity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
+                          child: Assets.png.cancelRed128.image(height: 20, width: 20),
+                        ),
+                        TextWidget.titleGraySmallBold('未暗記・誤答の復習 ${wordStatusList.where((element) => element.status == WordStatusType.notRemembered.id).length}語'),
                       ],
                     ),
                     Padding(

@@ -21,6 +21,7 @@ class Lesson {
   PartOfSpeechEnum? partOfSpeech;
   LevelGroup? levelGroup;
   bool isBookmark = false;
+  bool isNotRemembered = false;
   List<TangoEntity> tangos = [];
   List<QuizResult> quizResults = [];
 }
