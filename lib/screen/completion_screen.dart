@@ -4,7 +4,6 @@ import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/domain/tango_list_service.dart';
 import 'package:indonesia_flash_card/screen/flush_card_screen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
-import 'package:lottie/lottie.dart';
 
 import '../config/config.dart';
 import '../config/size_config.dart';
@@ -40,7 +39,7 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
   final itemCardHeight = 88.0;
   final baseQuestionTime = 1000 * 15;
   final _baseScore = 10.0;
-  late AppDatabase database;
+  AppDatabase? database;
 
   @override
   void initState() {
@@ -162,14 +161,14 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
   }
 
   Future<WordStatus?> getWordStatus(TangoEntity entity) async {
-    final wordStatusDao = database.wordStatusDao;
-    final wordStatus = await wordStatusDao.findWordStatusById(entity.id!);
+    final wordStatusDao = database?.wordStatusDao;
+    final wordStatus = await wordStatusDao?.findWordStatusById(entity.id!);
     return wordStatus;
   }
 
   Future<WordStatus?> getBookmark(TangoEntity entity) async {
-    final wordStatusDao = database.wordStatusDao;
-    final wordStatus = await wordStatusDao.findWordStatusById(entity.id!);
+    final wordStatusDao = database?.wordStatusDao;
+    final wordStatus = await wordStatusDao?.findWordStatusById(entity.id!);
     return wordStatus;
   }
 
