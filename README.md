@@ -78,3 +78,9 @@ const credentials = {
 };
 ```
 
+また、Firebaseの設定ファイルを以下に格納してください。  
+
+- Android
+  android/app/google-services.json  
+- ios
+  ios/Runner/GoogleService-Info.plist  
