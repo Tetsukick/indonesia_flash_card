@@ -123,6 +123,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
       ..lesson.partOfSpeech = partOfSpeech
       ..lesson.levelGroup = levelGroup
       ..lesson.isBookmark = false
+      ..lesson.isNotRemembered = false
       ..lesson.quizResults = [];
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
       await getAllTangoList(folder: state.lesson.folder!);
@@ -153,12 +154,31 @@ class TangoListController extends StateNotifier<TangoMaster> {
   }
 
   Future<List<TangoEntity>> setBookmarkLessonsData() async {
-    state = state..lesson.isBookmark = true;
+    state = state
+      ..lesson.isBookmark = true
+      ..lesson.quizResults = [];
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
       await getAllTangoList(folder: state.lesson.folder!);
     }
     List<TangoEntity> _filteredTangos = await filterTangoList(isBookmark: true);
     _filteredTangos.shuffle();
+    state = state..lesson.tangos = _filteredTangos;
+
+    return _filteredTangos;
+  }
+
+  Future<List<TangoEntity>> setNotRememberedTangoLessonsData() async {
+    state = state
+      ..lesson.isNotRemembered = true
+      ..lesson.quizResults = [];
+    if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
+      await getAllTangoList(folder: state.lesson.folder!);
+    }
+    List<TangoEntity> _filteredTangos = await filterTangoList(isNotRemembered: true);
+    _filteredTangos.shuffle();
+    if (_filteredTangos.length > 10) {
+      _filteredTangos = _filteredTangos.getRange(0, 10).toList();
+    }
     state = state..lesson.tangos = _filteredTangos;
 
     return _filteredTangos;
@@ -180,7 +200,8 @@ class TangoListController extends StateNotifier<TangoMaster> {
     PartOfSpeechEnum? partOfSpeech,
     LevelGroup? levelGroup,
     WordStatusType? wordStatusType,
-    bool isBookmark = false
+    bool isBookmark = false,
+    bool isNotRemembered = false
   }) async {
     final _tmpTangos = state.dictionary.allTangos;
     List<TangoEntity> _filteredTangos = _tmpTangos.where((element) {
@@ -211,6 +232,15 @@ class TangoListController extends StateNotifier<TangoMaster> {
         return targetWordStatus != null && targetWordStatus.isBookmarked;
       }).toList();
     }
+    if (isNotRemembered) {
+      final wordStatusList = await getAllWordStatus();
+      _filteredTangos = _filteredTangos.where((element) {
+        final targetWordStatus = wordStatusList.firstWhereOrNull((e) {
+          return e.wordId == element.id;
+        });
+        return targetWordStatus != null && targetWordStatus.status == WordStatusType.notRemembered.id;
+      }).toList();
+    }
     return _filteredTangos;
   }
 
@@ -219,6 +249,8 @@ class TangoListController extends StateNotifier<TangoMaster> {
       List<TangoEntity> _filteredTangos = state.lesson.tangos;
       _filteredTangos.shuffle();
       return _filteredTangos;
+    } else if (state.lesson.isNotRemembered) {
+      return setNotRememberedTangoLessonsData();
     }
     List<TangoEntity> _filteredTangos = await filterTangoList(
         category: state.lesson.category,
