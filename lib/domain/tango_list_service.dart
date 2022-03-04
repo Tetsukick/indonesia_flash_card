@@ -245,6 +245,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
   }
 
   Future<List<TangoEntity>> resetLessonsData() async {
+    state = state..lesson.quizResults = [];
     if (state.lesson.isBookmark) {
       List<TangoEntity> _filteredTangos = state.lesson.tangos;
       _filteredTangos.shuffle();
