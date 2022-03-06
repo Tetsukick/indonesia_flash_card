@@ -52,6 +52,7 @@ dependencies:
   pull_to_refresh: ^2.0.0
   pin_code_fields: ^7.3.0
   flutter_countdown_timer: ^4.1.0
+  in_app_review: ^2.0.4
 
 dev_dependencies:
   flutter_test:

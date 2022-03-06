@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/domain/file_service.dart';
@@ -594,6 +595,18 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     final activityDao = database.activityDao;
     final _activityList = await activityDao.findAllActivity();
     setState(() => activityList = _activityList);
+
+    _requestAppReview();
+  }
+
+  Future<void> _requestAppReview() async {
+    if (activityList.map((e) => e.date).toList().toSet().toList().length >= 10) {
+      final inAppReview = InAppReview.instance;
+
+      if (await inAppReview.isAvailable()) {
+        await inAppReview.requestReview();
+      }
+    }
   }
 
   Future<void> getBookmark() async {
