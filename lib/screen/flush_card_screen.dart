@@ -75,6 +75,9 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     _isSoundOn = await PreferenceKey.isSoundOn.getBool();
     setState(() {});
     final questionAnswerList = ref.watch(tangoListControllerProvider);
+    if (questionAnswerList.lesson.tangos.isEmpty) {
+      return;
+    }
     if (_isSoundOn) {
       flutterTts.speak(questionAnswerList.lesson.tangos[currentIndex].indonesian ?? '');
     }
@@ -143,11 +146,11 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
 
   Widget _flashCardFront() {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
-    if (_isSoundOn) {
-      flutterTts.speak(questionAnswerList.lesson.tangos[currentIndex].indonesian ?? '');
-    }
     if (questionAnswerList.lesson.tangos.isEmpty) {
       return _shimmerFlashCard(isTappable: false, isJapanese: false);
+    }
+    if (_isSoundOn) {
+      flutterTts.speak(questionAnswerList.lesson.tangos[currentIndex].indonesian ?? '');
     }
     return _flashCard(
         title: 'インドネシア語',
@@ -156,12 +159,12 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
 
   Widget _flashCardBack() {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
-    final entity = questionAnswerList.lesson.tangos[currentIndex];
     if (questionAnswerList.lesson.tangos.isEmpty) {
       return _shimmerFlashCard(isTappable: false);
     } else if (!cardFlipped) {
       return _shimmerFlashCard(isTappable: true);
     }
+    final entity = questionAnswerList.lesson.tangos[currentIndex];
     return Card(
       child: SingleChildScrollView(
         child: Container(
