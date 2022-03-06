@@ -63,6 +63,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   CountdownTimerController? countDownController;
   final baseQuestionTime = 1000 * 15;
   late int endTime = DateTime.now().millisecondsSinceEpoch + baseQuestionTime;
+  final questionExplanation = '日本語に適するインドネシア語を入力してください';
 
   @override
   void initState() {
@@ -162,7 +163,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            TextWidget.titleGrayMediumBold('上記の日本語に適するインドネシア語を入力してください'),
+            TextWidget.titleGrayMediumBold(questionExplanation, maxLines: 2),
             _separater(),
             if (pinCodeTextField != null) pinCodeTextField!,
           ],
