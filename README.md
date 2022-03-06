@@ -2,6 +2,11 @@
 Flash card application of Indonesian language for Japanese  
 日本語話者向けインドネシア語単語学習アプリ  
 
+![tango_ver1 0 0](https://user-images.githubusercontent.com/47769514/156931533-41fe312c-a344-47db-9e7e-2569fe937947.png)
+![dictionary_ver1 0 0](https://user-images.githubusercontent.com/47769514/156931525-415779c9-e3f5-406a-bec0-591f3fc6326b.png)
+![top_ver1 0 0](https://user-images.githubusercontent.com/47769514/156931537-ebce6387-c55f-4dbb-bab4-b0ab1c0a7c4e.png)
+
+
 ## ストア情報
 iOS: https://apps.apple.com/app/id1607987786  
 Android: https://play.google.com/store/apps/details?id=com.tetsukick.indonesia.flash.card  
