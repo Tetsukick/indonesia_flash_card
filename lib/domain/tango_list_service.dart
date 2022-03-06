@@ -134,11 +134,10 @@ class TangoListController extends StateNotifier<TangoMaster> {
       final wordStatusList = await getAllWordStatus();
       _filteredTangos.sort((a, b) {
         if (!(wordStatusList.any((element) => element.wordId == b.id))) {
-          return 1;
-        } else if (wordStatusList.firstWhere((element) => element.wordId == b.id).status == WordStatusType.notRemembered.id) {
-          return 0;
+          return 100;
         } else {
-          return -1;
+          return getTargetStatusId(wordStatusList, a.id!)
+              .compareTo(getTargetStatusId(wordStatusList, b.id!));
         }
       });
       _filteredTangos = _filteredTangos.getRange(0, 10).toList();
@@ -147,6 +146,11 @@ class TangoListController extends StateNotifier<TangoMaster> {
     state = state..lesson.tangos = _filteredTangos;
 
     return _filteredTangos;
+  }
+
+  int getTargetStatusId(List<WordStatus> wordStatusList, int wordId) {
+    return wordStatusList
+        .firstWhereOrNull((element) => element.wordId == wordId)?.status ?? -1;
   }
 
   void addQuizResult(QuizResult result) {
