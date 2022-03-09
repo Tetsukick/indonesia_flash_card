@@ -8,7 +8,6 @@ import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 class TangoMaster {
   Dictionary dictionary = Dictionary();
   Lesson lesson = Lesson();
-  Test test = Test();
 }
 
 class Dictionary {
@@ -23,11 +22,7 @@ class Lesson {
   LevelGroup? levelGroup;
   bool isBookmark = false;
   bool isNotRemembered = false;
-  List<TangoEntity> tangos = [];
-  List<QuizResult> quizResults = [];
-}
-
-class Test {
+  bool isTest = false;
   List<TangoEntity> tangos = [];
   List<QuizResult> quizResults = [];
 }

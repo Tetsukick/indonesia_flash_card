@@ -118,13 +118,11 @@ class TangoListController extends StateNotifier<TangoMaster> {
     PartOfSpeechEnum? partOfSpeech,
     LevelGroup? levelGroup
   }) async {
+    initializeLessonState();
     state = state
       ..lesson.category = category
       ..lesson.partOfSpeech = partOfSpeech
-      ..lesson.levelGroup = levelGroup
-      ..lesson.isBookmark = false
-      ..lesson.isNotRemembered = false
-      ..lesson.quizResults = [];
+      ..lesson.levelGroup = levelGroup;
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
       await getAllTangoList(folder: state.lesson.folder!);
     }
@@ -158,9 +156,9 @@ class TangoListController extends StateNotifier<TangoMaster> {
   }
 
   Future<List<TangoEntity>> setBookmarkLessonsData() async {
+    initializeLessonState();
     state = state
-      ..lesson.isBookmark = true
-      ..lesson.quizResults = [];
+      ..lesson.isBookmark = true;
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
       await getAllTangoList(folder: state.lesson.folder!);
     }
@@ -172,9 +170,9 @@ class TangoListController extends StateNotifier<TangoMaster> {
   }
 
   Future<List<TangoEntity>> setNotRememberedTangoLessonsData() async {
+    initializeLessonState();
     state = state
-      ..lesson.isNotRemembered = true
-      ..lesson.quizResults = [];
+      ..lesson.isNotRemembered = true;
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
       await getAllTangoList(folder: state.lesson.folder!);
     }
@@ -271,7 +269,9 @@ class TangoListController extends StateNotifier<TangoMaster> {
   }
 
   Future<List<TangoEntity>> setTestData() async {
-    state = state..test = Test();
+    initializeLessonState();
+    state = state
+      ..lesson.isTest = true;
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
       await getAllTangoList(folder: state.lesson.folder!);
     }
@@ -283,12 +283,19 @@ class TangoListController extends StateNotifier<TangoMaster> {
       _filteredTangos.addAll(_tempeTangos);
     });
     _filteredTangos.shuffle();
-    state = state..test.tangos = _filteredTangos;
+    state = state..lesson.tangos = _filteredTangos;
 
     return _filteredTangos;
   }
 
-  void addTestResult(QuizResult result) {
-    state = state..test.quizResults.add(result);
+  void initializeLessonState() {
+    state = state
+      ..lesson.category = null
+      ..lesson.partOfSpeech = null
+      ..lesson.levelGroup = null
+      ..lesson.isBookmark = false
+      ..lesson.isNotRemembered = false
+      ..lesson.isTest = false
+      ..lesson.quizResults = [];
   }
 }
