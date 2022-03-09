@@ -118,13 +118,11 @@ class TangoListController extends StateNotifier<TangoMaster> {
     PartOfSpeechEnum? partOfSpeech,
     LevelGroup? levelGroup
   }) async {
+    initializeLessonState();
     state = state
       ..lesson.category = category
       ..lesson.partOfSpeech = partOfSpeech
-      ..lesson.levelGroup = levelGroup
-      ..lesson.isBookmark = false
-      ..lesson.isNotRemembered = false
-      ..lesson.quizResults = [];
+      ..lesson.levelGroup = levelGroup;
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
       await getAllTangoList(folder: state.lesson.folder!);
     }
@@ -158,9 +156,9 @@ class TangoListController extends StateNotifier<TangoMaster> {
   }
 
   Future<List<TangoEntity>> setBookmarkLessonsData() async {
+    initializeLessonState();
     state = state
-      ..lesson.isBookmark = true
-      ..lesson.quizResults = [];
+      ..lesson.isBookmark = true;
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
       await getAllTangoList(folder: state.lesson.folder!);
     }
@@ -172,9 +170,9 @@ class TangoListController extends StateNotifier<TangoMaster> {
   }
 
   Future<List<TangoEntity>> setNotRememberedTangoLessonsData() async {
+    initializeLessonState();
     state = state
-      ..lesson.isNotRemembered = true
-      ..lesson.quizResults = [];
+      ..lesson.isNotRemembered = true;
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
       await getAllTangoList(folder: state.lesson.folder!);
     }
@@ -268,5 +266,36 @@ class TangoListController extends StateNotifier<TangoMaster> {
     state = state..lesson.tangos = _filteredTangos;
 
     return _filteredTangos;
+  }
+
+  Future<List<TangoEntity>> setTestData() async {
+    initializeLessonState();
+    state = state
+      ..lesson.isTest = true;
+    if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
+      await getAllTangoList(folder: state.lesson.folder!);
+    }
+    List<TangoEntity> _filteredTangos = [];
+    await Future.forEach(LevelGroup.values, (element) async {
+      final _tempeTangos = await filterTangoList(levelGroup: LevelGroup.easy);
+      _tempeTangos.shuffle();
+      _tempeTangos.getRange(0, 4).toList();
+      _filteredTangos.addAll(_tempeTangos);
+    });
+    _filteredTangos.shuffle();
+    state = state..lesson.tangos = _filteredTangos;
+
+    return _filteredTangos;
+  }
+
+  void initializeLessonState() {
+    state = state
+      ..lesson.category = null
+      ..lesson.partOfSpeech = null
+      ..lesson.levelGroup = null
+      ..lesson.isBookmark = false
+      ..lesson.isNotRemembered = false
+      ..lesson.isTest = false
+      ..lesson.quizResults = [];
   }
 }

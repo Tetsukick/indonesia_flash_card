@@ -22,6 +22,7 @@ class Lesson {
   LevelGroup? levelGroup;
   bool isBookmark = false;
   bool isNotRemembered = false;
+  bool isTest = false;
   List<TangoEntity> tangos = [];
   List<QuizResult> quizResults = [];
 }
