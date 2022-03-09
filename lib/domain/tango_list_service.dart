@@ -269,4 +269,26 @@ class TangoListController extends StateNotifier<TangoMaster> {
 
     return _filteredTangos;
   }
+
+  Future<List<TangoEntity>> setTestData() async {
+    state = state..test = Test();
+    if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
+      await getAllTangoList(folder: state.lesson.folder!);
+    }
+    List<TangoEntity> _filteredTangos = [];
+    await Future.forEach(LevelGroup.values, (element) async {
+      final _tempeTangos = await filterTangoList(levelGroup: LevelGroup.easy);
+      _tempeTangos.shuffle();
+      _tempeTangos.getRange(0, 4).toList();
+      _filteredTangos.addAll(_tempeTangos);
+    });
+    _filteredTangos.shuffle();
+    state = state..test.tangos = _filteredTangos;
+
+    return _filteredTangos;
+  }
+
+  void addTestResult(QuizResult result) {
+    state = state..test.quizResults.add(result);
+  }
 }
