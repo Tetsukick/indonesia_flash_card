@@ -215,11 +215,14 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
           child: InkWell(
             onTap: () async {
               if (await _confirmAlreadyTestedToday()) {
-                
-              }  
-              analytics(LectureSelectorItem.todayTest);
-              ref.read(tangoListControllerProvider.notifier).setTestData();
-              QuizScreen.navigateTo(context);
+                Utils.showSimpleAlert(context,
+                    title: 'インドネシア語単語力検定は1日1回となっております。',
+                    content: 'また明日お待ちしております。');
+              } else {
+                analytics(LectureSelectorItem.todayTest);
+                ref.read(tangoListControllerProvider.notifier).setTestData();
+                QuizScreen.navigateTo(context);
+              }
             },
             child: Container(
                 height: 40,

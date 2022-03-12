@@ -53,6 +53,7 @@ dependencies:
   pin_code_fields: ^7.3.0
   flutter_countdown_timer: ^4.1.0
   in_app_review: ^2.0.4
+  flutter_dialogs: ^2.1.1
 
 dev_dependencies:
   flutter_test:
