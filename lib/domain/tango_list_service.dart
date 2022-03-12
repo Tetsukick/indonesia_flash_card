@@ -277,9 +277,10 @@ class TangoListController extends StateNotifier<TangoMaster> {
     }
     List<TangoEntity> _filteredTangos = [];
     await Future.forEach(LevelGroup.values, (element) async {
-      final _tempeTangos = await filterTangoList(levelGroup: LevelGroup.easy);
+      final targetLevelGroup = element as LevelGroup;
+      var _tempeTangos = await filterTangoList(levelGroup: targetLevelGroup);
       _tempeTangos.shuffle();
-      _tempeTangos.getRange(0, 4).toList();
+      _tempeTangos = _tempeTangos.getRange(0, 4).toList();
       _filteredTangos.addAll(_tempeTangos);
     });
     _filteredTangos.shuffle();

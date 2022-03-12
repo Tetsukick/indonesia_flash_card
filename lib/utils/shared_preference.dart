@@ -2,6 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 enum PreferenceKey {
   isSoundOn,
+  lastTestDate,
 }
 
 extension PreferenceKeyEx on PreferenceKey {
@@ -18,6 +19,20 @@ extension PreferenceKeyEx on PreferenceKey {
       return (await pref.getBool(keyString)) ?? false;
     } else {
       return false;
+    }
+  }
+
+  Future<bool> setString(String value) async {
+    final pref = await SharedPreferences.getInstance();
+    return pref.setString(keyString, value);
+  }
+
+  Future<String?> getString() async {
+    final pref = await SharedPreferences.getInstance();
+    if (pref.containsKey(keyString)) {
+      return pref.getString(keyString);
+    } else {
+      return null;
     }
   }
 }

@@ -53,4 +53,41 @@ extension LevelGroupExt on LevelGroup {
         return Assets.svg.ufo;
     }
   }
+
+  double get testFactor {
+    switch (this) {
+      case LevelGroup.superEasy:
+        return 1.0;
+      case LevelGroup.easy:
+        return 1.2;
+      case LevelGroup.medium:
+        return 1.5;
+      case LevelGroup.hard:
+        return 1.8;
+      case LevelGroup.superHard:
+        return 2.0;
+    }
+  }
+
+  static LevelGroup intToLevelGroup({required int value}) {
+    switch (value) {
+      case 1:
+      case 2:
+        return LevelGroup.superEasy;
+      case 3:
+      case 4:
+        return LevelGroup.easy;
+      case 5:
+      case 6:
+        return LevelGroup.medium;
+      case 7:
+      case 8:
+        return LevelGroup.hard;
+      case 9:
+      case 10:
+        return LevelGroup.superHard;
+      default:
+        return LevelGroup.superEasy;
+    }
+  }
 }

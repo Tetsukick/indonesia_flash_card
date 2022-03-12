@@ -18,12 +18,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indonesia_flash_card/model/level.dart';
 import 'package:indonesia_flash_card/model/part_of_speech.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
+import 'package:indonesia_flash_card/screen/quiz_screen.dart';
 import 'package:indonesia_flash_card/utils/analytics/analytics_event_entity.dart';
 import 'package:indonesia_flash_card/utils/analytics/analytics_parameters.dart';
 import 'package:indonesia_flash_card/utils/analytics/firebase_analytics.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
+import 'package:indonesia_flash_card/utils/shared_preference.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
+import 'package:indonesia_flash_card/utils/utils.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -64,6 +67,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   late BannerAd bannerAd;
   final RefreshController _refreshController =
     RefreshController(initialRefresh: false);
+  bool _isAlreadyTestedToday = false;
 
   @override
   void initState() {
@@ -73,6 +77,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     initTangoList();
     initFCM();
     initializeBannerAd();
+    _confirmAlreadyTestedToday();
   }
 
   void initializeDB() async {
@@ -135,15 +140,12 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   _userSection(),
+                  _todayTangTest(),
                   _bookMarkLecture(),
                   _notRememberTangoLecture(),
                   _sectionTitle('レベル別'),
                   _carouselLevelLectures(),
-                  Container(
-                    height: 50,
-                    width: double.infinity,
-                    child: AdWidget(ad: bannerAd),
-                  ),
+                  _adWidget(),
                   _sectionTitle('カテゴリー別'),
                   _carouselCategoryLectures(),
                   _sectionTitle('品詞別'),
@@ -166,6 +168,14 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _adWidget() {
+    return Container(
+      height: 50,
+      width: double.infinity,
+      child: AdWidget(ad: bannerAd),
     );
   }
 
@@ -196,6 +206,63 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
             )
         )
     );
+  }
+
+  Widget _todayTangTest() {
+    return Visibility(
+      visible: !_isAlreadyTestedToday,
+      child: Card(
+          child: InkWell(
+            onTap: () async {
+              if (await _confirmAlreadyTestedToday()) {
+                Utils.showSimpleAlert(context,
+                    title: 'インドネシア語単語力検定は1日1回となっております。',
+                    content: 'また明日お待ちしております。');
+              } else {
+                analytics(LectureSelectorItem.todayTest);
+                ref.read(tangoListControllerProvider.notifier).setTestData();
+                QuizScreen.navigateTo(context);
+              }
+            },
+            child: Container(
+                height: 40,
+                width: double.infinity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
+                          child: Assets.png.test128.image(height: 20, width: 20),
+                        ),
+                        TextWidget.titleGraySmallBold('今日のインドネシア単語力検定'),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
+                      child: Icon(Icons.arrow_forward_ios_sharp, size: 20),
+                    )
+                  ],
+                )
+            ),
+          )
+      ),
+    );
+  }
+
+  Future<bool> _confirmAlreadyTestedToday() async {
+    bool _tmpIsAlradyTestedToday = false;
+    final lastTestDate = await PreferenceKey.lastTestDate.getString();
+    if (lastTestDate == null) {
+      _tmpIsAlradyTestedToday = false;
+    } else {
+      _tmpIsAlradyTestedToday =
+          lastTestDate == Utils.dateTimeToString(DateTime.now());
+    }
+    setState(() => _isAlreadyTestedToday = _tmpIsAlradyTestedToday);
+    return _tmpIsAlradyTestedToday;
   }
 
   Widget _bookMarkLecture() {

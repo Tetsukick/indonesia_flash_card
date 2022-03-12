@@ -24,6 +24,7 @@ extension AnalyticsActionTypeExt on AnalyticsActionType {
 enum LectureSelectorItem {
   bookmarkLesson,
   lessonCard,
+  todayTest,
 }
 
 extension LectureSelectorItemExt on LectureSelectorItem {

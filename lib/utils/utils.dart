@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:intl/intl.dart';
 
@@ -67,5 +68,25 @@ class Utils {
 
       rethrow;
     }
+  }
+
+  static Future showSimpleAlert(BuildContext context, {required String title, String? content}) {
+    return showPlatformDialog<void>(
+      context: context,
+      builder: (context) => BasicDialogAlert(
+        title: Text(title),
+        content: Visibility(
+            visible: content != null,
+            child: Text(content ?? '')),
+        actions: <Widget>[
+          BasicDialogAction(
+            title: Text("OK"),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
   }
 }
