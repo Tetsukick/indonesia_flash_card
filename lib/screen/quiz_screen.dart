@@ -113,6 +113,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                 _questionTitleCard(),
                 SizedBox(height: SizeConfig.smallMargin),
                 _questionAnswerCard(),
+                SizedBox(height: SizeConfig.smallMargin),
+                _actionButton(type: WordStatusType.notRemembered),
               ],
             ),
           ),
@@ -420,5 +422,34 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     );
     await Future<void>.delayed(Duration(seconds: 1));
     Navigator.of(context).pop();
+  }
+
+  Widget _actionButton({required WordStatusType type}) {
+    return Visibility(
+      visible: pinCodeTextField != null,
+      child: Card(
+        shape: CircleBorder(),
+        child: InkWell(
+          child: Container(
+              height: 120,
+              width: 120,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  type.iconLarge,
+                  SizedBox(height: SizeConfig.smallMargin),
+                  TextWidget.titleGraySmallBold('パス'),
+                ],
+              )
+          ),
+          onTap: () async {
+            if (type == WordStatusType.notRemembered) {
+              await registerWordStatus(isCorrect: false);
+            }
+            getNextCard();
+          },
+        ),
+      ),
+    );
   }
 }
