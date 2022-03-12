@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
@@ -8,6 +9,9 @@ import 'package:indonesia_flash_card/screen/flush_card_screen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/shared_preference.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:social_share/social_share.dart';
 
 import '../config/config.dart';
 import '../config/size_config.dart';
@@ -44,6 +48,7 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
   final baseQuestionTime = 1000 * 15;
   final _baseScore = 10.0;
   AppDatabase? database;
+  ScreenshotController screenshotController = ScreenshotController();
 
   @override
   void initState() {
@@ -74,24 +79,8 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextWidget.titleGraySmallBold('おつかれさまでした!'),
-              const SizedBox(height: SizeConfig.smallMargin),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextWidget.titleGrayLargeBold('総合スコア: '),
-                    TextWidget.titleRedLargestBold(calculateTotalScore(tangoList.lesson.quizResults).toStringAsFixed(3)),
-                    TextWidget.titleGrayLargeBold(' 点'),
-                  ]
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    RankExt.doubleToRank(score: calculateTotalScore(tangoList.lesson.quizResults)).img.image(width: 30, height: 30),
-                    SizedBox(width: SizeConfig.mediumSmallMargin),
-                    TextWidget.titleRedLargestBold(RankExt.doubleToRank(score: calculateTotalScore(tangoList.lesson.quizResults)).title),
-                  ]
-              ),
+              _scoreArea(),
+              _shareSNSButton(),
               const SizedBox(height: SizeConfig.smallMargin),
               Flexible(
                 child: ListView.builder(
@@ -121,6 +110,42 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
           ),
         ),
       ),
+    );
+  }
+
+  Widget _scoreArea() {
+    final tangoList = ref.watch(tangoListControllerProvider);
+    return Screenshot<dynamic>(
+        controller: screenshotController,
+        child: Container(
+          color: ColorConfig.bgPinkColor,
+          child: Column(
+            children: [
+              const SizedBox(height: SizeConfig.smallestMargin),
+              TextWidget.titleGraySmallBold('今日もおつかれさまでした!'),
+              const SizedBox(height: SizeConfig.smallestMargin),
+              TextWidget.titleGraySmallBold('${Utils.dateTimeToString(DateTime.now())} の結果'),
+              const SizedBox(height: SizeConfig.smallMargin),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextWidget.titleGrayLargeBold('総合スコア: '),
+                    TextWidget.titleRedLargestBold(calculateTotalScore(tangoList.lesson.quizResults).toStringAsFixed(3)),
+                    TextWidget.titleGrayLargeBold(' 点'),
+                  ]
+              ),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    RankExt.doubleToRank(score: calculateTotalScore(tangoList.lesson.quizResults)).img.image(width: 30, height: 30),
+                    SizedBox(width: SizeConfig.mediumSmallMargin),
+                    TextWidget.titleRedLargestBold(RankExt.doubleToRank(score: calculateTotalScore(tangoList.lesson.quizResults)).title),
+                  ]
+              ),
+              const SizedBox(height: SizeConfig.smallMargin),
+            ],
+          ),
+        )
     );
   }
 
@@ -269,5 +294,50 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
       }
     });
     return score;
+  }
+
+  Widget _shareSNSButton() {
+    return Card(
+        child: InkWell(
+          onTap: () {
+            shareSNS();
+          },
+          child: Container(
+              height: 40,
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
+                        child: Assets.png.snsShare128.image(height: 20, width: 20),
+                      ),
+                      TextWidget.titleGraySmallBold('SNSでシェア'),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
+                    child: Icon(Icons.arrow_forward_ios_sharp, size: 20),
+                  )
+                ],
+              )
+          ),
+        )
+    );
+  }
+
+  void shareSNS() async {
+    final tangoList = ref.watch(tangoListControllerProvider);
+    await screenshotController.capture().then((image) async {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = await File('${directory.path}/temp.png').create();
+      await file.writeAsBytes(image!);
+      SocialShare.shareOptions(
+          '本日のインドネシア単語検定\nスコア: ${calculateTotalScore(tangoList.lesson.quizResults).toStringAsFixed(3)} 点\nランク: ${RankExt.doubleToRank(score: calculateTotalScore(tangoList.lesson.quizResults)).title}\n#BINTANGO #インドネシア語学習'
+          ,imagePath: file.path);
+    });
   }
 }
