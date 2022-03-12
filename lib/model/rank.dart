@@ -92,31 +92,31 @@ extension RankExt on Rank {
   static Rank doubleToRank({required double score}) {
     if (score <= 100) {
       return Rank.E_minus;
-    } else if (score <= 150) {
+    } else if (score <= 130) {
       return Rank.E;
-    } else if (score <= 180) {
+    } else if (score <= 150) {
       return Rank.E_plus;
-    } else if (score <= 200) {
+    } else if (score <= 180) {
       return Rank.D_minus;
-    } else if (score <= 250) {
+    } else if (score <= 200) {
       return Rank.D;
-    } else if (score <= 280) {
+    } else if (score <= 230) {
       return Rank.D_plus;
-    } else if (score <= 300) {
+    } else if (score <= 250) {
       return Rank.C_minus;
-    } else if (score <= 350) {
+    } else if (score <= 280) {
       return Rank.C;
-    } else if (score <= 380) {
+    } else if (score <= 300) {
       return Rank.C_plus;
-    } else if (score <= 400) {
+    } else if (score <= 340) {
       return Rank.B_minus;
-    } else if (score <= 430) {
+    } else if (score <= 380) {
       return Rank.B;
-    } else if (score <= 450) {
+    } else if (score <= 420) {
       return Rank.B_plus;
-    } else if (score <= 500) {
+    } else if (score <= 460) {
       return Rank.A;
-    } else if (score <= 550) {
+    } else if (score <= 500) {
       return Rank.A_plus;
     } else {
       return Rank.A_plusPlus;
