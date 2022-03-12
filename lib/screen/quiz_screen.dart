@@ -14,6 +14,7 @@ import 'package:indonesia_flash_card/model/tango_entity.dart';
 import 'package:indonesia_flash_card/model/tango_master.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/screen/completion_screen.dart';
+import 'package:indonesia_flash_card/screen/completion_today_test_screen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
@@ -282,7 +283,11 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     if (questionAnswerList.lesson.tangos.length <= currentIndex + 1) {
       setState(() => allCardsFinished = true);
       await Future<void>.delayed(Duration(milliseconds: 1500));
-      CompletionScreen.navigateTo(context);
+      if (questionAnswerList.lesson.isTest) {
+        CompletionTodayTestScreen.navigateTo(context);
+      } else {
+        CompletionScreen.navigateTo(context);
+      }
       return;
     }
     setState(() {
