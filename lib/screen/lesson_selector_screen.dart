@@ -210,19 +210,19 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
 
   Widget _todayTangTest() {
     return Visibility(
-      visible: !_isAlreadyTestedToday,
+      // visible: !_isAlreadyTestedToday,
       child: Card(
           child: InkWell(
             onTap: () async {
-              if (await _confirmAlreadyTestedToday()) {
-                Utils.showSimpleAlert(context,
-                    title: 'インドネシア語単語力検定は1日1回となっております。',
-                    content: 'また明日お待ちしております。');
-              } else {
+              // if (await _confirmAlreadyTestedToday()) {
+              //   Utils.showSimpleAlert(context,
+              //       title: 'インドネシア語単語力検定は1日1回となっております。',
+              //       content: 'また明日お待ちしております。');
+              // } else {
                 analytics(LectureSelectorItem.todayTest);
                 ref.read(tangoListControllerProvider.notifier).setTestData();
                 QuizScreen.navigateTo(context);
-              }
+              // }
             },
             child: Container(
                 height: 40,
