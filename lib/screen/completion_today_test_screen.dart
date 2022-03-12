@@ -80,7 +80,7 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _scoreArea(),
-              _shareTwitterButton(),
+              _shareSNSButton(),
               const SizedBox(height: SizeConfig.smallMargin),
               Flexible(
                 child: ListView.builder(
@@ -296,11 +296,11 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
     return score;
   }
 
-  Widget _shareTwitterButton() {
+  Widget _shareSNSButton() {
     return Card(
         child: InkWell(
           onTap: () {
-            shareTwitter();
+            shareSNS();
           },
           child: Container(
               height: 40,
@@ -313,7 +313,7 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
-                        child: Assets.svg.twitterBlue.svg(height: 20, width: 20),
+                        child: Assets.png.snsShare128.image(height: 20, width: 20),
                       ),
                       TextWidget.titleGraySmallBold('SNSでシェア'),
                     ],
@@ -329,7 +329,7 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
     );
   }
 
-  void shareTwitter() async {
+  void shareSNS() async {
     final tangoList = ref.watch(tangoListControllerProvider);
     await screenshotController.capture().then((image) async {
       final directory = await getApplicationDocumentsDirectory();

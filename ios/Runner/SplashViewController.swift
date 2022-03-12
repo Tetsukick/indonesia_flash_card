@@ -22,8 +22,7 @@ public class SplashViewController: UIViewController {
         let flutterEngine = appDelegate.flutterEngine
         let flutterViewController =
             FlutterViewController(engine: flutterEngine, nibName: nil, bundle: nil)
-
+        
         UIApplication.shared.keyWindow?.rootViewController = flutterViewController
-        present(flutterViewController, animated: true, completion: nil)
     }
  }

@@ -261,6 +261,10 @@ class $AssetsPngGen {
   AssetGenImage get settingsColor2 =>
       const AssetGenImage('assets/png/settings_color_2.png');
 
+  /// File path: assets/png/sns_share_128.png
+  AssetGenImage get snsShare128 =>
+      const AssetGenImage('assets/png/sns_share_128.png');
+
   /// File path: assets/png/sort_128.png
   AssetGenImage get sort128 => const AssetGenImage('assets/png/sort_128.png');
 
