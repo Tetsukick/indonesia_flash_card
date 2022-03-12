@@ -554,6 +554,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/trip.svg
   SvgGenImage get trip => const SvgGenImage('assets/svg/trip.svg');
 
+  /// File path: assets/svg/twitter_blue.svg
+  SvgGenImage get twitterBlue =>
+      const SvgGenImage('assets/svg/twitter_blue.svg');
+
   /// File path: assets/svg/ufo.svg
   SvgGenImage get ufo => const SvgGenImage('assets/svg/ufo.svg');
 
