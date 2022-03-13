@@ -88,7 +88,7 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
     const _indonesian = 'Indonesian';
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         TextWidget.titleRedMedium(_isIndonesiaToJapanese ? _indonesian : _japanese),
         ElevatedButton(
@@ -96,6 +96,9 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
             setState(() => _isIndonesiaToJapanese = !_isIndonesiaToJapanese);
           },
           child: Assets.png.reverse128.image(width: 24, height: 24),
+          style: ElevatedButton.styleFrom(
+            shape: const CircleBorder()
+          ),
         ),
         TextWidget.titleRedMedium(_isIndonesiaToJapanese ? _japanese : _indonesian),
       ],
