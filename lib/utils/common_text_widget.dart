@@ -116,6 +116,20 @@ class TextWidget {
     );
   }
 
+  static Widget titleGrayMedium(String data, {int maxLines = 1}) {
+    return AutoSizeText(
+      data,
+      maxLines: maxLines,
+      minFontSize: 14,
+      maxFontSize: 20,
+      style: TextStyle(
+          fontWeight: FontWeight.normal,
+          color: ColorConfig.fontGrey,
+          fontSize: 20
+      ),
+    );
+  }
+
   static Widget titleGrayMediumSmallBold(String data, {int maxLines = 1}) {
     return AutoSizeText(
       data,

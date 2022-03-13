@@ -257,6 +257,10 @@ class $AssetsPngGen {
   AssetGenImage get reverse128 =>
       const AssetGenImage('assets/png/reverse_128.png');
 
+  /// File path: assets/png/search_128.png
+  AssetGenImage get search128 =>
+      const AssetGenImage('assets/png/search_128.png');
+
   /// File path: assets/png/settings_color.png
   AssetGenImage get settingsColor =>
       const AssetGenImage('assets/png/settings_color.png');

@@ -46,6 +46,9 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
   late BannerAd bannerAd;
   bool _isIndonesiaToJapanese = true;
   TextEditingController _inputController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final _inputFocusNode = FocusNode();
+  String _translateResult = '';
 
   @override
   void initState() {
@@ -109,20 +112,63 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
   }
 
   Widget _inputField() {
-    return TextFormField(
-      maxLines: null,
-      minLines: 3,
-      controller: _inputController,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(),
-        filled: true,
-        hintText: 'Enter Text',
-        alignLabelWithHint: true,
-        suffixIcon: IconButton(
-          icon: Icon(Icons.clear),
-          onPressed: () => _inputController.clear(),
-        ),
-      ),
+    const _japanese = '文章を入力してください';
+    const _indonesian = 'Silakan masukkan kalimatnya';
+
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Flexible(
+                child: TextFormField(
+                  maxLines: null,
+                  minLines: null,
+                  focusNode: _inputFocusNode,
+                  controller: _inputController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    hintText: _isIndonesiaToJapanese ? _indonesian : _japanese,
+                    alignLabelWithHint: true,
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.clear),
+                      onPressed: () => _inputController.clear(),
+                    ),
+                  ),
+                  onSaved: (value) {
+                    logger.d('search orgin value: $value');
+                    setState(() => _translateResult = value ?? '');
+                  },
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+                  _formKey.currentState?.save();
+                },
+                child: Assets.png.search128.image(width: 24, height: 24),
+                style: ElevatedButton.styleFrom(
+                    shape: const CircleBorder()
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: SizeConfig.mediumSmallMargin),
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: ColorConfig.bgGrey),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
+              child: TextWidget.titleGrayMedium(_translateResult, maxLines: 30),
+            ),
+          ),
+        ],
+      )
     );
   }
 
