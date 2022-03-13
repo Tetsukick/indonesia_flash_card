@@ -287,7 +287,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     if (questionAnswerList.lesson.tangos.length <= currentIndex + 1) {
       setState(() => allCardsFinished = true);
-      await Future<void>.delayed(Duration(milliseconds: 2500));
+      await Future<void>.delayed(Duration(milliseconds: 1500));
       if (questionAnswerList.lesson.isTest) {
         CompletionTodayTestScreen.navigateTo(context);
       } else {
@@ -297,8 +297,6 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     }
     setState(() {
       currentText = '';
-    });
-    setState(() {
       currentIndex++;
     });
     final entity = questionAnswerList.lesson.tangos[currentIndex];
@@ -318,6 +316,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   }
 
   void setPinCodeTextField(TangoEntity entity) async {
+    countDownController?.disposeTimer();
     setState(() {
       pinCodeTextField = null;
       errorController?.close();
@@ -381,7 +380,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     });
   }
 
-  void showTrueFalseDialog(bool isTrue, {required TangoEntity entity, int? remainTime}) async {
+  Future<void> showTrueFalseDialog(bool isTrue, {required TangoEntity entity, int? remainTime}) async {
     showGeneralDialog(
         context: context,
         barrierDismissible: false,
@@ -442,6 +441,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
               )
           ),
           onTap: () async {
+            countDownController?.disposeTimer();
             await wrongAnswerAction(entity);
           },
         ),
@@ -452,7 +452,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   Future<void> wrongAnswerAction(TangoEntity entity) async {
     await registerWordStatus(isCorrect: false);
     await registerActivity();
-    showTrueFalseDialog(false, entity: entity);
+    await showTrueFalseDialog(false, entity: entity);
     final result = QuizResult()
       ..entity = entity
       ..isCorrect = false;
