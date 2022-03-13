@@ -45,6 +45,7 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
   late AppDatabase database;
   late BannerAd bannerAd;
   bool _isIndonesiaToJapanese = true;
+  TextEditingController _inputController = TextEditingController();
 
   @override
   void initState() {
@@ -76,6 +77,8 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
           child: Column(
             children: [
               _titleBar(),
+              SizedBox(height: SizeConfig.smallMargin),
+              _inputField(),
             ],
           ),
         ),
@@ -102,6 +105,24 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
         ),
         TextWidget.titleRedMedium(_isIndonesiaToJapanese ? _japanese : _indonesian),
       ],
+    );
+  }
+
+  Widget _inputField() {
+    return TextFormField(
+      maxLines: null,
+      minLines: 3,
+      controller: _inputController,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(),
+        filled: true,
+        hintText: 'Enter Text',
+        alignLabelWithHint: true,
+        suffixIcon: IconButton(
+          icon: Icon(Icons.clear),
+          onPressed: () => _inputController.clear(),
+        ),
+      ),
     );
   }
 
