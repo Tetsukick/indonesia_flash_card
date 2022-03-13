@@ -51,7 +51,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
   LevelGroup? _selectedLevelGroup;
   WordStatusType? _selectedWordStatusType;
   List<TangoEntity> _searchedTango = [];
-  late AppDatabase database;
+  AppDatabase? database;
   late BannerAd bannerAd;
 
   @override
@@ -142,14 +142,14 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
   }
 
   Future<WordStatus?> getWordStatus(TangoEntity entity) async {
-    final wordStatusDao = database.wordStatusDao;
-    final wordStatus = await wordStatusDao.findWordStatusById(entity.id!);
+    final wordStatusDao = database?.wordStatusDao;
+    final wordStatus = await wordStatusDao?.findWordStatusById(entity.id!);
     return wordStatus;
   }
 
   Future<WordStatus?> getBookmark(TangoEntity entity) async {
-    final wordStatusDao = database.wordStatusDao;
-    final wordStatus = await wordStatusDao.findWordStatusById(entity.id!);
+    final wordStatusDao = database?.wordStatusDao;
+    final wordStatus = await wordStatusDao?.findWordStatusById(entity.id!);
     return wordStatus;
   }
 
