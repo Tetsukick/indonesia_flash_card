@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
 import 'package:indonesia_flash_card/config/config.dart';
@@ -7,6 +9,7 @@ import 'package:indonesia_flash_card/model/tango_master.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
+import 'package:indonesia_flash_card/repository/translate_repo.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
 
@@ -16,6 +19,7 @@ import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word
 import '../model/level.dart';
 import '../model/part_of_speech.dart';
 import '../model/sort_type.dart';
+import '../model/translate_response_entity.dart';
 
 final tangoListControllerProvider = StateNotifierProvider<TangoListController, TangoMaster>(
       (ref) => TangoListController(initialTangoMaster: TangoMaster()),
@@ -298,5 +302,39 @@ class TangoListController extends StateNotifier<TangoMaster> {
       ..lesson.isNotRemembered = false
       ..lesson.isTest = false
       ..lesson.quizResults = [];
+  }
+
+  Future<TranslateResponseEntity> translate(String origin, {bool isIndonesianToJapanese = true}) async {
+    final response = await TranslateRepo().translate(origin, isIndonesianToJapanese: isIndonesianToJapanese);
+    state = state..translateMaster.translateApiResponse = response;
+    return response;
+  }
+
+  Future<List<TangoEntity>> searchIncludeWords(String value) async {
+    List<TangoEntity> includedWords = [];
+    final wordList = value.split(' ');
+    final baseSearchLength = 3;
+    for (var i = 0; i < wordList.length; i++) {
+      final remainCount = [baseSearchLength, wordList.length - i].reduce(min);
+      var searchText = '';
+      for (var j = 0; j < remainCount; j++) {
+        if (j>0) {
+          searchText = searchText + ' ';
+        }
+        searchText = searchText + wordList[i + j];
+        includedWords.addAll(await search(searchText));
+      }
+    }
+    state = state..translateMaster.includedTangos = includedWords;
+    return includedWords;
+  }
+
+  Future<List<TangoEntity>> search(String search) async {
+    final allTangoList = state.dictionary.allTangos;
+    var searchTangos = allTangoList
+        .where((tango) {
+          return tango.indonesian!.toLowerCase() == search.toLowerCase();
+        }).toList();
+    return searchTangos;
   }
 }
