@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/domain/tango_list_service.dart';
 import 'package:indonesia_flash_card/model/level.dart';
@@ -25,6 +26,7 @@ import '../model/word_status_type.dart';
 import '../utils/analytics/analytics_event_entity.dart';
 import '../utils/analytics/analytics_parameters.dart';
 import '../utils/analytics/firebase_analytics.dart';
+import '../utils/logger.dart';
 import '../utils/shimmer.dart';
 import 'dictionary_detail_screen.dart';
 
@@ -49,6 +51,7 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
   final _baseScore = 10.0;
   AppDatabase? database;
   ScreenshotController screenshotController = ScreenshotController();
+  InterstitialAd? _interstitialAd;
 
   @override
   void initState() {
@@ -56,6 +59,7 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
     initializeDB();
     super.initState();
     PreferenceKey.lastTestDate.setString(Utils.dateTimeToString(DateTime.now()));
+    loadInterstitialAd();
   }
 
   void initializeDB() async {
@@ -299,7 +303,8 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
   Widget _shareSNSButton() {
     return Card(
         child: InkWell(
-          onTap: () {
+          onTap: () async {
+            await showInterstitialAd();
             shareSNS();
           },
           child: Container(
@@ -339,5 +344,28 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
           '本日のインドネシア単語検定\nスコア: ${calculateTotalScore(tangoList.lesson.quizResults).toStringAsFixed(3)} 点\nランク: ${RankExt.doubleToRank(score: calculateTotalScore(tangoList.lesson.quizResults)).title}\n#BINTANGO #インドネシア語学習'
           ,imagePath: file.path);
     });
+  }
+
+
+  Future<void> loadInterstitialAd() async {
+    await InterstitialAd.load(
+        adUnitId: Platform.isIOS ?
+          Config.adUnitIdIosInterstitial : Config.adUnitIdAndroidInterstitial,
+        request: AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (InterstitialAd ad) {
+            _interstitialAd = ad;
+            logger.d('Ad loaded.${ad}');
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            logger.d('Ad failed to load: $error');
+          },
+        ));
+  }
+
+  Future<void> showInterstitialAd() async {
+    if (_interstitialAd != null) {
+      await _interstitialAd?.show();
+    }
   }
 }
