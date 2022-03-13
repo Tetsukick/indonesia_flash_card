@@ -42,13 +42,12 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
   final itemCardHeight = 88.0;
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   List<TangoEntity> _searchedTango = [];
-  late AppDatabase database;
+  AppDatabase? database;
   late BannerAd bannerAd;
   bool _isIndonesiaToJapanese = true;
   TextEditingController _inputController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _inputFocusNode = FocusNode();
-  String _translateResult = '';
 
   @override
   void initState() {
@@ -82,6 +81,23 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
               _titleBar(),
               SizedBox(height: SizeConfig.smallMargin),
               _inputField(),
+              Flexible(
+                child: ListView.builder(
+                  padding: EdgeInsets.fromLTRB(0, 64, 0, SizeConfig.bottomBarHeight),
+                  itemBuilder: (BuildContext context, int index){
+                    if (index == 0) {
+                      return Container(
+                        height: 50,
+                        width: double.infinity,
+                        child: AdWidget(ad: bannerAd),
+                      );
+                    }
+                    TangoEntity tango = tangoList.translateMaster.includedTangos[index - 1];
+                    return tangoListItem(tango);
+                  },
+                  itemCount: tangoList.translateMaster.includedTangos.length + 1,
+                ),
+              ),
             ],
           ),
         ),
@@ -114,6 +130,7 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
   Widget _inputField() {
     const _japanese = '文章を入力してください';
     const _indonesian = 'Silakan masukkan kalimatnya';
+    final tangoList = ref.watch(tangoListControllerProvider);
 
     return Form(
       key: _formKey,
@@ -139,7 +156,10 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
                   ),
                   onSaved: (value) {
                     logger.d('search orgin value: $value');
-                    setState(() => _translateResult = value ?? '');
+                    if (value != null) {
+                      ref.read(tangoListControllerProvider.notifier).translate(value, isIndonesianToJapanese: _isIndonesiaToJapanese);
+                      ref.read(tangoListControllerProvider.notifier).searchIncludeWords(value);
+                    }
                   },
                 ),
               ),
@@ -164,7 +184,9 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
             width: double.infinity,
             child: Padding(
               padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
-              child: TextWidget.titleGrayMedium(_translateResult, maxLines: 30),
+              child: TextWidget.titleGrayMedium(
+                  tangoList.translateMaster.translateApiResponse?.text ?? '',
+                  maxLines: 30),
             ),
           ),
         ],
@@ -212,14 +234,14 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
   }
 
   Future<WordStatus?> getWordStatus(TangoEntity entity) async {
-    final wordStatusDao = database.wordStatusDao;
-    final wordStatus = await wordStatusDao.findWordStatusById(entity.id!);
+    final wordStatusDao = database?.wordStatusDao;
+    final wordStatus = await wordStatusDao?.findWordStatusById(entity.id!);
     return wordStatus;
   }
 
   Future<WordStatus?> getBookmark(TangoEntity entity) async {
-    final wordStatusDao = database.wordStatusDao;
-    final wordStatus = await wordStatusDao.findWordStatusById(entity.id!);
+    final wordStatusDao = database?.wordStatusDao;
+    final wordStatus = await wordStatusDao?.findWordStatusById(entity.id!);
     return wordStatus;
   }
 

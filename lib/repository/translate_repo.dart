@@ -6,7 +6,7 @@ import 'package:indonesia_flash_card/utils/logger.dart';
 class TranslateRepo {
   Api translateApi = Api(generalClient: GeneralClient(
     apiKey: '',
-    baseUrl: 'https://script.google.com/macros/s/AKfycbwwsokn-ihd3ffq0rTu--Qa5p4XtQLgJbL3audTm397ZwFwVQplNPYlEeKrH4AsSIuS/exec',
+    baseUrl: 'https://script.google.com/macros/s/AKfycbwwsokn-ihd3ffq0rTu--Qa5p4XtQLgJbL3audTm397ZwFwVQplNPYlEeKrH4AsSIuS',
     logger: logger
   ));
 
@@ -15,7 +15,7 @@ class TranslateRepo {
     final _indonesianCode = 'id';
 
     return translateApi.generalClient.get<TranslateResponseEntity>(
-        endpoint: '',
+        endpoint: 'exec',
         queryParams: {
           'text': origin,
           'source': isIndonesianToJapanese ? _indonesianCode : _japaneseCode,

@@ -109,7 +109,7 @@ class ApiClient {
 
       handleError(ex.response);
       throw CustomException(
-          "Something is wrong with your request", ex, ex?.response?.statusCode ?? -1);
+          "Something is wrong with your request", ex, ex.response?.statusCode ?? -1);
     } catch (ex) {
       logger.d('Unexepected exception obtained with request POST ' +
           endpoint +
