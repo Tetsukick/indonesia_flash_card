@@ -130,9 +130,12 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       children: [
         TextWidget.titleGraySmallBold('${currentIndex + 1} / ${questionAnswerList.lesson.tangos.length} 問目'),
         SizedBox(width: SizeConfig.smallMargin),
-        CountdownTimer(
-          controller: countDownController,
-          endTime: endTime,
+        Visibility(
+          visible: pinCodeTextField != null,
+          child: CountdownTimer(
+            controller: countDownController,
+            endTime: endTime,
+          ),
         ),
         Spacer(),
         IconButton(
@@ -284,7 +287,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     if (questionAnswerList.lesson.tangos.length <= currentIndex + 1) {
       setState(() => allCardsFinished = true);
-      await Future<void>.delayed(Duration(milliseconds: 1500));
+      await Future<void>.delayed(Duration(milliseconds: 2500));
       if (questionAnswerList.lesson.isTest) {
         CompletionTodayTestScreen.navigateTo(context);
       } else {
@@ -372,14 +375,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       countDownController = CountdownTimerController(
         endTime: endTime,
         onEnd: () async {
-          await registerWordStatus(isCorrect: false);
-          await registerActivity();
-          showTrueFalseDialog(false, entity: entity);
-          final result = QuizResult()
-            ..entity = entity
-            ..isCorrect = false;
-          ref.read(tangoListControllerProvider.notifier).addQuizResult(result);
-          getNextCard();
+          await wrongAnswerAction(entity);
         },
       );
     });
@@ -420,11 +416,14 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
           );
         }
     );
-    await Future<void>.delayed(Duration(seconds: 1));
+    await Future<void>.delayed(Duration(seconds: 2));
     Navigator.of(context).pop();
   }
 
   Widget _actionButton({required WordStatusType type}) {
+    final questionAnswerList = ref.watch(tangoListControllerProvider);
+    final entity = questionAnswerList.lesson.tangos[currentIndex];
+
     return Visibility(
       visible: pinCodeTextField != null,
       child: Card(
@@ -443,13 +442,21 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
               )
           ),
           onTap: () async {
-            if (type == WordStatusType.notRemembered) {
-              await registerWordStatus(isCorrect: false);
-            }
-            getNextCard();
+            await wrongAnswerAction(entity);
           },
         ),
       ),
     );
+  }
+
+  Future<void> wrongAnswerAction(TangoEntity entity) async {
+    await registerWordStatus(isCorrect: false);
+    await registerActivity();
+    showTrueFalseDialog(false, entity: entity);
+    final result = QuizResult()
+      ..entity = entity
+      ..isCorrect = false;
+    ref.read(tangoListControllerProvider.notifier).addQuizResult(result);
+    getNextCard();
   }
 }
