@@ -281,6 +281,10 @@ class $AssetsPngGen {
 
   /// File path: assets/png/test_128.png
   AssetGenImage get test128 => const AssetGenImage('assets/png/test_128.png');
+
+  /// File path: assets/png/translation_128.png
+  AssetGenImage get translation128 =>
+      const AssetGenImage('assets/png/translation_128.png');
 }
 
 class $AssetsPrefectureIndonesiaGen {
