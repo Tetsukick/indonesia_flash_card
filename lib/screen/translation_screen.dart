@@ -154,11 +154,17 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
                       onPressed: () => _inputController.clear(),
                     ),
                   ),
-                  onSaved: (value) {
+                  onSaved: (value) async {
                     logger.d('search orgin value: $value');
                     if (value != null) {
-                      ref.read(tangoListControllerProvider.notifier).translate(value, isIndonesianToJapanese: _isIndonesiaToJapanese);
-                      ref.read(tangoListControllerProvider.notifier).searchIncludeWords(value);
+                      ref.read(tangoListControllerProvider.notifier).translate(value, isIndonesianToJapanese: _isIndonesiaToJapanese).then((result) async {
+                        if (!_isIndonesiaToJapanese) {
+                          await ref.read(tangoListControllerProvider.notifier).searchIncludeWords(result.text ?? '');
+                        } else {
+                          await ref.read(tangoListControllerProvider.notifier).searchIncludeWords(value);
+                        }
+                        setState(() {});
+                      });
                     }
                   },
                 ),
