@@ -83,7 +83,7 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
               _inputField(),
               Flexible(
                 child: ListView.builder(
-                  padding: EdgeInsets.fromLTRB(0, 64, 0, SizeConfig.bottomBarHeight),
+                  padding: EdgeInsets.fromLTRB(0, SizeConfig.mediumSmallMargin, 0, SizeConfig.bottomBarHeight),
                   itemBuilder: (BuildContext context, int index){
                     if (index == 0) {
                       return Container(
@@ -292,19 +292,6 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
             );
           }
         });
-  }
-
-  Future<List<TangoEntity>> search(String search) async {
-    final tangoList = ref.watch(tangoListControllerProvider);
-    final allTangoList = tangoList.dictionary.allTangos;
-    var searchTangos = allTangoList
-        .where((tango) {
-      return tango.indonesian!.toLowerCase().contains(search.toLowerCase())
-          || tango.japanese!.contains(search);
-    })
-        .toList();
-    setState(() => _searchedTango = searchTangos);
-    return searchTangos;
   }
 
   void analytics(DictionaryItem item, {String? others = ''}) {
