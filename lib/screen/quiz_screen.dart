@@ -287,7 +287,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     if (questionAnswerList.lesson.tangos.length <= currentIndex + 1) {
       setState(() => allCardsFinished = true);
-      await Future<void>.delayed(Duration(milliseconds: 1500));
+      await Future<void>.delayed(Duration(milliseconds: 2500));
       if (questionAnswerList.lesson.isTest) {
         CompletionTodayTestScreen.navigateTo(context);
       } else {
