@@ -327,9 +327,9 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     await Future<void>.delayed(Duration(milliseconds: 1200));
 
     setCountDownController(entity);
-    final pinHeight = (entity.indonesian?.length ?? 0)  > 8 ? 25.0 : 40.0;
-    final pinWidth = (entity.indonesian?.length ?? 0)  > 8 ? 15.0 : 30.0;
-    final fontSize = (entity.indonesian?.length ?? 0)  > 8 ? 9.0 : 16.0;
+    final pinHeight = getPinHeight(entity.indonesian?.length ?? 0);
+    final pinWidth = getPinWidth(entity.indonesian?.length ?? 0);
+    final fontSize = getFontSize(entity.indonesian?.length ?? 0);
     setState(() {
       errorController = StreamController<ErrorAnimationType>();
       pinCodeTextField = PinCodeTextField(
@@ -366,6 +366,48 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         appContext: context,
       );
     });
+  }
+  
+  double getPinHeight(int length) {
+    if (length < 8) {
+      return 40.0;
+    } else if (length < 10) {
+      return 36.0;
+    } else if (length < 12) {
+      return 32.0;
+    } else if (length < 16) {
+      return 28.0;
+    } else {
+      return 24.0;
+    }
+  }
+
+  double getPinWidth(int length) {
+    if (length < 8) {
+      return 30.0;
+    } else if (length < 10) {
+      return 26.0;
+    } else if (length < 12) {
+      return 22.0;
+    } else if (length < 16) {
+      return 18.0;
+    } else {
+      return 15.0;
+    }
+  }
+
+  double getFontSize(int length) {
+    if (length < 8) {
+      return 16.0;
+    } else if (length < 10) {
+      return 15.0;
+    } else if (length < 12) {
+      return 13.0;
+    } else if (length < 16) {
+      return 11.0;
+    } else {
+      return 9.5;
+    }
   }
 
   void setCountDownController(TangoEntity entity) {
