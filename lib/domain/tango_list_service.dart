@@ -51,11 +51,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
 
     for (var element in entryList) {
       if (element.isEmpty) continue;
-      if (element.length <= 1) continue;
-
-      if (element.length < 9) {
-        throw UnsupportedError("The csv must have exactly 2 columns");
-      }
+      if (element.length < 9) continue;
 
       TangoEntity tmpTango = TangoEntity()
         ..id = int.parse(element[0].toString().trim())
