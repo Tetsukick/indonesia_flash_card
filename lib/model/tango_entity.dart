@@ -17,6 +17,8 @@ class TangoEntity {
 	@JSONField(name: "part_of_speech")
 	int? partOfSpeech;
 	int? category;
+	int? frequency;
+	int? rankFrequency;
   
   TangoEntity();
 
