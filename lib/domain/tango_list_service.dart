@@ -34,7 +34,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
     final sheetRepos = folder.spreadsheets.where((element) => element.name.contains(Config.dictionarySpreadSheetName)).map((e) => SheetRepo(e.id));
     List<List<Object?>> entryList = [];
     await Future.forEach<SheetRepo>(sheetRepos, (element) async {
-      List<List<Object?>>? _entryList = await Utils.retry(retries: 3, aFuture: element.getEntriesFromRange("A2:J3000"));
+      List<List<Object?>>? _entryList = await Utils.retry(retries: 3, aFuture: element.getEntriesFromRange("A2:L3000"));
       logger.d('SheetId ${element.spreadsheetId}: ${_entryList?.length ?? 0}');
       if (_entryList != null) {
         entryList.addAll(_entryList);
@@ -68,8 +68,10 @@ class TangoListController extends StateNotifier<TangoMaster> {
         ..level = int.parse(element[7].toString().trim())
         ..partOfSpeech = int.parse(element[8].toString().trim());
 
-      if (element.length == 10) {
+      if (element.length >= 10) {
         tmpTango.category = int.parse(element[9].toString().trim());
+        tmpTango.frequency = int.parse(element[10].toString().trim());
+        tmpTango.rankFrequency = int.parse(element[11].toString().trim());
       }
 
       tangoList.add(tmpTango);
