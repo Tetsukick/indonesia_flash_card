@@ -51,7 +51,10 @@ class TangoListController extends StateNotifier<TangoMaster> {
 
     for (var element in entryList) {
       if (element.isEmpty) continue;
-      if (element.length < 9) continue;
+      if (element[1].toString().trim() == ''
+          || element[2].toString().trim() == '') {
+        continue;
+      }
 
       TangoEntity tmpTango = TangoEntity()
         ..id = int.parse(element[0].toString().trim())
@@ -65,7 +68,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
         ..partOfSpeech = int.parse(element[8].toString().trim());
 
       if (element.length >= 10) {
-        tmpTango.category = int.parse(element[9].toString().trim());
+        tmpTango.category = element[9].toString().trim() == '' ? null : int.parse(element[9].toString().trim());
         tmpTango.frequency = int.parse(element[10].toString().trim());
         tmpTango.rankFrequency = int.parse(element[11].toString().trim());
       }
