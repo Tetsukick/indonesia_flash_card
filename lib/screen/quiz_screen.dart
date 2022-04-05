@@ -162,6 +162,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   }
 
   Widget _questionAnswerCard() {
+    final questionAnswerList = ref.watch(tangoListControllerProvider);
+    final entity = questionAnswerList.lesson.tangos[currentIndex];
     return Card(
       child: Container(
         padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
@@ -170,6 +172,9 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             TextWidget.titleGrayMediumBold(questionExplanation, maxLines: 2),
+            SizedBox(height: SizeConfig.smallestMargin),
+            TextWidget.titleGraySmallest('ヒント (${entity.indonesian?.split(' ').length}語)', maxLines: 2),
+            TextWidget.titleGraySmallest(hintText(entity.indonesian!), maxLines: 2),
             _separater(),
             if (pinCodeTextField != null) pinCodeTextField!,
           ],
@@ -500,5 +505,9 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       ..isCorrect = false;
     ref.read(tangoListControllerProvider.notifier).addQuizResult(result);
     getNextCard();
+  }
+
+  String hintText(String value) {
+    return value.replaceAll(RegExp(r'[a-zA-Z]'), '*');
   }
 }
