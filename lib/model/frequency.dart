@@ -7,7 +7,18 @@ enum FrequencyGroup {
 }
 
 extension FrequencyGroupExt on FrequencyGroup {
-  int get rangeFactor {
+  int get rangeFactorMin {
+    switch (this) {
+      case FrequencyGroup.highest300:
+        return 1;
+      case FrequencyGroup.high500:
+        return 301;
+      case FrequencyGroup.high1000:
+        return 801;
+    }
+  }
+
+  int get rangeFactorMax {
     switch (this) {
       case FrequencyGroup.highest300:
         return 300;
