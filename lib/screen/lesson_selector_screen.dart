@@ -13,6 +13,7 @@ import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/category.dart';
 import 'package:indonesia_flash_card/model/floor_entity/activity.dart';
 import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
+import 'package:indonesia_flash_card/model/frequency.dart';
 import 'package:indonesia_flash_card/model/lecture.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indonesia_flash_card/model/level.dart';
@@ -54,6 +55,8 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   late Future<List<LectureFolder>> getPossibleLectures;
   final itemCardWidth = 200.0;
   final itemCardHeight = 160.0;
+  int _currentFrequencyIndex = 0;
+  final CarouselController _frequencyCarouselController = CarouselController();
   int _currentLevelIndex = 0;
   final CarouselController _levelCarouselController = CarouselController();
   int _currentCategoryIndex = 0;
@@ -143,9 +146,11 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                   _todayTangTest(),
                   _bookMarkLecture(),
                   _notRememberTangoLecture(),
+                  _sectionTitle('頻出度別'),
+                  _carouselFrequencyLectures(),
+                  _adWidget(),
                   _sectionTitle('レベル別'),
                   _carouselLevelLectures(),
-                  _adWidget(),
                   _sectionTitle('カテゴリー別'),
                   _carouselCategoryLectures(),
                   _sectionTitle('品詞別'),
@@ -428,6 +433,14 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     );
   }
 
+  Widget _carouselFrequencyLectures() {
+    return _carouselLectures(
+      items: _frequencyWidgets(),
+      controller: _frequencyCarouselController,
+      index: _currentFrequencyIndex,
+    );
+  }
+
   Widget _carouselLevelLectures() {
     return _carouselLectures(
       items: _levelWidgets(),
@@ -499,6 +512,14 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     );
   }
 
+  List<Widget> _frequencyWidgets() {
+    List<Widget> _frequency = [];
+    FrequencyGroup.values.forEach((element) {
+      _frequency.add(_lectureCard(frequencyGroup: element));
+    });
+    return _frequency;
+  }
+
   List<Widget> _levelWidgets() {
     List<Widget> _levels = [];
     LevelGroup.values.forEach((element) {
@@ -523,7 +544,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     return _partOfSpeechs;
   }
 
-  Widget _lectureCard({TangoCategory? category, PartOfSpeechEnum? partOfSpeech, LevelGroup? levelGroup}) {
+  Widget _lectureCard({TangoCategory? category, PartOfSpeechEnum? partOfSpeech, LevelGroup? levelGroup, FrequencyGroup? frequencyGroup}) {
     String _title = '';
     SvgGenImage _svg = Assets.svg.islam1;
     if (category != null) {
@@ -535,6 +556,9 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     } else if (levelGroup != null) {
       _title = levelGroup.title;
       _svg = levelGroup.svg;
+    } else if (frequencyGroup != null) {
+      _title = frequencyGroup.title;
+      _svg = frequencyGroup.svg;
     }
 
     final lectures = ref.watch(fileControllerProvider);
@@ -592,13 +616,14 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
       child: InkWell(
         onTap: () {
           analytics(LectureSelectorItem.lessonCard,
-            others: 'category: ${category?.id}, partOfSpeech: ${partOfSpeech?.id}, levelGroup: ${levelGroup?.index}');
+            others: 'category: ${category?.id}, partOfSpeech: ${partOfSpeech?.id}, levelGroup: ${levelGroup?.index}, frequencyGroup: ${frequencyGroup?.index}');
 
           ref.read(tangoListControllerProvider.notifier)
               .setLessonsData(
                 category: category,
                 partOfSpeech: partOfSpeech,
                 levelGroup: levelGroup,
+                frequencyGroup: frequencyGroup,
               );
           FlashCardScreen.navigateTo(context);
         },

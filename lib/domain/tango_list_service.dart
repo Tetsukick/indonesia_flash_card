@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
 import 'package:indonesia_flash_card/config/config.dart';
 import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
+import 'package:indonesia_flash_card/model/frequency.dart';
 import 'package:indonesia_flash_card/model/lecture.dart';
 import 'package:indonesia_flash_card/model/tango_master.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
@@ -89,13 +90,14 @@ class TangoListController extends StateNotifier<TangoMaster> {
     TangoCategory? category,
     PartOfSpeechEnum? partOfSpeech,
     LevelGroup? levelGroup,
+    FrequencyGroup? frequencyGroup,
     WordStatusType? wordStatusType,
     SortType? sortType
   }) async {
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
       await getAllTangoList(folder: state.lesson.folder!);
     }
-    List<TangoEntity> _filteredTangos = await filterTangoList(category: category, partOfSpeech: partOfSpeech, levelGroup: levelGroup, wordStatusType: wordStatusType);
+    List<TangoEntity> _filteredTangos = await filterTangoList(category: category, partOfSpeech: partOfSpeech, levelGroup: levelGroup, frequencyGroup: frequencyGroup, wordStatusType: wordStatusType);
     if (sortType != null) {
       if (sortType == SortType.indonesian || sortType == SortType.indonesianReverse) {
         _filteredTangos.sort((a, b) {
@@ -121,13 +123,15 @@ class TangoListController extends StateNotifier<TangoMaster> {
   Future<List<TangoEntity>> setLessonsData({
     TangoCategory? category,
     PartOfSpeechEnum? partOfSpeech,
-    LevelGroup? levelGroup
+    LevelGroup? levelGroup,
+    FrequencyGroup? frequencyGroup,
   }) async {
     initializeLessonState();
     state = state
       ..lesson.category = category
       ..lesson.partOfSpeech = partOfSpeech
-      ..lesson.levelGroup = levelGroup;
+      ..lesson.levelGroup = levelGroup
+      ..lesson.frequencyGroup = frequencyGroup;
     if (state.dictionary.allTangos == null || state.dictionary.allTangos.isEmpty) {
       await getAllTangoList(folder: state.lesson.folder!);
     }
@@ -206,6 +210,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
     TangoCategory? category,
     PartOfSpeechEnum? partOfSpeech,
     LevelGroup? levelGroup,
+    FrequencyGroup? frequencyGroup,
     WordStatusType? wordStatusType,
     bool isBookmark = false,
     bool isNotRemembered = false
@@ -215,7 +220,8 @@ class TangoListController extends StateNotifier<TangoMaster> {
       bool _filterCategory = category != null ? element.category == category.id : true;
       bool _filterPartOfSpeech = partOfSpeech != null ? element.partOfSpeech == partOfSpeech.id : true;
       bool _filterLevel = levelGroup != null ? levelGroup.range.any((e) => e == element.level) : true;
-      return _filterCategory && _filterPartOfSpeech && _filterLevel;
+      bool _filterFrequency = frequencyGroup != null ? (element.rankFrequency! >= frequencyGroup.rangeFactorMin && element.rankFrequency! <= frequencyGroup.rangeFactorMax) : true;
+      return _filterCategory && _filterPartOfSpeech && _filterLevel && _filterFrequency;
     }).toList();
     if (wordStatusType != null) {
       final wordStatusList = await getAllWordStatus();
@@ -263,7 +269,8 @@ class TangoListController extends StateNotifier<TangoMaster> {
     List<TangoEntity> _filteredTangos = await filterTangoList(
         category: state.lesson.category,
         partOfSpeech: state.lesson.partOfSpeech,
-        levelGroup: state.lesson.levelGroup);
+        levelGroup: state.lesson.levelGroup,
+        frequencyGroup: state.lesson.frequencyGroup);
     _filteredTangos.shuffle();
     if (_filteredTangos.length > 10) {
       _filteredTangos = _filteredTangos.getRange(0, 10).toList();
@@ -299,6 +306,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
       ..lesson.category = null
       ..lesson.partOfSpeech = null
       ..lesson.levelGroup = null
+      ..lesson.frequencyGroup = null
       ..lesson.isBookmark = false
       ..lesson.isNotRemembered = false
       ..lesson.isTest = false

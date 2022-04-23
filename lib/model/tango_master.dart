@@ -1,4 +1,5 @@
 import 'package:indonesia_flash_card/model/category.dart';
+import 'package:indonesia_flash_card/model/frequency.dart';
 import 'package:indonesia_flash_card/model/lecture.dart';
 import 'package:indonesia_flash_card/model/level.dart';
 import 'package:indonesia_flash_card/model/part_of_speech.dart';
@@ -22,6 +23,7 @@ class Lesson {
   TangoCategory? category;
   PartOfSpeechEnum? partOfSpeech;
   LevelGroup? levelGroup;
+  FrequencyGroup? frequencyGroup;
   bool isBookmark = false;
   bool isNotRemembered = false;
   bool isTest = false;
