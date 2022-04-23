@@ -346,4 +346,28 @@ class TangoListController extends StateNotifier<TangoMaster> {
         }).toList();
     return searchTangos;
   }
+
+  Future<double> achievementRate({
+    TangoCategory? category,
+    PartOfSpeechEnum? partOfSpeech,
+    LevelGroup? levelGroup,
+    FrequencyGroup? frequencyGroup,
+  }) async {
+    List<TangoEntity> _filteredTangos = await filterTangoList(
+        category: category,
+        partOfSpeech: partOfSpeech,
+        levelGroup: levelGroup,
+        frequencyGroup: frequencyGroup);
+
+    final wordStatusList = await getAllWordStatus();
+    List<TangoEntity> _filteredRememberedTango = _filteredTangos.where((element) {
+      final targetWordStatus = wordStatusList.firstWhereOrNull((e) {
+        return e.wordId == element.id;
+      });
+      return targetWordStatus != null && (targetWordStatus.status == WordStatusType.remembered.id || targetWordStatus.status == WordStatusType.perfectRemembered.id);
+    }).toList();
+
+    final rate = _filteredRememberedTango.length / _filteredTangos.length;
+    return rate;
+  }
 }

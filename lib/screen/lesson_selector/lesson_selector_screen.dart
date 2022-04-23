@@ -19,6 +19,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indonesia_flash_card/model/level.dart';
 import 'package:indonesia_flash_card/model/part_of_speech.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
+import 'package:indonesia_flash_card/screen/lesson_selector/views/lesson_card.dart';
 import 'package:indonesia_flash_card/screen/quiz_screen.dart';
 import 'package:indonesia_flash_card/utils/analytics/analytics_event_entity.dart';
 import 'package:indonesia_flash_card/utils/analytics/analytics_parameters.dart';
@@ -29,12 +30,13 @@ import 'package:indonesia_flash_card/utils/shared_preference.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
 import 'package:lottie/lottie.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import '../config/config.dart';
-import '../model/floor_database/database.dart';
-import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
-import 'flush_card_screen.dart';
+import '../../config/config.dart';
+import '../../model/floor_database/database.dart';
+import '../../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
+import '../flush_card_screen.dart';
 
 class LessonSelectorScreen extends ConsumerStatefulWidget {
   const LessonSelectorScreen({Key? key}) : super(key: key);
@@ -53,8 +55,6 @@ class LessonSelectorScreen extends ConsumerStatefulWidget {
 
 class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   late Future<List<LectureFolder>> getPossibleLectures;
-  final itemCardWidth = 200.0;
-  final itemCardHeight = 160.0;
   int _currentFrequencyIndex = 0;
   final CarouselController _frequencyCarouselController = CarouselController();
   int _currentLevelIndex = 0;
@@ -515,7 +515,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   List<Widget> _frequencyWidgets() {
     List<Widget> _frequency = [];
     FrequencyGroup.values.forEach((element) {
-      _frequency.add(_lectureCard(frequencyGroup: element));
+      _frequency.add(LessonCard(frequencyGroup: element));
     });
     return _frequency;
   }
@@ -523,7 +523,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   List<Widget> _levelWidgets() {
     List<Widget> _levels = [];
     LevelGroup.values.forEach((element) {
-      _levels.add(_lectureCard(levelGroup: element));
+      _levels.add(LessonCard(levelGroup: element));
     });
     return _levels;
   }
@@ -531,7 +531,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   List<Widget> _categoryWidgets() {
     List<Widget> _categories = [];
     TangoCategory.values.forEach((element) {
-      _categories.add(_lectureCard(category: element));
+      _categories.add(LessonCard(category: element));
     });
     return _categories;
   }
@@ -539,142 +539,9 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   List<Widget> _partOfSpeechWidgets() {
     List<Widget> _partOfSpeechs = [];
     PartOfSpeechEnum.values.forEach((element) {
-      _partOfSpeechs.add(_lectureCard(partOfSpeech: element));
+      _partOfSpeechs.add(LessonCard(partOfSpeech: element));
     });
     return _partOfSpeechs;
-  }
-
-  Widget _lectureCard({TangoCategory? category, PartOfSpeechEnum? partOfSpeech, LevelGroup? levelGroup, FrequencyGroup? frequencyGroup}) {
-    String _title = '';
-    SvgGenImage _svg = Assets.svg.islam1;
-    if (category != null) {
-      _title = category.title;
-      _svg = category.svg;
-    } else if (partOfSpeech != null) {
-      _title = partOfSpeech.title;
-      _svg = partOfSpeech.svg;
-    } else if (levelGroup != null) {
-      _title = levelGroup.title;
-      _svg = levelGroup.svg;
-    } else if (frequencyGroup != null) {
-      _title = frequencyGroup.title;
-      _svg = frequencyGroup.svg;
-    }
-
-    final lectures = ref.watch(fileControllerProvider);
-    final _isLoadingLecture = lectures.isEmpty;
-    if (_isLoadingLecture) {
-      return Card(
-        child: Container(
-          width: itemCardWidth,
-          height: itemCardHeight,
-          child: Stack(
-            children: <Widget>[
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  child: Container(
-                    width: double.infinity,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: FractionalOffset.bottomCenter,
-                        end: FractionalOffset.topCenter,
-                        colors: [
-                          Colors.black.withOpacity(0.5),
-                          Colors.black.withOpacity(0),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                height: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.all(SizeConfig.smallMargin),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ShimmerWidget.rectangular(
-                        height: 20,
-                        width: double.infinity,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    return Card(
-      child: InkWell(
-        onTap: () {
-          analytics(LectureSelectorItem.lessonCard,
-            others: 'category: ${category?.id}, partOfSpeech: ${partOfSpeech?.id}, levelGroup: ${levelGroup?.index}, frequencyGroup: ${frequencyGroup?.index}');
-
-          ref.read(tangoListControllerProvider.notifier)
-              .setLessonsData(
-                category: category,
-                partOfSpeech: partOfSpeech,
-                levelGroup: levelGroup,
-                frequencyGroup: frequencyGroup,
-              );
-          FlashCardScreen.navigateTo(context);
-        },
-        child: Container(
-          width: itemCardWidth,
-          height: itemCardHeight,
-          child: Stack(
-            children: <Widget>[
-              _svg.svg(
-                alignment: Alignment.center,
-                width: double.infinity,
-                height: double.infinity,
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  child: Container(
-                    width: double.infinity,
-                    height: itemCardHeight * 0.6,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: FractionalOffset.bottomCenter,
-                        end: FractionalOffset.topCenter,
-                        colors: [
-                          Colors.black.withOpacity(0.5),
-                          Colors.black.withOpacity(0),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                height: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.all(SizeConfig.smallMargin),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextWidget.titleWhiteLargeBold(_title, maxLines: 2)
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   Future<void> getAllWordStatus() async {

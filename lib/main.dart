@@ -9,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/screen/home_navigation.dart';
-import 'package:indonesia_flash_card/screen/lesson_selector_screen.dart';
+import 'package:indonesia_flash_card/screen/lesson_selector/lesson_selector_screen.dart';
 import 'package:indonesia_flash_card/utils/analytics/firebase_analytics.dart';
 import 'package:indonesia_flash_card/utils/crash_reporter.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';

@@ -5,7 +5,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/screen/dictionary_screen.dart';
-import 'package:indonesia_flash_card/screen/lesson_selector_screen.dart';
+import 'package:indonesia_flash_card/screen/lesson_selector/lesson_selector_screen.dart';
 import 'package:indonesia_flash_card/screen/menu_screen.dart';
 import 'package:indonesia_flash_card/screen/translation_screen.dart';
 

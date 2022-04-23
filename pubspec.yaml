@@ -57,6 +57,7 @@ dependencies:
   social_share: ^2.2.1
   screenshot: ^1.2.3
   path_provider:
+  percent_indicator: ^4.0.0
 
 dev_dependencies:
   flutter_test:
