@@ -188,24 +188,41 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     final tangoMaster = ref.watch(tangoListControllerProvider);
     return Card(
         child: Container(
-            height: 90,
+            height: 120,
             width: double.infinity,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            child: Column(
               children: [
-                _userSectionItem(
-                  title: '総単語数',
-                  data: tangoMaster.dictionary.allTangos.length,
-                  unitTitle: '単語'
+                Container(
+                  height: 90,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _userSectionItem(
+                          title: '総単語数',
+                          data: tangoMaster.dictionary.allTangos.length,
+                          unitTitle: '単語'
+                      ),
+                      _separater(),
+                      _userSectionItemTangoStatus(title: '覚えた単語数'),
+                      _separater(),
+                      _userSectionItem(
+                          title: '累計学習日数',
+                          data: activityList.map((e) => e.date).toList().toSet().toList().length,
+                          unitTitle: '日'
+                      ),
+                    ],
+                  ),
                 ),
-                _separater(),
-                _userSectionItemTangoStatus(title: '覚えた単語数'),
-                _separater(),
-                _userSectionItem(
-                  title: '累計学習日数',
-                  data: activityList.map((e) => e.date).toList().toSet().toList().length,
-                  unitTitle: '日'
+                LinearPercentIndicator(
+                  width: MediaQuery.of(context).size.width - 40,
+                  animation: true,
+                  lineHeight: 20.0,
+                  animationDuration: 2500,
+                  percent: tangoMaster.totalAchievement,
+                  center: Text('${(tangoMaster.totalAchievement*100).toStringAsFixed(2)} %'),
+                  linearStrokeCap: LinearStrokeCap.roundAll,
+                  progressColor: ColorConfig.green,
                 ),
               ],
             )

@@ -11,6 +11,7 @@ class TangoMaster {
   Dictionary dictionary = Dictionary();
   Lesson lesson = Lesson();
   TranslateMaster translateMaster = TranslateMaster();
+  double totalAchievement = 0;
 }
 
 class Dictionary {
