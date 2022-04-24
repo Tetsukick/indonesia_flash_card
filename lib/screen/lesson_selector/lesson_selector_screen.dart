@@ -471,7 +471,6 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
       items: _categoryWidgets(),
       controller: _categoryCarouselController,
       index: _currentCategoryIndex,
-      autoPlay: true,
     );
   }
 
