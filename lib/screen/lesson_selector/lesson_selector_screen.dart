@@ -71,6 +71,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   final RefreshController _refreshController =
     RefreshController(initialRefresh: false);
   bool _isAlreadyTestedToday = false;
+  bool _isLoadTangoList = false;
 
   @override
   void initState() {
@@ -98,6 +99,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   Future<void> initTangoList() async {
     final lectures = await ref.read(fileControllerProvider.notifier).getPossibleLectures();
     await ref.read(tangoListControllerProvider.notifier).getAllTangoList(folder: lectures.first);
+    setState(() => _isLoadTangoList = true);
   }
 
   void initFCM() async {
@@ -161,7 +163,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
           ),
         ),
         Visibility(
-          visible: tangoMaster.dictionary.allTangos.isEmpty,
+          visible: !_isLoadTangoList,
           child: Container(
             color: Colors.black.withOpacity(0.2),
             child: Center(
