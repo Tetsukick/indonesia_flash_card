@@ -83,10 +83,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
       ..dictionary.allTangos = tangoList
       ..dictionary.sortAndFilteredTangos = tangoList;
 
-    final rate = await achievementRate();
-
-    state = state
-      ..totalAchievement = rate;
+    getTotalAchievement();
 
     return tangoList;
   }
@@ -375,5 +372,12 @@ class TangoListController extends StateNotifier<TangoMaster> {
     final rate = _filteredRememberedTango.length / _filteredTangos.length;
     logger.d('achieveMentRate: ${rate}');
     return rate;
+  }
+
+  void getTotalAchievement() async {
+    final rate = await achievementRate();
+
+    state = state
+      ..totalAchievement = rate;
   }
 }
