@@ -1,6 +1,10 @@
+import 'dart:io';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
+import 'package:indonesia_flash_card/config/config.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/part_of_speech.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -15,6 +19,7 @@ import '../../../utils/analytics/analytics_event_entity.dart';
 import '../../../utils/analytics/analytics_parameters.dart';
 import '../../../utils/analytics/firebase_analytics.dart';
 import '../../../utils/common_text_widget.dart';
+import '../../../utils/logger.dart';
 import '../../../utils/shimmer.dart';
 import '../../flush_card_screen.dart';
 
@@ -34,16 +39,19 @@ class _LessonCardState extends ConsumerState<LessonCard> {
   final itemCardWidth = 200.0;
   final itemCardHeight = 160.0;
   double achievementRate = 0.0;
+  bool isLoadAchievementRate = false;
+  InterstitialAd? _interstitialAd;
 
   @override
   void initState() {
     super.initState();
+    loadInterstitialAd();
   }
 
   @override
   Widget build(BuildContext context) {
     final tangoMaster = ref.watch(tangoListControllerProvider);
-    if (tangoMaster.dictionary.allTangos.length >= 1) {
+    if ((tangoMaster.dictionary.allTangos.isNotEmpty) && !isLoadAchievementRate) {
       getAchievementRate();
     }
 
@@ -80,7 +88,13 @@ class _LessonCardState extends ConsumerState<LessonCard> {
 
     return Card(
       child: InkWell(
-        onTap: () {
+        onTap: () async {
+          var rand = new math.Random();
+          int lottery = rand.nextInt(5);
+          if (lottery == 4) {
+            await showInterstitialAd();
+          }
+
           analytics(LectureSelectorItem.lessonCard,
               others: 'category: ${category?.id}, partOfSpeech: ${partOfSpeech?.id}, levelGroup: ${levelGroup?.index}, frequencyGroup: ${frequencyGroup?.index}');
 
@@ -222,6 +236,7 @@ class _LessonCardState extends ConsumerState<LessonCard> {
     if (this.widget.category == null && this.widget.frequencyGroup == null && this.widget.levelGroup == null && this.widget.partOfSpeech == null) {
       return;
     }
+    setState(() => isLoadAchievementRate = true);
     final _achievementRate = await ref.read(tangoListControllerProvider.notifier)
         .achievementRate(
           category: this.widget.category,
@@ -231,5 +246,27 @@ class _LessonCardState extends ConsumerState<LessonCard> {
         );
 
     setState(() => achievementRate = _achievementRate);
+  }
+
+  Future<void> loadInterstitialAd() async {
+    await InterstitialAd.load(
+        adUnitId: Platform.isIOS ?
+          Config.adUnitIdIosInterstitial : Config.adUnitIdAndroidInterstitial,
+        request: AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (InterstitialAd ad) {
+            _interstitialAd = ad;
+            logger.d('Ad loaded.${ad}');
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            logger.d('Ad failed to load: $error');
+          },
+        ));
+  }
+
+  Future<void> showInterstitialAd() async {
+    if (_interstitialAd != null) {
+      await _interstitialAd?.show();
+    }
   }
 }
