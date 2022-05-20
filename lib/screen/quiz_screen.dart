@@ -131,7 +131,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         TextWidget.titleGraySmallBold('${currentIndex + 1} / ${questionAnswerList.lesson.tangos.length} 問目'),
         SizedBox(width: SizeConfig.smallMargin),
         Visibility(
-          visible: pinCodeTextField != null,
+          visible: pinCodeTextField != null && questionAnswerList.lesson.isTest,
           child: CountdownTimer(
             controller: countDownController,
             endTime: endTime,
@@ -321,6 +321,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   }
 
   void setPinCodeTextField(TangoEntity entity) async {
+    final questionAnswerList = ref.watch(tangoListControllerProvider);
     countDownController?.disposeTimer();
     setState(() {
       pinCodeTextField = null;
@@ -331,7 +332,9 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
 
     await Future<void>.delayed(Duration(milliseconds: 1200));
 
-    setCountDownController(entity);
+    if (questionAnswerList.lesson.isTest) {
+      setCountDownController(entity);
+    }
     final pinHeight = getPinHeight(entity.indonesian?.length ?? 0);
     final pinWidth = getPinWidth(entity.indonesian?.length ?? 0);
     final fontSize = getFontSize(entity.indonesian?.length ?? 0);
