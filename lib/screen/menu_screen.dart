@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
@@ -115,6 +116,11 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
               applicationIcon: Assets.icon.appIcon.image(),
               applicationLegalese: "BINTANGOアプリのライセンス情報",
             );
+          } else if (menuItem == MenuItem.feedback) {
+            final inAppReview = InAppReview.instance;
+            if (await inAppReview.isAvailable()) {
+              await inAppReview.requestReview();
+            }
           } else {
             setBrowserPage(menuItem.url);
           }
