@@ -80,7 +80,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     super.initState();
     initTangoList();
     initFCM();
-    initializeBannerAd();
+    // initializeBannerAd();
     _confirmAlreadyTestedToday();
   }
 
@@ -179,6 +179,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   }
 
   Widget _adWidget() {
+    return Container();
     return Container(
       height: 50,
       width: double.infinity,

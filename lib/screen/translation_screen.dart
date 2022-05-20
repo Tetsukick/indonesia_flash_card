@@ -54,7 +54,7 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
     FirebaseAnalyticsUtils.analytics
         .setCurrentScreen(screenName: AnalyticsScreen.translation.name);
     initializeDB();
-    initializeBannerAd();
+    // initializeBannerAd();
     super.initState();
   }
 
@@ -86,6 +86,7 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
                   padding: EdgeInsets.fromLTRB(0, SizeConfig.mediumSmallMargin, 0, SizeConfig.bottomBarHeight),
                   itemBuilder: (BuildContext context, int index){
                     if (index == 0) {
+                      return Container();
                       return Container(
                         height: 50,
                         width: double.infinity,

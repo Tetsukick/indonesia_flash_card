@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -53,12 +54,14 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
   List<TangoEntity> _searchedTango = [];
   AppDatabase? database;
   late BannerAd bannerAd;
+  InterstitialAd? _interstitialAd;
 
   @override
   void initState() {
     FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: AnalyticsScreen.dictionary.name);
     initializeDB();
-    initializeBannerAd();
+    // initializeBannerAd();
+    loadInterstitialAd();
     super.initState();
   }
 
@@ -83,6 +86,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
             padding: EdgeInsets.fromLTRB(0, 64, 0, SizeConfig.bottomBarHeight),
             itemBuilder: (BuildContext context, int index){
               if (index == 0) {
+                return Container();
                 return Container(
                   height: 50,
                   width: double.infinity,
@@ -106,8 +110,14 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: SizeConfig.mediumSmallMargin),
       child: InkWell(
-        onTap: () {
+        onTap: () async {
           analytics(DictionaryItem.dictionaryItem);
+          var rand = new math.Random();
+          int lottery = rand.nextInt(4);
+          if (lottery == 0) {
+            await showInterstitialAd();
+          }
+
           DictionaryDetail.navigateTo(context, tangoEntity: tango);
         },
         child: Card(
@@ -565,5 +575,27 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
     });
 
     bannerAd.load();
+  }
+
+  Future<void> loadInterstitialAd() async {
+    await InterstitialAd.load(
+        adUnitId: Platform.isIOS ?
+        Config.adUnitIdIosInterstitial : Config.adUnitIdAndroidInterstitial,
+        request: AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (InterstitialAd ad) {
+            _interstitialAd = ad;
+            logger.d('Ad loaded.${ad}');
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            logger.d('Ad failed to load: $error');
+          },
+        ));
+  }
+
+  Future<void> showInterstitialAd() async {
+    if (_interstitialAd != null) {
+      await _interstitialAd?.show();
+    }
   }
 }
