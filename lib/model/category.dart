@@ -16,6 +16,9 @@ enum TangoCategory {
   hobby,
   color,
   plantsAndAnimals,
+  medical,
+  law,
+  dirtyJoke
 }
 
 extension TangoCategoryExt on TangoCategory {
@@ -53,6 +56,12 @@ extension TangoCategoryExt on TangoCategory {
         return '色';
       case TangoCategory.plantsAndAnimals:
         return '動植物';
+      case TangoCategory.medical:
+        return '病気・医療';
+      case TangoCategory.law:
+        return '法律・規則';
+      case TangoCategory.dirtyJoke:
+        return '下ネタ';
     }
   }
 
@@ -88,6 +97,12 @@ extension TangoCategoryExt on TangoCategory {
         return Assets.svg.shodou;
       case TangoCategory.plantsAndAnimals:
         return Assets.svg.bear;
+      case TangoCategory.medical:
+        return Assets.svg.difficult;
+      case TangoCategory.law:
+        return Assets.svg.difficult3;
+      case TangoCategory.dirtyJoke:
+        return Assets.svg.ufo;
     }
   }
 
@@ -123,6 +138,12 @@ extension TangoCategoryExt on TangoCategory {
         return TangoCategory.color;
       case 15:
         return TangoCategory.plantsAndAnimals;
+      case 16:
+        return TangoCategory.medical;
+      case 17:
+        return TangoCategory.law;
+      case 18:
+        return TangoCategory.dirtyJoke;
       default:
         return TangoCategory.work;
     }
