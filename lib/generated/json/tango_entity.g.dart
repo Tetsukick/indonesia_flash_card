@@ -43,6 +43,14 @@ TangoEntity $TangoEntityFromJson(Map<String, dynamic> json) {
 	if (category != null) {
 		tangoEntity.category = category;
 	}
+	final int? frequency = jsonConvert.convert<int>(json['frequency']);
+	if (frequency != null) {
+		tangoEntity.frequency = frequency;
+	}
+	final int? rankFrequency = jsonConvert.convert<int>(json['rankFrequency']);
+	if (rankFrequency != null) {
+		tangoEntity.rankFrequency = rankFrequency;
+	}
 	return tangoEntity;
 }
 
@@ -58,5 +66,7 @@ Map<String, dynamic> $TangoEntityToJson(TangoEntity entity) {
 	data['level'] = entity.level;
 	data['part_of_speech'] = entity.partOfSpeech;
 	data['category'] = entity.category;
+	data['frequency'] = entity.frequency;
+	data['rankFrequency'] = entity.rankFrequency;
 	return data;
 }
