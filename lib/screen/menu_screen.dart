@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -212,7 +214,7 @@ extension MenuItemExt on MenuItem {
       case MenuItem.feedback:
         return 'https://docs.google.com/forms/d/e/1FAIpQLSddXsg9zlzk0Zd-Y_0n0pEfsK3U246OJoI0cQCOCVL7XyRWOw/viewform';
       case MenuItem.developerInfo:
-        return 'https://linktr.ee/TeppeiKikuchi';
+        return Platform.isIOS ?  'https://linktr.ee/TeppeiKikuchi' : 'https://twitter.com/tpi29';
       default:
         return '';
     }

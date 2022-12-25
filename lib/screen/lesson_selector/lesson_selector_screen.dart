@@ -76,12 +76,10 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   @override
   void initState() {
     FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: AnalyticsScreen.lectureSelector.name);
-    initializeDB();
+    _onRefresh();
     super.initState();
-    initTangoList();
     initFCM();
-    // initializeBannerAd();
-    _confirmAlreadyTestedToday();
+    initializeBannerAd();
   }
 
   void initializeDB() async {
@@ -123,7 +121,6 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final tangoMaster = ref.watch(tangoListControllerProvider);
     return Stack(
       children: [
         SmartRefresher(
@@ -179,12 +176,15 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   }
 
   Widget _adWidget() {
-    return Container();
-    return Container(
-      height: 50,
-      width: double.infinity,
-      child: AdWidget(ad: bannerAd),
-    );
+    if (Platform.isAndroid) {
+      return Container();
+    } else {
+      return Container(
+        height: 50,
+        width: double.infinity,
+        child: AdWidget(ad: bannerAd),
+      );
+    }
   }
 
   Widget _userSection() {
@@ -458,6 +458,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
       items: _frequencyWidgets(),
       controller: _frequencyCarouselController,
       index: _currentFrequencyIndex,
+      autoPlay: Platform.isIOS
     );
   }
 
@@ -466,6 +467,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
       items: _levelWidgets(),
       controller: _levelCarouselController,
       index: _currentLevelIndex,
+      autoPlay: Platform.isIOS
     );
   }
 
@@ -474,6 +476,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
       items: _categoryWidgets(),
       controller: _categoryCarouselController,
       index: _currentCategoryIndex,
+      autoPlay: Platform.isIOS
     );
   }
 
@@ -482,6 +485,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
       items: _partOfSpeechWidgets(),
       controller: _partOfSpeechCarouselController,
       index: _currentPartOfSpeechIndex,
+      autoPlay: Platform.isIOS
     );
   }
 
@@ -632,6 +636,8 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   void _onRefresh() async{
     initializeDB();
     await initTangoList();
+    _confirmAlreadyTestedToday();
     _refreshController.refreshCompleted();
+    setState(() {});
   }
 }
