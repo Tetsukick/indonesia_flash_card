@@ -60,6 +60,9 @@ dependencies:
   screenshot: ^1.2.3
   path_provider:
   percent_indicator: ^4.0.0
+  font_awesome_flutter:
+  json_path:
+  timeago:
 
 dev_dependencies:
   flutter_test:

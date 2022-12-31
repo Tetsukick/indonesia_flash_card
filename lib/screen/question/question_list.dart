@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/question_entity.dart';
+import 'package:indonesia_flash_card/screen/question/answer_list_screen.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
 
 import '../../config/size_config.dart';
@@ -54,7 +55,12 @@ class _QuestionListScreenState extends State<QuestionListScreen> {
             itemCount: questionList.length,
             itemBuilder: (BuildContext context, int index) {
               final questionEntity = questionList[index];
-              return QuestionListChildViewWidget(questionEntity: questionEntity);
+              return InkWell(
+                onTap: () {
+                  QuestionAnswerListWidget.navigateTo(context, questionEntity: questionEntity);
+                },
+                child: QuestionListChildViewWidget(questionEntity: questionEntity),
+              );
             },
           ),
         ),

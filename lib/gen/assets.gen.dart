@@ -185,6 +185,10 @@ class $AssetsPngGen {
   AssetGenImage get addQuestion128 =>
       const AssetGenImage('assets/png/add_question_128.png');
 
+  /// File path: assets/png/answer_raise_hand_128.png
+  AssetGenImage get answerRaiseHand128 =>
+      const AssetGenImage('assets/png/answer_raise_hand_128.png');
+
   /// File path: assets/png/asking_question_128.png
   AssetGenImage get askingQuestion128 =>
       const AssetGenImage('assets/png/asking_question_128.png');
@@ -358,6 +362,7 @@ class $AssetsPngGen {
   List<AssetGenImage> get values => [
         addDocument128,
         addQuestion128,
+        answerRaiseHand128,
         askingQuestion128,
         bookmarkOff64,
         bookmarkOn64,
