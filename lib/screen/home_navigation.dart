@@ -7,6 +7,7 @@ import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/screen/dictionary_screen.dart';
 import 'package:indonesia_flash_card/screen/lesson_selector/lesson_selector_screen.dart';
 import 'package:indonesia_flash_card/screen/menu_screen.dart';
+import 'package:indonesia_flash_card/screen/question/question_list.dart';
 import 'package:indonesia_flash_card/screen/translation_screen.dart';
 
 import '../config/color_config.dart';
@@ -22,6 +23,7 @@ class _HomeNavigationState extends State<HomeNavigation> {
   final List<Widget> _pages = [
     LessonSelectorScreen(),
     DictionaryScreen(),
+    QuestionListScreen(),
     TranslationScreen(),
     MenuScreen(),
   ];
@@ -47,6 +49,7 @@ class _HomeNavigationState extends State<HomeNavigation> {
         items: <Widget>[
           Assets.png.flashCardColor.image(width: iconWidth, height: iconHeight),
           Assets.png.dictionaryColor2.image(width: iconWidth, height: iconHeight),
+          Assets.png.questionAndAnswer128.image(width: iconWidth, height: iconHeight),
           Assets.png.translation128.image(width: iconWidth, height: iconHeight),
           Assets.png.menuColor.image(width: iconWidth, height: iconHeight),
         ],

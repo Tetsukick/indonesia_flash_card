@@ -3,7 +3,9 @@
 ///  FlutterGen
 /// *****************************************************
 
-// ignore_for_file: directives_ordering,unnecessary_import
+// coverage:ignore-file
+// ignore_for_file: type=lint
+// ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -72,6 +74,27 @@ class $AssetsDotGen {
 
   /// File path: assets/dot/yakitori.gif
   AssetGenImage get yakitori => const AssetGenImage('assets/dot/yakitori.gif');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [
+        dashimaki,
+        eagle,
+        eagleStrong,
+        friedEgg,
+        hiyoko,
+        monster,
+        monsterStrong,
+        niwatori,
+        niwatoriBreak,
+        niwatoriCuteEye,
+        niwatoriFront,
+        niwatoriHalfEgg,
+        niwatoriRun,
+        omurice,
+        penginCute,
+        toriKaraage,
+        yakitori
+      ];
 }
 
 class $AssetsGifGen {
@@ -80,6 +103,9 @@ class $AssetsGifGen {
   /// File path: assets/gif/bir_bintang_kanpai.gif
   AssetGenImage get birBintangKanpai =>
       const AssetGenImage('assets/gif/bir_bintang_kanpai.gif');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [birBintangKanpai];
 }
 
 class $AssetsIconGen {
@@ -91,6 +117,9 @@ class $AssetsIconGen {
   /// File path: assets/icon/app_icon_512.png
   AssetGenImage get appIcon512 =>
       const AssetGenImage('assets/icon/app_icon_512.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [appIcon, appIcon512];
 }
 
 class $AssetsLottieGen {
@@ -128,6 +157,21 @@ class $AssetsLottieGen {
 
   /// File path: assets/lottie/timer_bomb_15s.json
   String get timerBomb15s => 'assets/lottie/timer_bomb_15s.json';
+
+  /// List of all assets
+  List<String> get values => [
+        bicycleIndonesia,
+        checkGreen,
+        complete,
+        congratulation,
+        countdown10s,
+        crossRed,
+        kanpai,
+        speaker,
+        splashScreen,
+        tap,
+        timerBomb15s
+      ];
 }
 
 class $AssetsPngGen {
@@ -253,6 +297,10 @@ class $AssetsPngGen {
   AssetGenImage get privacypolicy128 =>
       const AssetGenImage('assets/png/privacypolicy_128.png');
 
+  /// File path: assets/png/question_and_answer_128.png
+  AssetGenImage get questionAndAnswer128 =>
+      const AssetGenImage('assets/png/question_and_answer_128.png');
+
   /// File path: assets/png/reverse_128.png
   AssetGenImage get reverse128 =>
       const AssetGenImage('assets/png/reverse_128.png');
@@ -293,6 +341,53 @@ class $AssetsPngGen {
   /// File path: assets/png/translation_128.png
   AssetGenImage get translation128 =>
       const AssetGenImage('assets/png/translation_128.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [
+        addDocument128,
+        bookmarkOff64,
+        bookmarkOn64,
+        cancelRed128,
+        cancelRed512,
+        cardGames,
+        checkGreenRich64,
+        checkedGreen128,
+        checkedGreen512,
+        continue128,
+        developer128,
+        dictionaryBlack,
+        dictionaryBlack2,
+        dictionaryColor,
+        dictionaryColor2,
+        english64,
+        example64,
+        feedback128,
+        filter64,
+        flashCardColor,
+        flashCardsBlack,
+        growth128,
+        home128,
+        indonesia64,
+        infoNotes,
+        japan64,
+        japanFuji64,
+        licence128,
+        menuColor,
+        minus128,
+        privacypolicy128,
+        questionAndAnswer128,
+        reverse128,
+        search128,
+        settingsColor,
+        settingsColor2,
+        snsShare128,
+        sort128,
+        sort64,
+        soundOff64,
+        soundOn64,
+        test128,
+        translation128
+      ];
 }
 
 class $AssetsPrefectureIndonesiaGen {
@@ -433,6 +528,44 @@ class $AssetsPrefectureIndonesiaGen {
   /// File path: assets/prefecture_indonesia/logo_sumatera_utara.png
   AssetGenImage get logoSumateraUtara => const AssetGenImage(
       'assets/prefecture_indonesia/logo_sumatera_utara.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [
+        logoProvinsiAceh,
+        logoProvinsiBali,
+        logoProvinsiBanten,
+        logoProvinsiBengkulu,
+        logoProvinsiDKIJakarta,
+        logoProvinsiGorontalo,
+        logoProvinsiJambi,
+        logoProvinsiJawaBarat,
+        logoProvinsiJawaTengah,
+        logoProvinsiJawaTimur,
+        logoProvinsiKalimantanBarat,
+        logoProvinsiKalimantanSelatan,
+        logoProvinsiKalimantanTengah,
+        logoProvinsiKalimantanTimur,
+        logoProvinsiKalimantanUtara,
+        logoProvinsiKepulauanBangkaBelitung,
+        logoProvinsiLampung,
+        logoProvinsiMaluku,
+        logoProvinsiMalukuUtara,
+        logoProvinsiNusaTenggaraBarat,
+        logoProvinsiNusaTenggaraTimur,
+        logoProvinsiPapua,
+        logoProvinsiPapuaBarat,
+        logoProvinsiRiau,
+        logoProvinsiSulawesiSelatan,
+        logoProvinsiSulawesiTengah,
+        logoProvinsiSulawesiTenggara,
+        logoProvinsiSulawesiUtara,
+        logoProvinsiSumateraSelatan,
+        logoProvinsiYogyakarta,
+        logoSumateraBarat,
+        provinsiSulawesiBarat,
+        logoProvinsiKepulauanRiauKepri,
+        logoSumateraUtara
+      ];
 }
 
 class $AssetsSvgGen {
@@ -609,6 +742,66 @@ class $AssetsSvgGen {
 
   /// File path: assets/svg/yoga.svg
   SvgGenImage get yoga => const SvgGenImage('assets/svg/yoga.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [
+        bear,
+        building2,
+        buildings,
+        cat,
+        christmasDoal,
+        day,
+        difficult,
+        difficult2,
+        difficult3,
+        drink,
+        easy,
+        eat,
+        event,
+        event2,
+        event3,
+        fashion,
+        fashion2,
+        fashion3,
+        fashion4,
+        food2,
+        happiness,
+        islam1,
+        islam2,
+        money,
+        money2,
+        music,
+        ninja,
+        rabit,
+        rainy,
+        robot,
+        shodou,
+        spaceShattle,
+        sport2,
+        sports1,
+        summerVacation,
+        superhero,
+        surfer,
+        tennis,
+        time,
+        time2,
+        tool,
+        tool2,
+        trip,
+        twitterBlue,
+        ufo,
+        unit,
+        unit2,
+        vehicle,
+        vehicle2,
+        vehicle3,
+        witchGirl,
+        work,
+        work2,
+        world,
+        world2,
+        yoga
+      ];
 }
 
 class Assets {
@@ -624,19 +817,23 @@ class Assets {
   static const $AssetsSvgGen svg = $AssetsSvgGen();
 }
 
-class AssetGenImage extends AssetImage {
-  const AssetGenImage(String assetName) : super(assetName);
+class AssetGenImage {
+  const AssetGenImage(this._assetName);
+
+  final String _assetName;
 
   Image image({
     Key? key,
+    AssetBundle? bundle,
     ImageFrameBuilder? frameBuilder,
-    ImageLoadingBuilder? loadingBuilder,
     ImageErrorWidgetBuilder? errorBuilder,
     String? semanticLabel,
     bool excludeFromSemantics = false,
+    double? scale,
     double? width,
     double? height,
     Color? color,
+    Animation<double>? opacity,
     BlendMode? colorBlendMode,
     BoxFit? fit,
     AlignmentGeometry alignment = Alignment.center,
@@ -645,19 +842,24 @@ class AssetGenImage extends AssetImage {
     bool matchTextDirection = false,
     bool gaplessPlayback = false,
     bool isAntiAlias = false,
+    String? package,
     FilterQuality filterQuality = FilterQuality.low,
+    int? cacheWidth,
+    int? cacheHeight,
   }) {
-    return Image(
+    return Image.asset(
+      _assetName,
       key: key,
-      image: this,
+      bundle: bundle,
       frameBuilder: frameBuilder,
-      loadingBuilder: loadingBuilder,
       errorBuilder: errorBuilder,
       semanticLabel: semanticLabel,
       excludeFromSemantics: excludeFromSemantics,
+      scale: scale,
       width: width,
       height: height,
       color: color,
+      opacity: opacity,
       colorBlendMode: colorBlendMode,
       fit: fit,
       alignment: alignment,
@@ -666,11 +868,18 @@ class AssetGenImage extends AssetImage {
       matchTextDirection: matchTextDirection,
       gaplessPlayback: gaplessPlayback,
       isAntiAlias: isAntiAlias,
+      package: package,
       filterQuality: filterQuality,
+      cacheWidth: cacheWidth,
+      cacheHeight: cacheHeight,
     );
   }
 
-  String get path => assetName;
+  ImageProvider provider() => AssetImage(_assetName);
+
+  String get path => _assetName;
+
+  String get keyName => _assetName;
 }
 
 class SvgGenImage {
@@ -694,6 +903,8 @@ class SvgGenImage {
     String? semanticsLabel,
     bool excludeFromSemantics = false,
     Clip clipBehavior = Clip.hardEdge,
+    bool cacheColorFilter = false,
+    SvgTheme? theme,
   }) {
     return SvgPicture.asset(
       _assetName,
@@ -712,8 +923,12 @@ class SvgGenImage {
       semanticsLabel: semanticsLabel,
       excludeFromSemantics: excludeFromSemantics,
       clipBehavior: clipBehavior,
+      cacheColorFilter: cacheColorFilter,
+      theme: theme,
     );
   }
 
   String get path => _assetName;
+
+  String get keyName => _assetName;
 }

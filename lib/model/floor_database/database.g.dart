@@ -65,8 +65,11 @@ class _$AppDatabase extends AppDatabase {
 
   ActivityDao? _activityDaoInstance;
 
-  Future<sqflite.Database> open(String path, List<Migration> migrations,
-      [Callback? callback]) async {
+  Future<sqflite.Database> open(
+    String path,
+    List<Migration> migrations, [
+    Callback? callback,
+  ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
       version: 2,
       onConfigure: (database) async {
@@ -106,8 +109,10 @@ class _$AppDatabase extends AppDatabase {
 }
 
 class _$WordStatusDao extends WordStatusDao {
-  _$WordStatusDao(this.database, this.changeListener)
-      : _queryAdapter = QueryAdapter(database),
+  _$WordStatusDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
         _wordStatusInsertionAdapter = InsertionAdapter(
             database,
             'WordStatus',
@@ -183,8 +188,10 @@ class _$WordStatusDao extends WordStatusDao {
 }
 
 class _$ActivityDao extends ActivityDao {
-  _$ActivityDao(this.database, this.changeListener)
-      : _queryAdapter = QueryAdapter(database),
+  _$ActivityDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
         _activityInsertionAdapter = InsertionAdapter(
             database,
             'Activity',
