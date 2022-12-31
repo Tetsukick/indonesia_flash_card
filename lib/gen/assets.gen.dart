@@ -181,6 +181,14 @@ class $AssetsPngGen {
   AssetGenImage get addDocument128 =>
       const AssetGenImage('assets/png/add_document_128.png');
 
+  /// File path: assets/png/add_question_128.png
+  AssetGenImage get addQuestion128 =>
+      const AssetGenImage('assets/png/add_question_128.png');
+
+  /// File path: assets/png/asking_question_128.png
+  AssetGenImage get askingQuestion128 =>
+      const AssetGenImage('assets/png/asking_question_128.png');
+
   /// File path: assets/png/bookmark_off_64.png
   AssetGenImage get bookmarkOff64 =>
       const AssetGenImage('assets/png/bookmark_off_64.png');
@@ -264,6 +272,10 @@ class $AssetsPngGen {
   AssetGenImage get growth128 =>
       const AssetGenImage('assets/png/growth_128.png');
 
+  /// File path: assets/png/hijab_teacher_128.png
+  AssetGenImage get hijabTeacher128 =>
+      const AssetGenImage('assets/png/hijab_teacher_128.png');
+
   /// File path: assets/png/home_128.png
   AssetGenImage get home128 => const AssetGenImage('assets/png/home_128.png');
 
@@ -345,6 +357,8 @@ class $AssetsPngGen {
   /// List of all assets
   List<AssetGenImage> get values => [
         addDocument128,
+        addQuestion128,
+        askingQuestion128,
         bookmarkOff64,
         bookmarkOn64,
         cancelRed128,
@@ -366,6 +380,7 @@ class $AssetsPngGen {
         flashCardColor,
         flashCardsBlack,
         growth128,
+        hijabTeacher128,
         home128,
         indonesia64,
         infoNotes,

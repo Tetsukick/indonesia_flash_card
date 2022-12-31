@@ -5,6 +5,7 @@ import 'package:indonesia_flash_card/generated/json/question_answer_entity.g.dar
 @JsonSerializable()
 class QuestionAnswerEntity {
 
+  String? id;
 	String? answer;
 	@JSONField(name: "is_best")
 	bool? isBest;

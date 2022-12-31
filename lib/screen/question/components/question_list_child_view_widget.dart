@@ -1,9 +1,30 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:indonesia_flash_card/gen/assets.gen.dart';
+import 'package:indonesia_flash_card/model/question_answer_entity.dart';
+import 'package:indonesia_flash_card/model/question_entity.dart';
 
-class QuestionListChildViewWidget extends StatelessWidget {
-  const QuestionListChildViewWidget({Key? key}) : super(key: key);
+import '../../../utils/logger.dart';
+
+class QuestionListChildViewWidget extends StatefulWidget {
+  const QuestionListChildViewWidget({Key? key, required this.questionEntity}) : super(key: key);
+  final QuestionEntity questionEntity;
+
+  @override
+  State<QuestionListChildViewWidget> createState() => _QuestionListChildViewWidgetState();
+}
+
+class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidget> {
+  List<QuestionAnswerEntity> questionAnswers = [];
+  CollectionReference questionsRef = 
+    FirebaseFirestore.instance.collection('questions');
+  
+  @override
+  void initState() {
+    initQuestionAnswerList();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,19 +48,16 @@ class QuestionListChildViewWidget extends StatelessWidget {
                       padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(0),
-                        child: Image.network(
-                          'https://cdn-icons-png.flaticon.com/512/3782/3782284.png',
-                          width: 32,
-                          height: 32,
-                          fit: BoxFit.cover,
-                        ),
+                        child: Assets.png.askingQuestion128.image(
+                            width: 32, height: 32, fit: BoxFit.cover)
                       ),
                     ),
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
-                        child: Text(
-                          '頻度を表す単語(sering, selalu, kadang-kadang)のそれぞれの違いがいまいちよく分かっていません。どのように使い分けたら良いでしょうか？',
+                        padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                        child: AutoSizeText(
+                          widget.questionEntity.question ?? '',
+                          maxLines: 5,
                           // style: FlutterFlowTheme.of(context).bodyText1,
                         ),
                       ),
@@ -47,36 +65,34 @@ class QuestionListChildViewWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
-                      child: Image.network(
-                        'https://cdn-icons-png.flaticon.com/512/8907/8907269.png',
-                        width: 24,
-                        height: 24,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
+              Visibility(
+                visible: questionAnswers.isNotEmpty,
+                child: Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
-                        child: AutoSizeText(
-                          'selalu = 100% sering = 70% kadang-kadang = 50% jarang = 30%以下　みたいなイメージで使い分けています。',
-                          maxLines: 2,
-                          // style:
-                          // FlutterFlowTheme.of(context).bodyText2.override(
-                          //   fontFamily: 'Poppins',
-                          //   fontStyle: FontStyle.italic,
-                          // ),
+                        child: Assets.png.hijabTeacher128.image(
+                            width: 24, height: 24, fit: BoxFit.cover)
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                          child: AutoSizeText(
+                            questionAnswers.isNotEmpty ? questionAnswers.first.answer ?? '' : '',
+                            maxLines: 2,
+                            // style:
+                            // FlutterFlowTheme.of(context).bodyText2.override(
+                            //   fontFamily: 'Poppins',
+                            //   fontStyle: FontStyle.italic,
+                            // ),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               Padding(
@@ -90,32 +106,27 @@ class QuestionListChildViewWidget extends StatelessWidget {
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Icon(
-                                  Icons.mode_comment_outlined,
-                                  color: Color(0xFF95A1AC),
-                                  size: 24,
-                                ),
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      4, 0, 0, 0),
-                                  child: Text(
-                                    '4',
-                                    // style: FlutterFlowTheme.of(context)
-                                    //     .bodyText2
-                                    //     .override(
-                                    //   fontFamily: 'Lexend Deca',
-                                    //   color: Color(0xFF95A1AC),
-                                    //   fontSize: 14,
-                                    //   fontWeight: FontWeight.normal,
-                                    // ),
+                          Visibility(
+                            visible: questionAnswers.isNotEmpty,
+                            child: Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Icon(
+                                    Icons.mode_comment_outlined,
+                                    color: Color(0xFF95A1AC),
+                                    size: 24,
                                   ),
-                                ),
-                              ],
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        4, 0, 0, 0),
+                                    child: Text(
+                                      questionAnswers.length.toString(),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           Padding(
@@ -136,6 +147,20 @@ class QuestionListChildViewWidget extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void initQuestionAnswerList() {
+    questionsRef.doc(widget.questionEntity.id).collection('answers').get().then((value) {
+        setState(() {
+          questionAnswers = value.docs.map((e) =>
+            QuestionAnswerEntity.fromJson(e.data() as Map<String, dynamic>)..id = e.id
+          ).toList();
+        });
+      },
+      onError: (e) {
+        logger.d(e);
+      }
     );
   }
 }

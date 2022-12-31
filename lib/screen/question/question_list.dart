@@ -1,6 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:indonesia_flash_card/gen/assets.gen.dart';
+import 'package:indonesia_flash_card/model/question_entity.dart';
+import 'package:indonesia_flash_card/utils/logger.dart';
 
+import '../../config/size_config.dart';
 import 'components/question_list_child_view_widget.dart';
 
 class QuestionListScreen extends StatefulWidget {
@@ -12,63 +17,63 @@ class QuestionListScreen extends StatefulWidget {
 
 class _QuestionListScreenState extends State<QuestionListScreen> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  CollectionReference questionsRef =
+    FirebaseFirestore.instance.collection('questions');
+  List<QuestionEntity> questionList = [];
+
+  @override
+  void initState() {
+    initQuestionList();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: Color(0xFFFFEBEE),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print('FloatingActionButton pressed ...');
-        },
-        backgroundColor: Color(0xFFB71C1C),
-        elevation: 8,
-        child: Image.network(
-          'https://cdn-icons-png.flaticon.com/512/6238/6238434.png',
-          width: 32,
-          height: 32,
-          fit: BoxFit.cover,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: SizeConfig.bottomBarHeight),
+        child: FloatingActionButton(
+          onPressed: () {
+            print('FloatingActionButton pressed ...');
+          },
+          backgroundColor: Color(0xFFB71C1C),
+          elevation: 8,
+          child: Assets.png.addQuestion128.image(
+            width: 32,
+            height: 32,
+            fit: BoxFit.cover,
+          )
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            // Container(
-            //   width: MediaQuery.of(context).size.width,
-            //   decoration: BoxDecoration(
-            //     color: Color(0xFFFFEBEE),
-            //     boxShadow: [
-            //       BoxShadow(
-            //         blurRadius: 3,
-            //         color: Color(0x3A000000),
-            //         offset: Offset(0, 1),
-            //       )
-            //     ],
-            //   ),
-            //   child: Container(
-            //     decoration: BoxDecoration(),
-            //     child: Align(
-            //       alignment: AlignmentDirectional(0, 0),
-            //       child: SearchHeaderWidget(),
-            //     ),
-            //   ),
-            // ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 32),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  QuestionListChildViewWidget(),
-                  QuestionListChildViewWidget(),
-                  QuestionListChildViewWidget(),
-                ],
-              ),
-            ),
-          ],
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 32),
+          child: ListView.builder(
+            itemCount: questionList.length,
+            itemBuilder: (BuildContext context, int index) {
+              final questionEntity = questionList[index];
+              return QuestionListChildViewWidget(questionEntity: questionEntity);
+            },
+          ),
         ),
       ),
+    );
+  }
+
+  void initQuestionList() {
+    questionsRef.get().then((value) {
+        logger.d(value.docs.first);
+        setState(() {
+          questionList = value.docs.map((e) =>
+            QuestionEntity.fromJson(e.data() as Map<String, dynamic>)..id = e.id
+          ).toList();
+        });
+      },
+      onError: (e) {
+        logger.d(e);
+      }
     );
   }
 }

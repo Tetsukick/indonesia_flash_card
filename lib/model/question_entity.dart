@@ -5,6 +5,7 @@ import 'package:indonesia_flash_card/generated/json/question_entity.g.dart';
 @JsonSerializable()
 class QuestionEntity {
 
+  String? id;
 	String? question;
 	@JSONField(name: "user_token")
 	String? userToken;
