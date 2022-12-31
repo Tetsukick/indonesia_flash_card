@@ -25,10 +25,12 @@ class AnswerTitle extends StatelessWidget {
             child: AutoSizeText(
               answer ?? '',
               maxLines: maxLines,
-              style: FlutterFlowTheme.of(context).bodyText2.override(
-                fontFamily: 'Poppins',
-                fontStyle: FontStyle.italic,
-              ),
+              style:
+                maxLines != null ? FlutterFlowTheme.of(context).bodyText2.override(
+                  fontFamily: 'Poppins',
+                  fontStyle: FontStyle.italic,
+                )
+                : FlutterFlowTheme.of(context).bodyText1,
             ),
           ),
         ),
