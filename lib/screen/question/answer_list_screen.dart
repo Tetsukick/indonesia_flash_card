@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import '../../model/question_answer_entity.dart';
 import '../../model/question_entity.dart';
 import '../../utils/logger.dart';
+import '../../utils/utils.dart';
 import 'components/answer_title.dart';
 
 class QuestionAnswerListWidget extends StatefulWidget {
@@ -147,7 +148,8 @@ class _QuestionAnswerListWidgetState extends State<QuestionAnswerListWidget> {
                         itemBuilder: (BuildContext context, int index) {
                           return AnswerCard(answerEntity: questionAnswers[index]);
                         },
-                      )
+                      ),
+                      const SizedBox(height: 120)
                     ],
                   ),
                 ),
@@ -314,33 +316,8 @@ class _QuestionAnswerListWidgetState extends State<QuestionAnswerListWidget> {
     setState(() => _isSendingAnswer = true);
     await questionsRef.doc(widget.questionEntity.id).collection('answers').add(answerEntity.toJson());
     setState(() => _isSendingAnswer = false);
-    await showUploadSuccessDialog();
+    await Utils.showUploadSuccessDialog(context);
     answerTextEditingController.clear();
-
     initQuestionAnswerList();
-  }
-
-  Future<void> showUploadSuccessDialog() async {
-    showGeneralDialog(
-        context: context,
-        barrierDismissible: false,
-        transitionDuration: Duration(milliseconds: 300),
-        barrierColor: Colors.black.withOpacity(0.5),
-        pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Lottie.asset(
-                  Assets.lottie.thankYou,
-                  height: 300,
-                )
-              ],
-            ),
-          );
-        }
-    );
-    await Future<void>.delayed(Duration(seconds: 3));
-    Navigator.of(context).pop();
   }
 }

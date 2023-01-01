@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 import '../config/color_config.dart';
 import '../gen/assets.gen.dart';
@@ -88,5 +89,29 @@ class Utils {
         ],
       ),
     );
+  }
+
+  static Future<void> showUploadSuccessDialog(BuildContext context) async {
+    showGeneralDialog(
+        context: context,
+        barrierDismissible: false,
+        transitionDuration: Duration(milliseconds: 300),
+        barrierColor: Colors.black.withOpacity(0.5),
+        pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Lottie.asset(
+                  Assets.lottie.thankYou,
+                  height: 300,
+                )
+              ],
+            ),
+          );
+        }
+    );
+    await Future<void>.delayed(Duration(seconds: 3));
+    Navigator.of(context).pop();
   }
 }
