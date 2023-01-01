@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:indonesia_flash_card/generated/json/base/json_convert_content.dart';
 import 'package:indonesia_flash_card/model/question_entity.dart';
+
+import '../../utils/timestamp_converter.dart';
 
 QuestionEntity $QuestionEntityFromJson(Map<String, dynamic> json) {
 	final QuestionEntity questionEntity = QuestionEntity();
@@ -11,9 +14,9 @@ QuestionEntity $QuestionEntityFromJson(Map<String, dynamic> json) {
 	if (userToken != null) {
 		questionEntity.userToken = userToken;
 	}
-	final int? cretedAt = jsonConvert.convert<int>(json['creted_at']);
-	if (cretedAt != null) {
-		questionEntity.cretedAt = cretedAt;
+	final DateTime? createdAt = TimestampConverter().fromJson(json['created_at']);
+	if (createdAt != null) {
+		questionEntity.createdAt = createdAt;
 	}
 	final List<String>? categories = jsonConvert.convertListNotNull<String>(json['categories']);
 	if (categories != null) {
@@ -26,7 +29,7 @@ Map<String, dynamic> $QuestionEntityToJson(QuestionEntity entity) {
 	final Map<String, dynamic> data = <String, dynamic>{};
 	data['question'] = entity.question;
 	data['user_token'] = entity.userToken;
-	data['creted_at'] = entity.cretedAt;
+	data['created_at'] = TimestampConverter().toJson(entity.createdAt);
 	data['categories'] =  entity.categories;
 	return data;
 }

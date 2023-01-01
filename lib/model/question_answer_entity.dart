@@ -12,7 +12,7 @@ class QuestionAnswerEntity {
 	@JSONField(name: "user_token")
 	String? userToken;
 	@JSONField(name: "created_at")
-	int? createdAt;
+	DateTime? createdAt;
   
   QuestionAnswerEntity();
 

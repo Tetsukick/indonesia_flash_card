@@ -1,6 +1,8 @@
 import 'package:indonesia_flash_card/generated/json/base/json_convert_content.dart';
 import 'package:indonesia_flash_card/model/question_answer_entity.dart';
 
+import '../../utils/timestamp_converter.dart';
+
 QuestionAnswerEntity $QuestionAnswerEntityFromJson(Map<String, dynamic> json) {
 	final QuestionAnswerEntity questionAnswerEntity = QuestionAnswerEntity();
 	final String? answer = jsonConvert.convert<String>(json['answer']);
@@ -15,7 +17,7 @@ QuestionAnswerEntity $QuestionAnswerEntityFromJson(Map<String, dynamic> json) {
 	if (userToken != null) {
 		questionAnswerEntity.userToken = userToken;
 	}
-	final int? createdAt = jsonConvert.convert<int>(json['created_at']);
+	final DateTime? createdAt = TimestampConverter().fromJson(json['created_at']);
 	if (createdAt != null) {
 		questionAnswerEntity.createdAt = createdAt;
 	}
@@ -27,6 +29,6 @@ Map<String, dynamic> $QuestionAnswerEntityToJson(QuestionAnswerEntity entity) {
 	data['answer'] = entity.answer;
 	data['is_best'] = entity.isBest;
 	data['user_token'] = entity.userToken;
-	data['created_at'] = entity.createdAt;
+	data['created_at'] = TimestampConverter().toJson(entity.createdAt);
 	return data;
 }

@@ -69,8 +69,7 @@ class _QuestionListScreenState extends State<QuestionListScreen> {
   }
 
   void initQuestionList() {
-    questionsRef.get().then((value) {
-        logger.d(value.docs.first);
+    questionsRef.orderBy('created_at', descending: true).get().then((value) {
         setState(() {
           questionList = value.docs.map((e) =>
             QuestionEntity.fromJson(e.data() as Map<String, dynamic>)..id = e.id

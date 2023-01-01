@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:indonesia_flash_card/generated/json/base/json_field.dart';
 import 'package:indonesia_flash_card/generated/json/question_entity.g.dart';
 
@@ -9,8 +10,8 @@ class QuestionEntity {
 	String? question;
 	@JSONField(name: "user_token")
 	String? userToken;
-	@JSONField(name: "creted_at")
-	int? cretedAt;
+	@JSONField(name: "created_at")
+	DateTime? createdAt;
 	List<String>? categories;
   
   QuestionEntity();

@@ -22,6 +22,7 @@ class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidge
   List<QuestionAnswerEntity> questionAnswers = [];
   CollectionReference questionsRef = 
     FirebaseFirestore.instance.collection('questions');
+  int answerCount = 0;
   
   @override
   void initState() {
@@ -74,7 +75,7 @@ class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidge
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       4, 0, 0, 0),
                                   child: Text(
-                                    questionAnswers.length.toString(),
+                                    answerCount.toString(),
                                   ),
                                 ),
                               ],
@@ -102,7 +103,7 @@ class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidge
   }
 
   void initQuestionAnswerList() {
-    questionsRef.doc(widget.questionEntity.id).collection('answers').get().then((value) {
+    questionsRef.doc(widget.questionEntity.id).collection('answers').orderBy('created_at', descending: true).limit(1).get().then((value) {
         setState(() {
           questionAnswers = value.docs.map((e) =>
             QuestionAnswerEntity.fromJson(e.data() as Map<String, dynamic>)..id = e.id
@@ -113,5 +114,10 @@ class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidge
         logger.d(e);
       }
     );
+    questionsRef.doc(widget.questionEntity.id).collection('answers').count().get().then((value) {
+      setState(() {
+        answerCount = value.count;
+      });
+    });
   }
 }
