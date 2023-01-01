@@ -146,6 +146,9 @@ class $AssetsLottieGen {
   /// File path: assets/lottie/kanpai.json
   String get kanpai => 'assets/lottie/kanpai.json';
 
+  /// File path: assets/lottie/sending-paper-plane.json
+  String get sendingPaperPlane => 'assets/lottie/sending-paper-plane.json';
+
   /// File path: assets/lottie/speaker.json
   String get speaker => 'assets/lottie/speaker.json';
 
@@ -154,6 +157,9 @@ class $AssetsLottieGen {
 
   /// File path: assets/lottie/tap.json
   String get tap => 'assets/lottie/tap.json';
+
+  /// File path: assets/lottie/thank-you.json
+  String get thankYou => 'assets/lottie/thank-you.json';
 
   /// File path: assets/lottie/timer_bomb_15s.json
   String get timerBomb15s => 'assets/lottie/timer_bomb_15s.json';
@@ -167,9 +173,11 @@ class $AssetsLottieGen {
         countdown10s,
         crossRed,
         kanpai,
+        sendingPaperPlane,
         speaker,
         splashScreen,
         tap,
+        thankYou,
         timerBomb15s
       ];
 }
