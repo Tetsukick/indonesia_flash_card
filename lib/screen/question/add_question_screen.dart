@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -90,154 +91,106 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
         elevation: 0,
       ),
       body: SafeArea(
-        child: Stack(
-          children: [
-            Stack(
-              children: [
-                Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.94,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Expanded(
-                                        child: TextFormField(
-                                          controller: questionTextController,
-                                          focusNode: questionTextFieldFocusNode,
-                                          decoration: InputDecoration(
-                                            hintText:
-                                            '質問を入力 ※20字以上\n(質問例: \n頻度を表す単語(sering, selalu, kadang-kadang)のそれぞれの違いがいまいちよく分かっていません。どのように使い分けたら良いでしょうか？)',
-                                            hintStyle: FlutterFlowTheme.of(context)
-                                                .bodyText2
+        child: GestureDetector(
+          onTap: () => questionTextFieldFocusNode.unfocus(),
+          child: Stack(
+            children: [
+              Stack(
+                children: [
+                  Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.94,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Expanded(
+                                          child: TextFormField(
+                                            controller: questionTextController,
+                                            focusNode: questionTextFieldFocusNode,
+                                            decoration: InputDecoration(
+                                              hintText:
+                                              '質問を入力 ※20字以上\n(質問例: \n頻度を表す単語(sering, selalu, kadang-kadang)のそれぞれの違いがいまいちよく分かっていません。どのように使い分けたら良いでしょうか？)',
+                                              hintStyle: FlutterFlowTheme.of(context)
+                                                  .bodyText2
+                                                  .override(
+                                                fontFamily: 'Lexend Deca',
+                                                color: Color(0xFF95A1AC),
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Color(0xFFF1F4F8),
+                                                  width: 2,
+                                                ),
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Color(0xFFF1F4F8),
+                                                  width: 2,
+                                                ),
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                              errorBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Color(0x00000000),
+                                                  width: 2,
+                                                ),
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                              focusedErrorBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Color(0x00000000),
+                                                  width: 2,
+                                                ),
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                              filled: true,
+                                              fillColor: Colors.white,
+                                              contentPadding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  20, 32, 20, 12),
+                                            ),
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyText1
                                                 .override(
                                               fontFamily: 'Lexend Deca',
-                                              color: Color(0xFF95A1AC),
+                                              color: Color(0xFF090F13),
                                               fontSize: 14,
                                               fontWeight: FontWeight.normal,
                                             ),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Color(0xFFF1F4F8),
-                                                width: 2,
-                                              ),
-                                              borderRadius: BorderRadius.circular(8),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Color(0xFFF1F4F8),
-                                                width: 2,
-                                              ),
-                                              borderRadius: BorderRadius.circular(8),
-                                            ),
-                                            errorBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Color(0x00000000),
-                                                width: 2,
-                                              ),
-                                              borderRadius: BorderRadius.circular(8),
-                                            ),
-                                            focusedErrorBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Color(0x00000000),
-                                                width: 2,
-                                              ),
-                                              borderRadius: BorderRadius.circular(8),
-                                            ),
-                                            filled: true,
-                                            fillColor: Colors.white,
-                                            contentPadding:
-                                            EdgeInsetsDirectional.fromSTEB(
-                                                20, 32, 20, 12),
+                                            textAlign: TextAlign.start,
+                                            maxLines: 15,
                                           ),
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyText1
-                                              .override(
-                                            fontFamily: 'Lexend Deca',
-                                            color: Color(0xFF090F13),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                          textAlign: TextAlign.start,
-                                          maxLines: 15,
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-                      child: FFButtonWidget(
-                        onPressed: () {
-                          questionTextFieldFocusNode.unfocus();
-                          sendQuestion();
-                        },
-                        text: '質問を投稿',
-                        options: FFButtonOptions(
-                          width: 270,
-                          height: 50,
-                          color: Color(0xFFB71C1C),
-                          textStyle: FlutterFlowTheme.of(context).subtitle2.override(
-                            fontFamily: 'Lexend Deca',
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          elevation: 3,
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                            width: 1,
-                          ),
-                        ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-                Visibility(
-                  visible: _isAlreadySentQuestionToday,
-                  child: Container(
-                    color: Colors.black.withOpacity(0.5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Lottie.asset(
-                          Assets.lottie.thankYou,
-                          height: 300,
-                        ),
-                        const SizedBox(height: 24),
-                        Padding(
-                          padding: const EdgeInsets.all(SizeConfig.mediumLargeMargin),
-                          child: Text(
-                            '現在は一日に可能な質問は一回までとなっております。\n明日、再度お試しください。ご利用いただきありがとうございます。',
-                            style: FlutterFlowTheme.of(context).subtitle2.override(
-                              fontFamily: 'Lexend Deca',
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        FFButtonWidget(
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+                        child: FFButtonWidget(
                           onPressed: () {
-                            Navigator.of(context).pop();
+                            questionTextFieldFocusNode.unfocus();
+                            showConfirmToPostQuestionDialog();
                           },
-                          text: '戻る',
+                          text: '質問を投稿',
                           options: FFButtonOptions(
                             width: 270,
                             height: 50,
@@ -255,28 +208,94 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
                             ),
                           ),
                         ),
-                      ],
+                      ),
+                    ],
+                  ),
+                  Visibility(
+                    visible: _isAlreadySentQuestionToday,
+                    child: Container(
+                      color: Colors.black.withOpacity(0.5),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Lottie.asset(
+                            Assets.lottie.thankYou,
+                            height: 300,
+                          ),
+                          const SizedBox(height: 24),
+                          Padding(
+                            padding: const EdgeInsets.all(SizeConfig.mediumLargeMargin),
+                            child: Text(
+                              '現在は一日に可能な質問は一回までとなっております。\n明日、再度お試しください。ご利用いただきありがとうございます。',
+                              style: FlutterFlowTheme.of(context).subtitle2.override(
+                                fontFamily: 'Lexend Deca',
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          FFButtonWidget(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            text: '戻る',
+                            options: FFButtonOptions(
+                              width: 270,
+                              height: 50,
+                              color: Color(0xFFB71C1C),
+                              textStyle: FlutterFlowTheme.of(context).subtitle2.override(
+                                fontFamily: 'Lexend Deca',
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              elevation: 3,
+                              borderSide: BorderSide(
+                                color: Colors.transparent,
+                                width: 1,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Visibility(
+                visible: _isSendingQuestion,
+                child: Container(
+                  color: Colors.black.withOpacity(0.2),
+                  child: Center(
+                    child: Lottie.asset(
+                      Assets.lottie.sendingPaperPlane,
+                      height: 300,
                     ),
                   ),
                 ),
-              ],
-            ),
-            Visibility(
-              visible: _isSendingQuestion,
-              child: Container(
-                color: Colors.black.withOpacity(0.2),
-                child: Center(
-                  child: Lottie.asset(
-                    Assets.lottie.sendingPaperPlane,
-                    height: 300,
-                  ),
-                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  Future<void> showConfirmToPostQuestionDialog() async {
+    await AwesomeDialog(
+      context: context,
+      dialogType: DialogType.warning,
+      headerAnimationLoop: false,
+      animType: AnimType.bottomSlide,
+      title: 'この内容で質問を投稿しますか?',
+      desc: '質問を投稿後に削除・編集することはできません。質問は一日に一度までしか投稿できません。',
+      buttonsTextStyle: const TextStyle(color: Colors.black),
+      showCloseIcon: true,
+      btnCancelOnPress: () {},
+      btnOkOnPress: sendQuestion,
+    ).show();
   }
 
   Future<void> sendQuestion() async {
