@@ -15,7 +15,6 @@ import '../../model/question_answer_entity.dart';
 import '../../model/question_entity.dart';
 import '../../utils/logger.dart';
 import '../../utils/utils.dart';
-import 'components/answer_title.dart';
 
 class QuestionAnswerListWidget extends StatefulWidget {
   const QuestionAnswerListWidget({Key? key, required this.questionEntity}) : super(key: key);
