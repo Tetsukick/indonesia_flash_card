@@ -24,7 +24,7 @@ class ApiClient {
   // token should be injected by respective client manually by getting it from `SessionController` instance
   Future<T> get<T>({
     required String endpoint,
-    required T Function(Map<String,dynamic>) serializer,
+    T Function(Map<String,dynamic>)? serializer,
     Map<String, String>? queryParams,
     String? preferredUrl,
     Map<String, dynamic>? headers,
@@ -41,6 +41,9 @@ class ApiClient {
 
       ApiResponse apiResponse = handleResponse(response);
 
+      if (serializer == null) {
+        return apiResponse.body as T;
+      }
       return serializer(apiResponse.body);
     } on ApiException catch (ex) {
       // If the exception caught is an ApiException, then it isn't actually unexpected. We just throw it again

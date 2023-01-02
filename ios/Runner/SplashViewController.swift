@@ -3,7 +3,7 @@ import Lottie
 
 public class SplashViewController: UIViewController {
 
-    private var animationView: AnimationView?
+    private var animationView: LottieAnimationView?
 
     public override func viewDidAppear(_ animated: Bool) {
         animationView = .init(name: "splash_screen")
