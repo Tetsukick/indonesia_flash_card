@@ -1,10 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:floor/floor.dart';
 import 'package:flutter/material.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/question_answer_entity.dart';
 import 'package:indonesia_flash_card/model/question_entity.dart';
 import 'package:indonesia_flash_card/screen/question/components/question_title.dart';
+import 'package:social_share/social_share.dart';
 
 import '../../../flutter_flow/flutter_flow_theme.dart';
 import '../../../utils/logger.dart';
@@ -81,12 +83,15 @@ class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidge
                               ],
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
-                            child: Icon(
-                              Icons.ios_share,
-                              color: Color(0xFF95A1AC),
-                              size: 24,
+                          InkWell(
+                            onTap: shareSNS,
+                            child: Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
+                              child: Icon(
+                                Icons.ios_share,
+                                color: Color(0xFF95A1AC),
+                                size: 24,
+                              ),
                             ),
                           ),
                         ],
@@ -119,5 +124,9 @@ class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidge
         answerCount = value.count;
       });
     });
+  }
+
+  void shareSNS() async {
+    SocialShare.shareOptions('${widget.questionEntity.question} #インドネシア語についての質問');
   }
 }
