@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -187,7 +188,7 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
                         child: FFButtonWidget(
                           onPressed: () {
                             questionTextFieldFocusNode.unfocus();
-                            sendQuestion();
+                            showConfirmToPostQuestionDialog();
                           },
                           text: '質問を投稿',
                           options: FFButtonOptions(
@@ -280,6 +281,21 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
         ),
       ),
     );
+  }
+
+  Future<void> showConfirmToPostQuestionDialog() async {
+    await AwesomeDialog(
+      context: context,
+      dialogType: DialogType.warning,
+      headerAnimationLoop: false,
+      animType: AnimType.bottomSlide,
+      title: 'この内容で質問を投稿しますか?',
+      desc: '質問を投稿後に削除・編集することはできません。質問は一日に一度までしか投稿できません。',
+      buttonsTextStyle: const TextStyle(color: Colors.black),
+      showCloseIcon: true,
+      btnCancelOnPress: () {},
+      btnOkOnPress: sendQuestion,
+    ).show();
   }
 
   Future<void> sendQuestion() async {
