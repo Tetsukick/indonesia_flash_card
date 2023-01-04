@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:indonesia_flash_card/generated/json/base/json_convert_content.dart';
 import 'package:indonesia_flash_card/model/question_answer_entity.dart';
 
@@ -29,6 +30,6 @@ Map<String, dynamic> $QuestionAnswerEntityToJson(QuestionAnswerEntity entity) {
 	data['answer'] = entity.answer;
 	data['is_best'] = entity.isBest;
 	data['user_token'] = entity.userToken;
-	data['created_at'] = TimestampConverter().toJson(entity.createdAt);
+	data['created_at'] = entity.createdAt ?? FieldValue.serverTimestamp();
 	return data;
 }

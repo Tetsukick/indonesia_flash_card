@@ -22,11 +22,8 @@ class TimestampConverter implements JsonConverter<DateTime, dynamic> {
   }
 
   @override
-  Map<String, dynamic> toJson(DateTime? dateTime) {
-    final timestamp = dateTime == null ? Timestamp.now() : Timestamp.fromDate(dateTime);
-    return {
-      '_seconds': timestamp.seconds,
-      '_nanoseconds': timestamp.nanoseconds,
-    };
+  dynamic toJson(DateTime? dateTime) {
+    final timestamp = dateTime == null ? FieldValue.serverTimestamp() : Timestamp.fromDate(dateTime);
+    return timestamp;
   }
 }
