@@ -6,6 +6,7 @@ import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/model/question_entity.dart';
 import 'package:indonesia_flash_card/repository/question_tweet_repo.dart';
+import 'package:indonesia_flash_card/utils/common_border.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../flutter_flow/flutter_flow_icon_button.dart';
@@ -111,7 +112,6 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
                                     child: Row(
-                                      mainAxisSize: MainAxisSize.max,
                                       children: [
                                         Expanded(
                                           child: TextFormField(
@@ -128,50 +128,25 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.normal,
                                               ),
-                                              enabledBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  color: Color(0xFFF1F4F8),
-                                                  width: 2,
-                                                ),
-                                                borderRadius: BorderRadius.circular(8),
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  color: Color(0xFFF1F4F8),
-                                                  width: 2,
-                                                ),
-                                                borderRadius: BorderRadius.circular(8),
-                                              ),
-                                              errorBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  color: Color(0x00000000),
-                                                  width: 2,
-                                                ),
-                                                borderRadius: BorderRadius.circular(8),
-                                              ),
-                                              focusedErrorBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  color: Color(0x00000000),
-                                                  width: 2,
-                                                ),
-                                                borderRadius: BorderRadius.circular(8),
-                                              ),
+                                              enabledBorder: CommonBorder().whiteOutlineInputBorder,
+                                              focusedBorder: CommonBorder().whiteOutlineInputBorder,
+                                              errorBorder: CommonBorder().whiteOutlineInputBorder,
+                                              focusedErrorBorder: CommonBorder().whiteOutlineInputBorder,
                                               filled: true,
                                               fillColor: Colors.white,
                                               contentPadding:
-                                              EdgeInsetsDirectional.fromSTEB(
+                                              const EdgeInsetsDirectional.fromSTEB(
                                                   20, 32, 20, 12),
                                             ),
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyText1
                                                 .override(
                                               fontFamily: 'Lexend Deca',
-                                              color: Color(0xFF090F13),
+                                              color: const Color(0xFF090F13),
                                               fontSize: 14,
                                               fontWeight: FontWeight.normal,
                                             ),
-                                            textAlign: TextAlign.start,
-                                            maxLines: 15,
+                                            maxLines: 10,
                                           ),
                                         ),
                                       ],
@@ -184,7 +159,7 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+                        padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
                         child: FFButtonWidget(
                           onPressed: () {
                             questionTextFieldFocusNode.unfocus();
@@ -194,7 +169,7 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
                           options: FFButtonOptions(
                             width: 270,
                             height: 50,
-                            color: Color(0xFFB71C1C),
+                            color: ColorConfig.primaryRed900,
                             textStyle: FlutterFlowTheme.of(context).subtitle2.override(
                               fontFamily: 'Lexend Deca',
                               color: Colors.white,
@@ -202,10 +177,7 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
                               fontWeight: FontWeight.w500,
                             ),
                             elevation: 3,
-                            borderSide: BorderSide(
-                              color: Colors.transparent,
-                              width: 1,
-                            ),
+                            borderSide: CommonBorder().transparentBorderSide,
                           ),
                         ),
                       ),
@@ -214,7 +186,7 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
                   Visibility(
                     visible: _isAlreadySentQuestionToday,
                     child: Container(
-                      color: Colors.black.withOpacity(0.5),
+                      color: Colors.black.withOpacity(0.6),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -222,11 +194,10 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
                             Assets.lottie.thankYou,
                             height: 300,
                           ),
-                          const SizedBox(height: 24),
                           Padding(
                             padding: const EdgeInsets.all(SizeConfig.mediumLargeMargin),
                             child: Text(
-                              '現在は一日に可能な質問は一回までとなっております。\n明日、再度お試しください。ご利用いただきありがとうございます。',
+                              'ありがとうございます。\n\n現在は一日に可能な質問は一回までとなっております。\n明日、再度お試しください。ご利用いただきありがとうございます。',
                               style: FlutterFlowTheme.of(context).subtitle2.override(
                                 fontFamily: 'Lexend Deca',
                                 color: Colors.white,
@@ -244,7 +215,7 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
                             options: FFButtonOptions(
                               width: 270,
                               height: 50,
-                              color: Color(0xFFB71C1C),
+                              color: ColorConfig.primaryRed900,
                               textStyle: FlutterFlowTheme.of(context).subtitle2.override(
                                 fontFamily: 'Lexend Deca',
                                 color: Colors.white,
@@ -252,10 +223,7 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
                                 fontWeight: FontWeight.w500,
                               ),
                               elevation: 3,
-                              borderSide: BorderSide(
-                                color: Colors.transparent,
-                                width: 1,
-                              ),
+                              borderSide: CommonBorder().transparentBorderSide,
                             ),
                           ),
                         ],

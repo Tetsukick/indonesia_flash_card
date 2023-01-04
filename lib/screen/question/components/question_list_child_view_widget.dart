@@ -1,14 +1,10 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:floor/floor.dart';
 import 'package:flutter/material.dart';
-import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/question_answer_entity.dart';
 import 'package:indonesia_flash_card/model/question_entity.dart';
 import 'package:indonesia_flash_card/screen/question/components/question_title.dart';
 import 'package:social_share/social_share.dart';
 
-import '../../../flutter_flow/flutter_flow_theme.dart';
 import '../../../utils/logger.dart';
 import 'answer_title.dart';
 
@@ -43,7 +39,7 @@ class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidge
           padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
           child: Column(
             children: [
-              QuestionTitle(question: widget.questionEntity.question),
+              QuestionTitle(question: widget.questionEntity.question, maxLines: 5),
               Visibility(
                 visible: questionAnswers.isNotEmpty,
                 child: Padding(
