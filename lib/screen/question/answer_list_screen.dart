@@ -113,8 +113,7 @@ class _QuestionAnswerListWidgetState extends State<QuestionAnswerListWidget> {
                               Container(
                                 decoration: BoxDecoration(),
                                 child: QuestionTitle(
-                                  question: widget.questionEntity.question,
-                                  maxLines: 5,
+                                  question: widget.questionEntity.question
                                 ),
                               ),
                               Padding(
