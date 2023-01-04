@@ -29,7 +29,7 @@ Map<String, dynamic> $QuestionEntityToJson(QuestionEntity entity) {
 	final Map<String, dynamic> data = <String, dynamic>{};
 	data['question'] = entity.question;
 	data['user_token'] = entity.userToken;
-	data['created_at'] = TimestampConverter().toJson(entity.createdAt);
+	data['created_at'] = entity.createdAt ?? FieldValue.serverTimestamp();
 	data['categories'] =  entity.categories;
 	return data;
 }
