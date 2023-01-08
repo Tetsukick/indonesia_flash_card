@@ -9,7 +9,9 @@ import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/question_entity.dart';
 import 'package:indonesia_flash_card/screen/question/add_question_screen.dart';
 import 'package:indonesia_flash_card/screen/question/answer_list_screen.dart';
+import 'package:indonesia_flash_card/utils/admob.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
+import 'package:indonesia_flash_card/utils/utils.dart';
 
 import '../../config/config.dart';
 import '../../config/size_config.dart';
@@ -33,7 +35,7 @@ class _QuestionListScreenState extends State<QuestionListScreen> {
   void initState() {
     initQuestionList();
     super.initState();
-    loadInterstitialAd();
+    Admob.loadInterstitialAd();
   }
 
   @override
@@ -46,7 +48,7 @@ class _QuestionListScreenState extends State<QuestionListScreen> {
         padding: const EdgeInsets.only(bottom: SizeConfig.bottomBarHeight),
         child: FloatingActionButton(
           onPressed: () async {
-            await showInterstitialAd();
+            await Admob.showInterstitialAd();
             await SendQuestionWidget.navigateTo(context);
             initQuestionList();
           },
@@ -67,6 +69,9 @@ class _QuestionListScreenState extends State<QuestionListScreen> {
             final questionEntity = questionList[index];
             return InkWell(
               onTap: () {
+                if (Utils.rundomLottery()) {
+                  Admob.showInterstitialAd();
+                }
                 QuestionAnswerListWidget.navigateTo(context, questionEntity: questionEntity);
               },
               child: QuestionListChildViewWidget(questionEntity: questionEntity),
@@ -89,27 +94,5 @@ class _QuestionListScreenState extends State<QuestionListScreen> {
         logger.d(e);
       }
     );
-  }
-
-  Future<void> loadInterstitialAd() async {
-    await InterstitialAd.load(
-        adUnitId: Platform.isIOS ?
-        Config.adUnitIdIosInterstitial : Config.adUnitIdAndroidInterstitial,
-        request: AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (InterstitialAd ad) {
-            _interstitialAd = ad;
-            logger.d('Ad loaded.${ad}');
-          },
-          onAdFailedToLoad: (LoadAdError error) {
-            logger.d('Ad failed to load: $error');
-          },
-        ));
-  }
-
-  Future<void> showInterstitialAd() async {
-    if (_interstitialAd != null) {
-      await _interstitialAd?.show();
-    }
   }
 }
