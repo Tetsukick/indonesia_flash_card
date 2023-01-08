@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/question_entity.dart';
 import 'package:indonesia_flash_card/screen/question/add_question_screen.dart';
@@ -39,7 +40,8 @@ class _QuestionListScreenState extends State<QuestionListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: Color(0xFFFFEBEE),
+      backgroundColor: ColorConfig.bgPinkColor,
+      extendBody: true,
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: SizeConfig.bottomBarHeight),
         child: FloatingActionButton(
@@ -57,21 +59,19 @@ class _QuestionListScreenState extends State<QuestionListScreen> {
           )
         ),
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 32),
-          child: ListView.builder(
-            itemCount: questionList.length,
-            itemBuilder: (BuildContext context, int index) {
-              final questionEntity = questionList[index];
-              return InkWell(
-                onTap: () {
-                  QuestionAnswerListWidget.navigateTo(context, questionEntity: questionEntity);
-                },
-                child: QuestionListChildViewWidget(questionEntity: questionEntity),
-              );
-            },
-          ),
+      body: Padding(
+        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 32),
+        child: ListView.builder(
+          itemCount: questionList.length,
+          itemBuilder: (BuildContext context, int index) {
+            final questionEntity = questionList[index];
+            return InkWell(
+              onTap: () {
+                QuestionAnswerListWidget.navigateTo(context, questionEntity: questionEntity);
+              },
+              child: QuestionListChildViewWidget(questionEntity: questionEntity),
+            );
+          },
         ),
       ),
     );
