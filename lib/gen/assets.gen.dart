@@ -201,6 +201,10 @@ class $AssetsPngGen {
   AssetGenImage get askingQuestion128 =>
       const AssetGenImage('assets/png/asking_question_128.png');
 
+  /// File path: assets/png/best-answer_128.png
+  AssetGenImage get bestAnswer128 =>
+      const AssetGenImage('assets/png/best-answer_128.png');
+
   /// File path: assets/png/bookmark_off_64.png
   AssetGenImage get bookmarkOff64 =>
       const AssetGenImage('assets/png/bookmark_off_64.png');
@@ -372,6 +376,7 @@ class $AssetsPngGen {
         addQuestion128,
         answerRaiseHand128,
         askingQuestion128,
+        bestAnswer128,
         bookmarkOff64,
         bookmarkOn64,
         cancelRed128,
