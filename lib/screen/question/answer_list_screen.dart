@@ -5,6 +5,7 @@ import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/screen/question/components/answer_card.dart';
 import 'package:indonesia_flash_card/screen/question/components/question_title.dart';
+import 'package:indonesia_flash_card/utils/common_border.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../flutter_flow/flutter_flow_icon_button.dart';
@@ -43,11 +44,21 @@ class _QuestionAnswerListWidgetState extends State<QuestionAnswerListWidget> {
   TextEditingController answerTextEditingController = TextEditingController();
   FocusNode answerTextFieldFocusNode = FocusNode();
   bool _isSendingAnswer = false;
+  bool _isOpenedKeyboard = false;
 
   @override
   void initState() {
     initQuestionAnswerList();
     super.initState();
+    answerTextFieldFocusNode.addListener(() {
+      setState(() => _isOpenedKeyboard = answerTextFieldFocusNode.hasFocus);
+    });
+  }
+
+  @override
+  void dispose() {
+    answerTextFieldFocusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -156,7 +167,7 @@ class _QuestionAnswerListWidgetState extends State<QuestionAnswerListWidget> {
                   Align(
                     alignment: AlignmentDirectional(0, 1),
                     child: Container(
-                      height: 100,
+                      height: _isOpenedKeyboard ? 120 : 80,
                       decoration: BoxDecoration(
                         color: Color(0x9AFFFFFF),
                       ),
@@ -165,7 +176,6 @@ class _QuestionAnswerListWidgetState extends State<QuestionAnswerListWidget> {
                         child: Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 8),
                           child: Row(
-                            mainAxisSize: MainAxisSize.max,
                             children: [
                               Expanded(
                                 child: Padding(
@@ -192,38 +202,14 @@ class _QuestionAnswerListWidgetState extends State<QuestionAnswerListWidget> {
                                         fontSize: 14,
                                         fontWeight: FontWeight.normal,
                                       ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0xFFE0E3E7),
-                                          width: 2,
-                                        ),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0xFFE0E3E7),
-                                          width: 2,
-                                        ),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      errorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0x00000000),
-                                          width: 2,
-                                        ),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0x00000000),
-                                          width: 2,
-                                        ),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
+                                      enabledBorder: CommonBorder().grayOutlineInputBorder,
+                                      focusedBorder: CommonBorder().grayOutlineInputBorder,
+                                      errorBorder: CommonBorder().grayOutlineInputBorder,
+                                      focusedErrorBorder: CommonBorder().grayOutlineInputBorder,
                                       filled: true,
                                       fillColor: Color(0xFFF1F4F8),
                                       contentPadding: EdgeInsetsDirectional.fromSTEB(
-                                          24, 24, 20, 24),
+                                          16, 16, 12, 16),
                                     ),
                                     style: FlutterFlowTheme.of(context)
                                         .bodyText1

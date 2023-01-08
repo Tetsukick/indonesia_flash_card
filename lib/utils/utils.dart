@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -113,5 +115,11 @@ class Utils {
     );
     await Future<void>.delayed(Duration(seconds: 3));
     Navigator.of(context).pop();
+  }
+
+  static bool rundomLottery({int totalNum = 3}) {
+    var rand = new math.Random();
+    int lottery = rand.nextInt(totalNum);
+    return lottery == 0;
   }
 }
