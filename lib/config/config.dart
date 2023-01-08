@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 
 class Config {
@@ -12,4 +13,12 @@ class Config {
   static const contentTypeHeader = "Content-type";
   static const acceptHeader = "Accept";
   static const authorizationHeader = "Authorization";
+
+  static String getAdUnitIdBanner() {
+    return Platform.isIOS ? Config.adUnitIdIosBanner : Config.adUnitIdAndroidBanner;
+  }
+
+  static String getAdUnitIdInterstitial() {
+    return Platform.isIOS ? Config.adUnitIdIosInterstitial : Config.adUnitIdAndroidInterstitial;
+  }
 }
