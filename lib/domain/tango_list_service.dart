@@ -103,8 +103,10 @@ class TangoListController extends StateNotifier<TangoMaster> {
 
     final tangoDao = database.tangoDao;
     final tangoList = await tangoDao.getAllTangoList(0, 100);
+    final tangoCount = await tangoDao.getCountTangoList() ?? 0;
 
     state = state
+      ..dictionary.count = tangoCount
       ..dictionary.allTangos = tangoList
       ..dictionary.sortAndFilteredTangos = tangoList;
 

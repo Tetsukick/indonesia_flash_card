@@ -6,6 +6,15 @@ abstract class TangoDao {
   @Query('SELECT * FROM TangoEntity ORDER BY indonesian ASC LIMIT :offset,:limit')
   Future<List<TangoEntity>> getAllTangoList(int offset, int limit);
 
+  //   NEED manually fix in database.g.dart like bellow. (only for count SQL)
+  //   @override
+  //   Future<int?> getCountTangoList() async {
+  //     return _queryAdapter.query('SELECT COUNT(*) FROM TangoEntity',
+  //         mapper: (Map<String, Object?> row) => row['COUNT(*)'] as int);
+  //   }
+  @Query('SELECT COUNT(*) FROM TangoEntity')
+  Future<int?> getCountTangoList();
+
   @Query('SELECT * FROM TangoEntity WHERE category = :categoryId ORDER BY indonesian ASC')
   Future<List<TangoEntity>> getTangoListByCategory(int categoryId);
 

@@ -204,7 +204,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                     children: [
                       _userSectionItem(
                           title: '総単語数',
-                          data: tangoMaster.dictionary.allTangos.length,
+                          data: tangoMaster.dictionary.count,
                           unitTitle: '単語'
                       ),
                       _separater(),

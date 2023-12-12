@@ -328,6 +328,12 @@ class _$TangoDao extends TangoDao {
   }
 
   @override
+  Future<int?> getCountTangoList() async {
+    return _queryAdapter.query('SELECT COUNT(*) FROM TangoEntity',
+        mapper: (Map<String, Object?> row) => row['COUNT(*)'] as int);
+  }
+
+  @override
   Future<List<TangoEntity>> getTangoListByCategory(int categoryId) async {
     return _queryAdapter.queryList(
         'SELECT * FROM TangoEntity WHERE category = ?1 ORDER BY indonesian ASC',
