@@ -328,6 +328,11 @@ class _$TangoDao extends TangoDao {
   }
 
   @override
+  Future<void> deleteAllTango() async {
+    await _queryAdapter.queryNoReturn('DELETE * FROM TangoEntity');
+  }
+
+  @override
   Future<void> insertTangoEntity(TangoEntity tango) async {
     await _tangoEntityInsertionAdapter.insert(tango, OnConflictStrategy.abort);
   }

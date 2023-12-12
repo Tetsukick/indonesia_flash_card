@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
 import 'package:indonesia_flash_card/config/config.dart';
 import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
+import 'package:indonesia_flash_card/model/floor_migrations/migration_v2_to_v3_add_tango_table.dart';
 import 'package:indonesia_flash_card/model/frequency.dart';
 import 'package:indonesia_flash_card/model/lecture.dart';
 import 'package:indonesia_flash_card/model/tango_master.dart';
@@ -29,7 +30,15 @@ final tangoListControllerProvider = StateNotifierProvider<TangoListController, T
 class TangoListController extends StateNotifier<TangoMaster> {
   TangoListController({required TangoMaster initialTangoMaster}) : super(initialTangoMaster);
 
-  Future<List<TangoEntity>> getAllTangoList({required LectureFolder folder}) async {
+  Future<void> resetTangoData({required LectureFolder folder}) async {
+    final database = await $FloorAppDatabase
+        .databaseBuilder(Config.dbName)
+        .addMigrations([migration1to2, migration2to3])
+        .build();
+
+    final tangoDao = database.tangoDao;
+    await tangoDao.deleteAllTango();
+
     state = state..lesson.folder = folder;
 
     final sheetRepos = folder.spreadsheets.where((element) => element.name.contains(Config.dictionarySpreadSheetName)).map((e) => SheetRepo(e.id));
@@ -47,8 +56,6 @@ class TangoListController extends StateNotifier<TangoMaster> {
     if (entryList.isEmpty) {
       throw UnsupportedError("There are no questions nor answers.");
     }
-
-    List<TangoEntity> tangoList = [];
 
     for (var element in entryList) {
       if (element.isEmpty) continue;
@@ -74,16 +81,18 @@ class TangoListController extends StateNotifier<TangoMaster> {
         tmpTango.rankFrequency = int.parse(element[11].toString().trim());
       }
 
-      tangoList.add(tmpTango);
+      await tangoDao.insertTangoEntity(tmpTango);
     }
-    tangoList.sort((a, b) {
-      return a.indonesian!.toLowerCase().compareTo(b.indonesian!.toLowerCase());
-    });
-    state = state
-      ..dictionary.allTangos = tangoList
-      ..dictionary.sortAndFilteredTangos = tangoList;
+  }
 
-    getTotalAchievement();
+  Future<List<TangoEntity>> getAllTangoList({required LectureFolder folder}) async {
+    final database = await $FloorAppDatabase
+        .databaseBuilder(Config.dbName)
+        .addMigrations([migration1to2, migration2to3])
+        .build();
+
+    final tangoDao = database.tangoDao;
+    final tangoList = await tangoDao.getAllTangoList();
 
     return tangoList;
   }

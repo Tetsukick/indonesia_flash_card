@@ -18,4 +18,7 @@ abstract class TangoDao {
 
   @insert
   Future<void> insertTangoEntity(TangoEntity tango);
+
+  @Query('DELETE * FROM TangoEntity')
+  Future<void> deleteAllTango();
 }
