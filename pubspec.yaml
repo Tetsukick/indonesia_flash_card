@@ -40,6 +40,7 @@ dependencies:
   firebase_messaging: ^14.2.0
   firebase_analytics: ^10.0.8
   cloud_firestore:
+  firebase_remote_config:
 
   lottie: ^2.1.0
   carousel_slider: ^4.1.1

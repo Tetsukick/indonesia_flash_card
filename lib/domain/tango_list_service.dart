@@ -13,6 +13,8 @@ import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 import 'package:indonesia_flash_card/repository/translate_repo.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
+import 'package:indonesia_flash_card/utils/remote_config.dart';
+import 'package:indonesia_flash_card/utils/shared_preference.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
 
 import '../model/category.dart';
@@ -86,6 +88,14 @@ class TangoListController extends StateNotifier<TangoMaster> {
   }
 
   Future<List<TangoEntity>> getAllTangoList({required LectureFolder folder}) async {
+    final lastUpdateDate = await PreferenceKey.lastTangoUpdateDate.getString();
+    if (lastUpdateDate == null ||
+        lastUpdateDate != RemoteConfigUtil().getLatestDataUpdateDate()) {
+      await resetTangoData(folder: folder);
+      await PreferenceKey.lastTangoUpdateDate
+          .setString(RemoteConfigUtil().getLatestDataUpdateDate());
+    }
+
     final database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
         .addMigrations([migration1to2, migration2to3])
@@ -213,7 +223,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
   Future<List<WordStatus>> getAllWordStatus() async {
     final database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
-        .addMigrations([migration1to2])
+        .addMigrations([migration1to2, migration2to3])
         .build();
 
     final wordStatusDao = database.wordStatusDao;

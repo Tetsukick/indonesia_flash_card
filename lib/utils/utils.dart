@@ -40,6 +40,16 @@ class Utils {
     return formatter.format(dateTime);
   }
 
+  static DateTime stringToDateTimeWithTime(String stringDateTime) {
+    final formatter = DateFormat('yyyy-MM-dd hh:mm');
+    return formatter.parse(stringDateTime);
+  }
+
+  static String dateTimeToStringWithTime(DateTime dateTime) {
+    final formatter = DateFormat('yyyy-MM-dd hh:mm');
+    return formatter.format(dateTime);
+  }
+
   static String formatDateString(String stringDateTime) {
     return dateTimeToString(stringToDateTime(stringDateTime));
   }
