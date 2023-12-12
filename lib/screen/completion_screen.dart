@@ -73,14 +73,14 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
             const SizedBox(height: SizeConfig.mediumSmallMargin),
             TextWidget.titleGraySmallBold('おつかれさまでした!'),
             const SizedBox(height: SizeConfig.smallMargin),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextWidget.titleGrayLargeBold('総合スコア: '),
-                TextWidget.titleRedLargestBold(calculateTotalScore(tangoList.lesson.quizResults)),
-                TextWidget.titleGrayLargeBold(' 点'),
-              ]
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     TextWidget.titleGrayLargeBold('総合スコア: '),
+            //     TextWidget.titleRedLargestBold(calculateTotalScore(tangoList.lesson.quizResults)),
+            //     TextWidget.titleGrayLargeBold(' 点'),
+            //   ]
+            // ),
             const SizedBox(height: SizeConfig.smallMargin),
             Flexible(
               child: ListView.builder(

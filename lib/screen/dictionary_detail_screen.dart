@@ -45,15 +45,15 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
   bool _isSoundOn = true;
   final _iconHeight = 20.0;
   final _iconWidth = 20.0;
-  late AppDatabase database;
+  AppDatabase? database;
 
   @override
   void initState() {
     FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: AnalyticsScreen.dictionaryDetail.name);
     initializeDB();
+    super.initState();
     setTTS();
     loadSoundSetting();
-    super.initState();
   }
 
   void setTTS() {
@@ -127,7 +127,7 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
   }
 
   Widget bookmark(TangoEntity entity) {
-    final wordStatusDao = database.wordStatusDao;
+    final wordStatusDao = database?.wordStatusDao;
 
     return FutureBuilder(
         future: getBookmark(entity),
@@ -137,14 +137,14 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
             bool isBookmark = status == null ? false : status.isBookmarked;
             if (status == null) {
               status = WordStatus(wordId: entity.id!, status: WordStatusType.notLearned.id, isBookmarked: false);
-              wordStatusDao.insertWordStatus(status);
+              wordStatusDao?.insertWordStatus(status);
             }
             return Padding(
               padding: const EdgeInsets.only(left: SizeConfig.mediumSmallMargin),
               child: InkWell(
                 onTap: () {
                   analytics(DictionaryDetailItem.bookmark);
-                  wordStatusDao.updateWordStatus(status!..isBookmarked = !isBookmark);
+                  wordStatusDao?.updateWordStatus(status!..isBookmarked = !isBookmark);
                   setState(() => isBookmark = !isBookmark);
                 },
                 child: isBookmark ? Assets.png.bookmarkOn64.image(height: 32, width: 32)
@@ -161,7 +161,7 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
   }
 
   Future<WordStatus?> getBookmark(TangoEntity entity) async {
-    final wordStatusDao = database.wordStatusDao;
+    final wordStatusDao = database?.wordStatusDao;
     final wordStatus = await wordStatusDao.findWordStatusById(entity.id!);
     return wordStatus;
   }

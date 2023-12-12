@@ -15,6 +15,9 @@ abstract class TangoDao {
   @Query('SELECT COUNT(*) FROM TangoEntity')
   Future<int?> getCountTangoList();
 
+  @Query('SELECT * FROM TangoEntity WHERE LOWER(indonesian) = :name ORDER BY indonesian ASC')
+  Future<List<TangoEntity>> getTangoListByIndonesian(String name);
+
   @Query('SELECT * FROM TangoEntity WHERE category = :categoryId ORDER BY indonesian ASC')
   Future<List<TangoEntity>> getTangoListByCategory(int categoryId);
 

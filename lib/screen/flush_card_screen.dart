@@ -88,7 +88,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     final _database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
         .addMigrations([migration1to2, migration2to3])
-        .build();;
+        .build();
     setState(() => database = _database);
   }
 

@@ -415,11 +415,13 @@ class TangoListController extends StateNotifier<TangoMaster> {
   }
 
   Future<List<TangoEntity>> search(String search) async {
-    final allTangoList = state.dictionary.allTangos;
-    var searchTangos = allTangoList
-        .where((tango) {
-          return tango.indonesian!.toLowerCase() == search.toLowerCase();
-        }).toList();
+    final database = await $FloorAppDatabase
+        .databaseBuilder(Config.dbName)
+        .addMigrations([migration1to2, migration2to3])
+        .build();
+
+    final tangoDao = database.tangoDao;
+    var searchTangos = await tangoDao.getTangoListByIndonesian(search.toLowerCase());
     return searchTangos;
   }
 
