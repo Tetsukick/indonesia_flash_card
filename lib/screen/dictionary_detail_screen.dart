@@ -162,7 +162,7 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
 
   Future<WordStatus?> getBookmark(TangoEntity entity) async {
     final wordStatusDao = database?.wordStatusDao;
-    final wordStatus = await wordStatusDao.findWordStatusById(entity.id!);
+    final wordStatus = await wordStatusDao?.findWordStatusById(entity.id!);
     return wordStatus;
   }
 
