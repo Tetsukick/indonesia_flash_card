@@ -330,7 +330,7 @@ class _$TangoDao extends TangoDao {
   @override
   Future<List<TangoEntity>> getTangoListByCategory(int categoryId) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM TangoEntity ORDER BY indonesian ASC WHERE category = ?1',
+        'SELECT * FROM TangoEntity WHERE category = ?1 ORDER BY indonesian ASC',
         mapper: (Map<String, Object?> row) => TangoEntity(
             id: row['id'] as int?,
             indonesian: row['indonesian'] as String?,
@@ -350,7 +350,7 @@ class _$TangoDao extends TangoDao {
   @override
   Future<List<TangoEntity>> getTangoListByPartOfSpeech(int partOfSpeech) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM TangoEntity ORDER BY indonesian ASC WHERE partOfSpeech = ?1',
+        'SELECT * FROM TangoEntity WHERE partOfSpeech = ?1 ORDER BY indonesian ASC',
         mapper: (Map<String, Object?> row) => TangoEntity(id: row['id'] as int?, indonesian: row['indonesian'] as String?, japanese: row['japanese'] as String?, english: row['english'] as String?, description: row['description'] as String?, example: row['example'] as String?, exampleJp: row['exampleJp'] as String?, level: row['level'] as int?, partOfSpeech: row['partOfSpeech'] as int?, category: row['category'] as int?, frequency: row['frequency'] as int?, rankFrequency: row['rankFrequency'] as int?),
         arguments: [partOfSpeech]);
   }
@@ -361,7 +361,7 @@ class _$TangoDao extends TangoDao {
     int levelMax,
   ) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM TangoEntity ORDER BY indonesian ASC WHERE level BETWEEN ?1 AND ?2',
+        'SELECT * FROM TangoEntity WHERE level >= ?1 AND level <= ?2 ORDER BY indonesian ASC',
         mapper: (Map<String, Object?> row) => TangoEntity(id: row['id'] as int?, indonesian: row['indonesian'] as String?, japanese: row['japanese'] as String?, english: row['english'] as String?, description: row['description'] as String?, example: row['example'] as String?, exampleJp: row['exampleJp'] as String?, level: row['level'] as int?, partOfSpeech: row['partOfSpeech'] as int?, category: row['category'] as int?, frequency: row['frequency'] as int?, rankFrequency: row['rankFrequency'] as int?),
         arguments: [levelMin, levelMax]);
   }
@@ -372,14 +372,14 @@ class _$TangoDao extends TangoDao {
     int frequencyFactorMax,
   ) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM TangoEntity ORDER BY indonesian ASC WHERE rankFrequency BETWEEN ?1 AND ?2',
+        'SELECT * FROM TangoEntity WHERE rankFrequency >= ?1 AND rankFrequency <= ?2 ORDER BY indonesian ASC',
         mapper: (Map<String, Object?> row) => TangoEntity(id: row['id'] as int?, indonesian: row['indonesian'] as String?, japanese: row['japanese'] as String?, english: row['english'] as String?, description: row['description'] as String?, example: row['example'] as String?, exampleJp: row['exampleJp'] as String?, level: row['level'] as int?, partOfSpeech: row['partOfSpeech'] as int?, category: row['category'] as int?, frequency: row['frequency'] as int?, rankFrequency: row['rankFrequency'] as int?),
         arguments: [frequencyFactorMin, frequencyFactorMax]);
   }
 
   @override
   Future<void> deleteAllTango() async {
-    await _queryAdapter.queryNoReturn('DELETE * FROM TangoEntity');
+    await _queryAdapter.queryNoReturn('DELETE FROM TangoEntity');
   }
 
   @override

@@ -102,7 +102,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
         .build();
 
     final tangoDao = database.tangoDao;
-    final tangoList = await tangoDao.getAllTangoList();
+    final tangoList = await tangoDao.getAllTangoList(0, 100);
 
     state = state
       ..dictionary.allTangos = tangoList
@@ -250,7 +250,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
 
     if (category != null) {
       filteredTangos =
-        await tangoDao.getTangoListByCategory(categoryId: category.id);
+        await tangoDao.getTangoListByCategory(category.id);
       if (filteredTangos.isEmpty) {
         return filteredTangos;
       }
@@ -258,7 +258,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
     if (partOfSpeech != null) {
       if (filteredTangos.isEmpty) {
         filteredTangos =
-            await tangoDao.getTangoListByPartOfSpeech(partOfSpeech: partOfSpeech.id);
+            await tangoDao.getTangoListByPartOfSpeech(partOfSpeech.id);
       } else {
         filteredTangos = filteredTangos.where(
                 (element) => element.partOfSpeech == partOfSpeech.id,).toList();
@@ -270,7 +270,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
     if (levelGroup != null) {
       if (filteredTangos.isEmpty) {
         filteredTangos =
-          await tangoDao.getTangoListByLevel(levelMin: levelGroup.range.first, levelMax: levelGroup.range.last);
+          await tangoDao.getTangoListByLevel(levelGroup.range.first, levelGroup.range.last);
       } else {
         filteredTangos = filteredTangos.where(
               (element) => levelGroup.range.any((e) => e == element.level),)
@@ -284,8 +284,8 @@ class TangoListController extends StateNotifier<TangoMaster> {
       if (filteredTangos.isEmpty) {
         filteredTangos =
         await tangoDao.getTangoListByFrequency(
-            frequencyFactorMin: frequencyGroup.rangeFactorMin,
-            frequencyFactorMax: frequencyGroup.rangeFactorMax,);
+            frequencyGroup.rangeFactorMin,
+            frequencyGroup.rangeFactorMax,);
       } else {
         filteredTangos = filteredTangos.where((element) =>
           element.rankFrequency! >= frequencyGroup.rangeFactorMin
