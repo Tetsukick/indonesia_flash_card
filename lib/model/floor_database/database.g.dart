@@ -328,6 +328,56 @@ class _$TangoDao extends TangoDao {
   }
 
   @override
+  Future<List<TangoEntity>> getTangoListByCategory(int categoryId) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM TangoEntity ORDER BY indonesian ASC WHERE category = ?1',
+        mapper: (Map<String, Object?> row) => TangoEntity(
+            id: row['id'] as int?,
+            indonesian: row['indonesian'] as String?,
+            japanese: row['japanese'] as String?,
+            english: row['english'] as String?,
+            description: row['description'] as String?,
+            example: row['example'] as String?,
+            exampleJp: row['exampleJp'] as String?,
+            level: row['level'] as int?,
+            partOfSpeech: row['partOfSpeech'] as int?,
+            category: row['category'] as int?,
+            frequency: row['frequency'] as int?,
+            rankFrequency: row['rankFrequency'] as int?),
+        arguments: [categoryId]);
+  }
+
+  @override
+  Future<List<TangoEntity>> getTangoListByPartOfSpeech(int partOfSpeech) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM TangoEntity ORDER BY indonesian ASC WHERE partOfSpeech = ?1',
+        mapper: (Map<String, Object?> row) => TangoEntity(id: row['id'] as int?, indonesian: row['indonesian'] as String?, japanese: row['japanese'] as String?, english: row['english'] as String?, description: row['description'] as String?, example: row['example'] as String?, exampleJp: row['exampleJp'] as String?, level: row['level'] as int?, partOfSpeech: row['partOfSpeech'] as int?, category: row['category'] as int?, frequency: row['frequency'] as int?, rankFrequency: row['rankFrequency'] as int?),
+        arguments: [partOfSpeech]);
+  }
+
+  @override
+  Future<List<TangoEntity>> getTangoListByLevel(
+    int levelMin,
+    int levelMax,
+  ) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM TangoEntity ORDER BY indonesian ASC WHERE level BETWEEN ?1 AND ?2',
+        mapper: (Map<String, Object?> row) => TangoEntity(id: row['id'] as int?, indonesian: row['indonesian'] as String?, japanese: row['japanese'] as String?, english: row['english'] as String?, description: row['description'] as String?, example: row['example'] as String?, exampleJp: row['exampleJp'] as String?, level: row['level'] as int?, partOfSpeech: row['partOfSpeech'] as int?, category: row['category'] as int?, frequency: row['frequency'] as int?, rankFrequency: row['rankFrequency'] as int?),
+        arguments: [levelMin, levelMax]);
+  }
+
+  @override
+  Future<List<TangoEntity>> getTangoListByFrequency(
+    int frequencyFactorMin,
+    int frequencyFactorMax,
+  ) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM TangoEntity ORDER BY indonesian ASC WHERE rankFrequency BETWEEN ?1 AND ?2',
+        mapper: (Map<String, Object?> row) => TangoEntity(id: row['id'] as int?, indonesian: row['indonesian'] as String?, japanese: row['japanese'] as String?, english: row['english'] as String?, description: row['description'] as String?, example: row['example'] as String?, exampleJp: row['exampleJp'] as String?, level: row['level'] as int?, partOfSpeech: row['partOfSpeech'] as int?, category: row['category'] as int?, frequency: row['frequency'] as int?, rankFrequency: row['rankFrequency'] as int?),
+        arguments: [frequencyFactorMin, frequencyFactorMax]);
+  }
+
+  @override
   Future<void> deleteAllTango() async {
     await _queryAdapter.queryNoReturn('DELETE * FROM TangoEntity');
   }

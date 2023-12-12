@@ -94,6 +94,10 @@ class TangoListController extends StateNotifier<TangoMaster> {
     final tangoDao = database.tangoDao;
     final tangoList = await tangoDao.getAllTangoList();
 
+    state = state
+      ..dictionary.allTangos = tangoList
+      ..dictionary.sortAndFilteredTangos = tangoList;
+
     return tangoList;
   }
 
@@ -226,17 +230,66 @@ class TangoListController extends StateNotifier<TangoMaster> {
     bool isBookmark = false,
     bool isNotRemembered = false
   }) async {
-    final _tmpTangos = state.dictionary.allTangos;
-    List<TangoEntity> _filteredTangos = _tmpTangos.where((element) {
-      bool _filterCategory = category != null ? element.category == category.id : true;
-      bool _filterPartOfSpeech = partOfSpeech != null ? element.partOfSpeech == partOfSpeech.id : true;
-      bool _filterLevel = levelGroup != null ? levelGroup.range.any((e) => e == element.level) : true;
-      bool _filterFrequency = frequencyGroup != null ? (element.rankFrequency! >= frequencyGroup.rangeFactorMin && element.rankFrequency! <= frequencyGroup.rangeFactorMax) : true;
-      return _filterCategory && _filterPartOfSpeech && _filterLevel && _filterFrequency;
-    }).toList();
+    final database = await $FloorAppDatabase
+        .databaseBuilder(Config.dbName)
+        .addMigrations([migration1to2, migration2to3])
+        .build();
+
+    final tangoDao = database.tangoDao;
+    List<TangoEntity> filteredTangos = [];
+
+    if (category != null) {
+      filteredTangos =
+        await tangoDao.getTangoListByCategory(categoryId: category.id);
+      if (filteredTangos.isEmpty) {
+        return filteredTangos;
+      }
+    }
+    if (partOfSpeech != null) {
+      if (filteredTangos.isEmpty) {
+        filteredTangos =
+            await tangoDao.getTangoListByPartOfSpeech(partOfSpeech: partOfSpeech.id);
+      } else {
+        filteredTangos = filteredTangos.where(
+                (element) => element.partOfSpeech == partOfSpeech.id,).toList();
+      }
+      if (filteredTangos.isEmpty) {
+        return filteredTangos;
+      }
+    }
+    if (levelGroup != null) {
+      if (filteredTangos.isEmpty) {
+        filteredTangos =
+          await tangoDao.getTangoListByLevel(levelMin: levelGroup.range.first, levelMax: levelGroup.range.last);
+      } else {
+        filteredTangos = filteredTangos.where(
+              (element) => levelGroup.range.any((e) => e == element.level),)
+              .toList();
+      }
+      if (filteredTangos.isEmpty) {
+        return filteredTangos;
+      }
+    }
+    if (frequencyGroup != null) {
+      if (filteredTangos.isEmpty) {
+        filteredTangos =
+        await tangoDao.getTangoListByFrequency(
+            frequencyFactorMin: frequencyGroup.rangeFactorMin,
+            frequencyFactorMax: frequencyGroup.rangeFactorMax,);
+      } else {
+        filteredTangos = filteredTangos.where((element) =>
+          element.rankFrequency! >= frequencyGroup.rangeFactorMin
+              && element.rankFrequency! <= frequencyGroup.rangeFactorMax,)
+            .toList();
+      }
+      if (filteredTangos.isEmpty) {
+        return filteredTangos;
+      }
+    }
+
     if (wordStatusType != null) {
       final wordStatusList = await getAllWordStatus();
-      _filteredTangos = _filteredTangos.where((element) {
+      filteredTangos = filteredTangos.where((element) {
           final targetWordStatus = wordStatusList.firstWhereOrNull((e) {
             return e.wordId == element.id;
           });
@@ -249,7 +302,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
     }
     if (isBookmark) {
       final wordStatusList = await getAllWordStatus();
-      _filteredTangos = _filteredTangos.where((element) {
+      filteredTangos = filteredTangos.where((element) {
         final targetWordStatus = wordStatusList.firstWhereOrNull((e) {
           return e.wordId == element.id;
         });
@@ -258,14 +311,14 @@ class TangoListController extends StateNotifier<TangoMaster> {
     }
     if (isNotRemembered) {
       final wordStatusList = await getAllWordStatus();
-      _filteredTangos = _filteredTangos.where((element) {
+      filteredTangos = filteredTangos.where((element) {
         final targetWordStatus = wordStatusList.firstWhereOrNull((e) {
           return e.wordId == element.id;
         });
         return targetWordStatus != null && targetWordStatus.status == WordStatusType.notRemembered.id;
       }).toList();
     }
-    return _filteredTangos;
+    return filteredTangos;
   }
 
   Future<List<TangoEntity>> resetLessonsData() async {

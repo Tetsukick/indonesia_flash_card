@@ -1,17 +1,22 @@
 import 'package:floor/floor.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
 
-import '../category.dart';
-import '../frequency.dart';
-import '../level.dart';
-import '../part_of_speech.dart';
-import '../sort_type.dart';
-import '../word_status_type.dart';
-
 @dao
 abstract class TangoDao {
   @Query('SELECT * FROM TangoEntity ORDER BY indonesian ASC LIMIT :offset,:limit')
   Future<List<TangoEntity>> getAllTangoList({int offset = 0, int limit = 100});
+
+  @Query('SELECT * FROM TangoEntity ORDER BY indonesian ASC WHERE category = :categoryId')
+  Future<List<TangoEntity>> getTangoListByCategory({int categoryId});
+
+  @Query('SELECT * FROM TangoEntity ORDER BY indonesian ASC WHERE partOfSpeech = :partOfSpeech')
+  Future<List<TangoEntity>> getTangoListByPartOfSpeech({int partOfSpeech});
+
+  @Query('SELECT * FROM TangoEntity ORDER BY indonesian ASC WHERE level BETWEEN :levelMin AND :levelMax')
+  Future<List<TangoEntity>> getTangoListByLevel({int levelMin, int levelMax});
+
+  @Query('SELECT * FROM TangoEntity ORDER BY indonesian ASC WHERE rankFrequency BETWEEN :frequencyFactorMin AND :frequencyFactorMax')
+  Future<List<TangoEntity>> getTangoListByFrequency({int frequencyFactorMin, int frequencyFactorMax});
 
   @update
   Future<void> updateTangoEntity(TangoEntity tango);
