@@ -13,7 +13,6 @@ import '../../flutter_flow/flutter_flow_icon_button.dart';
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_widgets.dart';
 import '../../gen/assets.gen.dart';
-import '../../utils/logger.dart';
 import '../../utils/shared_preference.dart';
 import '../../utils/utils.dart';
 
@@ -59,15 +58,18 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
       key: scaffoldKey,
       backgroundColor: ColorConfig.bgPinkColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: ColorConfig.bgPinkColor,
         automaticallyImplyLeading: false,
-        title: Text(
-          '質問を新規作成',
-          style: FlutterFlowTheme.of(context).title2.override(
-            fontFamily: 'Lexend Deca',
-            color: Color(0xFF090F13),
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 8),
+          child: Text(
+            '質問を新規作成',
+            style: FlutterFlowTheme.of(context).title2.override(
+              fontFamily: 'Lexend Deca',
+              color: Color(0xFF090F13),
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         actions: [
@@ -104,13 +106,13 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
-                            child: Container(
+                            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
+                            child: SizedBox(
                               width: MediaQuery.of(context).size.width * 0.94,
                               child: Column(
                                 children: [
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
                                     child: Row(
                                       children: [
                                         Expanded(
