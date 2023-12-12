@@ -20,6 +20,7 @@ import '../gen/assets.gen.dart';
 import '../model/floor_database/database.dart';
 import '../model/floor_entity/word_status.dart';
 import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
+import '../model/floor_migrations/migration_v2_to_v3_add_tango_table.dart';
 import '../model/tango_entity.dart';
 import '../model/tango_master.dart';
 import '../model/word_status_type.dart';
@@ -65,7 +66,7 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
   void initializeDB() async {
     final _database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
-        .addMigrations([migration1to2])
+        .addMigrations([migration1to2, migration2to3])
         .build();
     setState(() => database = _database);
   }

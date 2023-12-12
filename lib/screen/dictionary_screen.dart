@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/category.dart';
 import 'package:indonesia_flash_card/model/filter_type.dart';
+import 'package:indonesia_flash_card/model/floor_dao/tango_dao.dart';
 import 'package:indonesia_flash_card/model/level.dart';
 import 'package:indonesia_flash_card/model/sort_type.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
@@ -25,6 +26,7 @@ import '../config/config.dart';
 import '../model/floor_database/database.dart';
 import '../model/floor_entity/word_status.dart';
 import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
+import '../model/floor_migrations/migration_v2_to_v3_add_tango_table.dart';
 import '../utils/analytics/analytics_event_entity.dart';
 import '../utils/analytics/analytics_parameters.dart';
 import '../utils/analytics/firebase_analytics.dart';
@@ -68,7 +70,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
   void initializeDB() async {
     final _database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
-        .addMigrations([migration1to2])
+        .addMigrations([migration1to2, migration2to3])
         .build();
     setState(() => database = _database);
   }
@@ -529,14 +531,17 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
   }
 
   Future<List<TangoEntity>> search(String search) async {
-    final tangoList = ref.watch(tangoListControllerProvider);
-    final allTangoList = tangoList.dictionary.allTangos;
-    var searchTangos = allTangoList
-        .where((tango) {
-          return tango.indonesian!.toLowerCase().contains(search.toLowerCase())
-            || tango.japanese!.contains(search);
-        })
-        .toList();
+    final TangoDao? tangoDao = database?.tangoDao;
+
+    final searchTangos =
+      await tangoDao?.getTangoListByIndonesian(search.toLowerCase()) ?? [];
+    final searchTangosByLikeIndonesian =
+        await tangoDao?.getTangoListByLikeIndonesian('%${search.toLowerCase()}%') ?? [];
+    searchTangos.addAll(searchTangosByLikeIndonesian);
+    final searchTangosByJapanese =
+      await tangoDao?.getTangoListByLikeJapanese('%$search%') ?? [];
+    searchTangos.addAll(searchTangosByJapanese);
+
     setState(() => _searchedTango = searchTangos);
     return searchTangos;
   }

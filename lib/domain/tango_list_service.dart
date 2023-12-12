@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
 import 'package:indonesia_flash_card/config/config.dart';
 import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
+import 'package:indonesia_flash_card/model/floor_migrations/migration_v2_to_v3_add_tango_table.dart';
 import 'package:indonesia_flash_card/model/frequency.dart';
 import 'package:indonesia_flash_card/model/lecture.dart';
 import 'package:indonesia_flash_card/model/tango_master.dart';
@@ -12,6 +13,8 @@ import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/repository/sheat_repo.dart';
 import 'package:indonesia_flash_card/repository/translate_repo.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
+import 'package:indonesia_flash_card/utils/remote_config.dart';
+import 'package:indonesia_flash_card/utils/shared_preference.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
 
 import '../model/category.dart';
@@ -29,7 +32,15 @@ final tangoListControllerProvider = StateNotifierProvider<TangoListController, T
 class TangoListController extends StateNotifier<TangoMaster> {
   TangoListController({required TangoMaster initialTangoMaster}) : super(initialTangoMaster);
 
-  Future<List<TangoEntity>> getAllTangoList({required LectureFolder folder}) async {
+  Future<void> resetTangoData({required LectureFolder folder}) async {
+    final database = await $FloorAppDatabase
+        .databaseBuilder(Config.dbName)
+        .addMigrations([migration1to2, migration2to3])
+        .build();
+
+    final tangoDao = database.tangoDao;
+    await tangoDao.deleteAllTango();
+
     state = state..lesson.folder = folder;
 
     final sheetRepos = folder.spreadsheets.where((element) => element.name.contains(Config.dictionarySpreadSheetName)).map((e) => SheetRepo(e.id));
@@ -47,8 +58,6 @@ class TangoListController extends StateNotifier<TangoMaster> {
     if (entryList.isEmpty) {
       throw UnsupportedError("There are no questions nor answers.");
     }
-
-    List<TangoEntity> tangoList = [];
 
     for (var element in entryList) {
       if (element.isEmpty) continue;
@@ -74,16 +83,32 @@ class TangoListController extends StateNotifier<TangoMaster> {
         tmpTango.rankFrequency = int.parse(element[11].toString().trim());
       }
 
-      tangoList.add(tmpTango);
+      await tangoDao.insertTangoEntity(tmpTango);
     }
-    tangoList.sort((a, b) {
-      return a.indonesian!.toLowerCase().compareTo(b.indonesian!.toLowerCase());
-    });
+  }
+
+  Future<List<TangoEntity>> getAllTangoList({required LectureFolder folder}) async {
+    final lastUpdateDate = await PreferenceKey.lastTangoUpdateDate.getString();
+    if (lastUpdateDate == null ||
+        lastUpdateDate != RemoteConfigUtil().getLatestDataUpdateDate()) {
+      await resetTangoData(folder: folder);
+      await PreferenceKey.lastTangoUpdateDate
+          .setString(RemoteConfigUtil().getLatestDataUpdateDate());
+    }
+
+    final database = await $FloorAppDatabase
+        .databaseBuilder(Config.dbName)
+        .addMigrations([migration1to2, migration2to3])
+        .build();
+
+    final tangoDao = database.tangoDao;
+    final tangoList = await tangoDao.getAllTangoList(0, 100);
+    final tangoCount = await tangoDao.getCountTangoList() ?? 0;
+
     state = state
+      ..dictionary.count = tangoCount
       ..dictionary.allTangos = tangoList
       ..dictionary.sortAndFilteredTangos = tangoList;
-
-    getTotalAchievement();
 
     return tangoList;
   }
@@ -200,7 +225,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
   Future<List<WordStatus>> getAllWordStatus() async {
     final database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
-        .addMigrations([migration1to2])
+        .addMigrations([migration1to2, migration2to3])
         .build();
 
     final wordStatusDao = database.wordStatusDao;
@@ -217,17 +242,66 @@ class TangoListController extends StateNotifier<TangoMaster> {
     bool isBookmark = false,
     bool isNotRemembered = false
   }) async {
-    final _tmpTangos = state.dictionary.allTangos;
-    List<TangoEntity> _filteredTangos = _tmpTangos.where((element) {
-      bool _filterCategory = category != null ? element.category == category.id : true;
-      bool _filterPartOfSpeech = partOfSpeech != null ? element.partOfSpeech == partOfSpeech.id : true;
-      bool _filterLevel = levelGroup != null ? levelGroup.range.any((e) => e == element.level) : true;
-      bool _filterFrequency = frequencyGroup != null ? (element.rankFrequency! >= frequencyGroup.rangeFactorMin && element.rankFrequency! <= frequencyGroup.rangeFactorMax) : true;
-      return _filterCategory && _filterPartOfSpeech && _filterLevel && _filterFrequency;
-    }).toList();
+    final database = await $FloorAppDatabase
+        .databaseBuilder(Config.dbName)
+        .addMigrations([migration1to2, migration2to3])
+        .build();
+
+    final tangoDao = database.tangoDao;
+    List<TangoEntity> filteredTangos = [];
+
+    if (category != null) {
+      filteredTangos =
+        await tangoDao.getTangoListByCategory(category.id);
+      if (filteredTangos.isEmpty) {
+        return filteredTangos;
+      }
+    }
+    if (partOfSpeech != null) {
+      if (filteredTangos.isEmpty) {
+        filteredTangos =
+            await tangoDao.getTangoListByPartOfSpeech(partOfSpeech.id);
+      } else {
+        filteredTangos = filteredTangos.where(
+                (element) => element.partOfSpeech == partOfSpeech.id,).toList();
+      }
+      if (filteredTangos.isEmpty) {
+        return filteredTangos;
+      }
+    }
+    if (levelGroup != null) {
+      if (filteredTangos.isEmpty) {
+        filteredTangos =
+          await tangoDao.getTangoListByLevel(levelGroup.range.first, levelGroup.range.last);
+      } else {
+        filteredTangos = filteredTangos.where(
+              (element) => levelGroup.range.any((e) => e == element.level),)
+              .toList();
+      }
+      if (filteredTangos.isEmpty) {
+        return filteredTangos;
+      }
+    }
+    if (frequencyGroup != null) {
+      if (filteredTangos.isEmpty) {
+        filteredTangos =
+        await tangoDao.getTangoListByFrequency(
+            frequencyGroup.rangeFactorMin,
+            frequencyGroup.rangeFactorMax,);
+      } else {
+        filteredTangos = filteredTangos.where((element) =>
+          element.rankFrequency! >= frequencyGroup.rangeFactorMin
+              && element.rankFrequency! <= frequencyGroup.rangeFactorMax,)
+            .toList();
+      }
+      if (filteredTangos.isEmpty) {
+        return filteredTangos;
+      }
+    }
+
     if (wordStatusType != null) {
       final wordStatusList = await getAllWordStatus();
-      _filteredTangos = _filteredTangos.where((element) {
+      filteredTangos = filteredTangos.where((element) {
           final targetWordStatus = wordStatusList.firstWhereOrNull((e) {
             return e.wordId == element.id;
           });
@@ -240,7 +314,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
     }
     if (isBookmark) {
       final wordStatusList = await getAllWordStatus();
-      _filteredTangos = _filteredTangos.where((element) {
+      filteredTangos = filteredTangos.where((element) {
         final targetWordStatus = wordStatusList.firstWhereOrNull((e) {
           return e.wordId == element.id;
         });
@@ -249,14 +323,14 @@ class TangoListController extends StateNotifier<TangoMaster> {
     }
     if (isNotRemembered) {
       final wordStatusList = await getAllWordStatus();
-      _filteredTangos = _filteredTangos.where((element) {
+      filteredTangos = filteredTangos.where((element) {
         final targetWordStatus = wordStatusList.firstWhereOrNull((e) {
           return e.wordId == element.id;
         });
         return targetWordStatus != null && targetWordStatus.status == WordStatusType.notRemembered.id;
       }).toList();
     }
-    return _filteredTangos;
+    return filteredTangos;
   }
 
   Future<List<TangoEntity>> resetLessonsData() async {
@@ -341,11 +415,13 @@ class TangoListController extends StateNotifier<TangoMaster> {
   }
 
   Future<List<TangoEntity>> search(String search) async {
-    final allTangoList = state.dictionary.allTangos;
-    var searchTangos = allTangoList
-        .where((tango) {
-          return tango.indonesian!.toLowerCase() == search.toLowerCase();
-        }).toList();
+    final database = await $FloorAppDatabase
+        .databaseBuilder(Config.dbName)
+        .addMigrations([migration1to2, migration2to3])
+        .build();
+
+    final tangoDao = database.tangoDao;
+    var searchTangos = await tangoDao.getTangoListByIndonesian(search.toLowerCase());
     return searchTangos;
   }
 

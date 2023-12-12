@@ -29,13 +29,11 @@ class _QuestionListScreenState extends State<QuestionListScreen> {
   CollectionReference questionsRef =
     FirebaseFirestore.instance.collection('questions');
   List<QuestionEntity> questionList = [];
-  InterstitialAd? _interstitialAd;
 
   @override
   void initState() {
     initQuestionList();
     super.initState();
-    Admob.loadInterstitialAd();
   }
 
   @override
@@ -48,7 +46,7 @@ class _QuestionListScreenState extends State<QuestionListScreen> {
         padding: const EdgeInsets.only(bottom: SizeConfig.bottomBarHeight),
         child: FloatingActionButton(
           onPressed: () async {
-            await Admob.showInterstitialAd();
+            await Admob().showInterstitialAd();
             await SendQuestionWidget.navigateTo(context);
             initQuestionList();
           },
@@ -70,7 +68,7 @@ class _QuestionListScreenState extends State<QuestionListScreen> {
             return InkWell(
               onTap: () {
                 if (Utils.rundomLottery()) {
-                  Admob.showInterstitialAd();
+                  Admob().showInterstitialAd();
                 }
                 QuestionAnswerListWidget.navigateTo(context, questionEntity: questionEntity);
               },

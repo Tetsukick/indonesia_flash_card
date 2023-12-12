@@ -13,6 +13,7 @@ import '../config/config.dart';
 import '../model/floor_database/database.dart';
 import '../model/floor_entity/word_status.dart';
 import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
+import '../model/floor_migrations/migration_v2_to_v3_add_tango_table.dart';
 import '../model/word_status_type.dart';
 import '../utils/analytics/analytics_event_entity.dart';
 import '../utils/analytics/analytics_parameters.dart';
@@ -44,15 +45,15 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
   bool _isSoundOn = true;
   final _iconHeight = 20.0;
   final _iconWidth = 20.0;
-  late AppDatabase database;
+  AppDatabase? database;
 
   @override
   void initState() {
     FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: AnalyticsScreen.dictionaryDetail.name);
     initializeDB();
+    super.initState();
     setTTS();
     loadSoundSetting();
-    super.initState();
   }
 
   void setTTS() {
@@ -70,7 +71,7 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
   void initializeDB() async {
     final _database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
-        .addMigrations([migration1to2])
+        .addMigrations([migration1to2, migration2to3])
         .build();;
     setState(() => database = _database);
   }
@@ -126,7 +127,7 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
   }
 
   Widget bookmark(TangoEntity entity) {
-    final wordStatusDao = database.wordStatusDao;
+    final wordStatusDao = database?.wordStatusDao;
 
     return FutureBuilder(
         future: getBookmark(entity),
@@ -136,14 +137,14 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
             bool isBookmark = status == null ? false : status.isBookmarked;
             if (status == null) {
               status = WordStatus(wordId: entity.id!, status: WordStatusType.notLearned.id, isBookmarked: false);
-              wordStatusDao.insertWordStatus(status);
+              wordStatusDao?.insertWordStatus(status);
             }
             return Padding(
               padding: const EdgeInsets.only(left: SizeConfig.mediumSmallMargin),
               child: InkWell(
                 onTap: () {
                   analytics(DictionaryDetailItem.bookmark);
-                  wordStatusDao.updateWordStatus(status!..isBookmarked = !isBookmark);
+                  wordStatusDao?.updateWordStatus(status!..isBookmarked = !isBookmark);
                   setState(() => isBookmark = !isBookmark);
                 },
                 child: isBookmark ? Assets.png.bookmarkOn64.image(height: 32, width: 32)
@@ -160,8 +161,8 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
   }
 
   Future<WordStatus?> getBookmark(TangoEntity entity) async {
-    final wordStatusDao = database.wordStatusDao;
-    final wordStatus = await wordStatusDao.findWordStatusById(entity.id!);
+    final wordStatusDao = database?.wordStatusDao;
+    final wordStatus = await wordStatusDao?.findWordStatusById(entity.id!);
     return wordStatus;
   }
 

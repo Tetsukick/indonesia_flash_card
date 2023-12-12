@@ -1,10 +1,30 @@
 import 'dart:convert';
+import 'package:floor/floor.dart';
 import 'package:indonesia_flash_card/generated/json/base/json_field.dart';
 import 'package:indonesia_flash_card/generated/json/tango_entity.g.dart';
 
 @JsonSerializable()
+@entity
 class TangoEntity {
 
+  TangoEntity({
+		this.id,
+		this.indonesian,
+		this.japanese,
+		this.english,
+		this.description,
+		this.example,
+		this.exampleJp,
+		this.level,
+		this.partOfSpeech,
+		this.category,
+		this.frequency,
+		this.rankFrequency
+	});
+
+  factory TangoEntity.fromJson(Map<String, dynamic> json) => $TangoEntityFromJson(json);
+
+	@PrimaryKey()
 	int? id;
 	String? indonesian;
 	String? japanese;
@@ -19,10 +39,6 @@ class TangoEntity {
 	int? category;
 	int? frequency;
 	int? rankFrequency;
-  
-  TangoEntity();
-
-  factory TangoEntity.fromJson(Map<String, dynamic> json) => $TangoEntityFromJson(json);
 
   Map<String, dynamic> toJson() => $TangoEntityToJson(this);
 

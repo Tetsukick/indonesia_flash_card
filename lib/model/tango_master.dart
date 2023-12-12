@@ -17,6 +17,7 @@ class TangoMaster {
 class Dictionary {
   List<TangoEntity> allTangos = [];
   List<TangoEntity> sortAndFilteredTangos = [];
+  int count = 0;
 }
 
 class Lesson {

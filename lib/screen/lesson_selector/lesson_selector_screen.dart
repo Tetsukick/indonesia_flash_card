@@ -36,6 +36,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../config/config.dart';
 import '../../model/floor_database/database.dart';
 import '../../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
+import '../../model/floor_migrations/migration_v2_to_v3_add_tango_table.dart';
 import '../flush_card_screen.dart';
 
 class LessonSelectorScreen extends ConsumerStatefulWidget {
@@ -85,7 +86,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   void initializeDB() async {
     final _database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
-        .addMigrations([migration1to2])
+        .addMigrations([migration1to2, migration2to3])
         .build();
     setState(() => database = _database);
 
@@ -203,7 +204,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                     children: [
                       _userSectionItem(
                           title: '総単語数',
-                          data: tangoMaster.dictionary.allTangos.length,
+                          data: tangoMaster.dictionary.count,
                           unitTitle: '単語'
                       ),
                       _separater(),

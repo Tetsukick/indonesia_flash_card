@@ -4,6 +4,7 @@ enum PreferenceKey {
   isSoundOn,
   lastTestDate,
   lastQuestionPostDate,
+  lastTangoUpdateDate,
 }
 
 extension PreferenceKeyEx on PreferenceKey {
