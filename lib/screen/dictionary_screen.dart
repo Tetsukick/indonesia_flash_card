@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/category.dart';
 import 'package:indonesia_flash_card/model/filter_type.dart';
+import 'package:indonesia_flash_card/model/floor_dao/tango_dao.dart';
 import 'package:indonesia_flash_card/model/level.dart';
 import 'package:indonesia_flash_card/model/sort_type.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
@@ -530,14 +531,17 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
   }
 
   Future<List<TangoEntity>> search(String search) async {
-    final tangoList = ref.watch(tangoListControllerProvider);
-    final allTangoList = tangoList.dictionary.allTangos;
-    var searchTangos = allTangoList
-        .where((tango) {
-          return tango.indonesian!.toLowerCase().contains(search.toLowerCase())
-            || tango.japanese!.contains(search);
-        })
-        .toList();
+    final TangoDao? tangoDao = database?.tangoDao;
+
+    final searchTangos =
+      await tangoDao?.getTangoListByIndonesian(search.toLowerCase()) ?? [];
+    final searchTangosByLikeIndonesian =
+        await tangoDao?.getTangoListByLikeIndonesian('%${search.toLowerCase()}%') ?? [];
+    searchTangos.addAll(searchTangosByLikeIndonesian);
+    final searchTangosByJapanese =
+      await tangoDao?.getTangoListByLikeJapanese('%$search%') ?? [];
+    searchTangos.addAll(searchTangosByJapanese);
+
     setState(() => _searchedTango = searchTangos);
     return searchTangos;
   }

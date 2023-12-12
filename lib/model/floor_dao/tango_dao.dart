@@ -18,6 +18,12 @@ abstract class TangoDao {
   @Query('SELECT * FROM TangoEntity WHERE LOWER(indonesian) = :name ORDER BY indonesian ASC')
   Future<List<TangoEntity>> getTangoListByIndonesian(String name);
 
+  @Query("SELECT * FROM TangoEntity WHERE LOWER(indonesian) like :search ORDER BY indonesian ASC")
+  Future<List<TangoEntity>> getTangoListByLikeIndonesian(String search);
+
+  @Query("SELECT * FROM TangoEntity WHERE LOWER(japanese) like :search ORDER BY indonesian ASC")
+  Future<List<TangoEntity>> getTangoListByLikeJapanese(String search);
+
   @Query('SELECT * FROM TangoEntity WHERE category = :categoryId ORDER BY indonesian ASC')
   Future<List<TangoEntity>> getTangoListByCategory(int categoryId);
 

@@ -330,7 +330,7 @@ class _$TangoDao extends TangoDao {
   @override
   Future<int?> getCountTangoList() async {
     return _queryAdapter.query('SELECT COUNT(*) FROM TangoEntity',
-        mapper: (Map<String, Object?> row) => row.values.first as int);
+        mapper: (Map<String, Object?> row) => row['COUNT(*)'] as int);
   }
 
   @override
@@ -339,6 +339,22 @@ class _$TangoDao extends TangoDao {
         'SELECT * FROM TangoEntity WHERE LOWER(indonesian) = ?1 ORDER BY indonesian ASC',
         mapper: (Map<String, Object?> row) => TangoEntity(id: row['id'] as int?, indonesian: row['indonesian'] as String?, japanese: row['japanese'] as String?, english: row['english'] as String?, description: row['description'] as String?, example: row['example'] as String?, exampleJp: row['exampleJp'] as String?, level: row['level'] as int?, partOfSpeech: row['partOfSpeech'] as int?, category: row['category'] as int?, frequency: row['frequency'] as int?, rankFrequency: row['rankFrequency'] as int?),
         arguments: [name]);
+  }
+
+  @override
+  Future<List<TangoEntity>> getTangoListByLikeIndonesian(String search) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM TangoEntity WHERE LOWER(indonesian) like ?1 ORDER BY indonesian ASC',
+        mapper: (Map<String, Object?> row) => TangoEntity(id: row['id'] as int?, indonesian: row['indonesian'] as String?, japanese: row['japanese'] as String?, english: row['english'] as String?, description: row['description'] as String?, example: row['example'] as String?, exampleJp: row['exampleJp'] as String?, level: row['level'] as int?, partOfSpeech: row['partOfSpeech'] as int?, category: row['category'] as int?, frequency: row['frequency'] as int?, rankFrequency: row['rankFrequency'] as int?),
+        arguments: [search]);
+  }
+
+  @override
+  Future<List<TangoEntity>> getTangoListByLikeJapanese(String search) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM TangoEntity WHERE LOWER(japanese) like ?1 ORDER BY indonesian ASC',
+        mapper: (Map<String, Object?> row) => TangoEntity(id: row['id'] as int?, indonesian: row['indonesian'] as String?, japanese: row['japanese'] as String?, english: row['english'] as String?, description: row['description'] as String?, example: row['example'] as String?, exampleJp: row['exampleJp'] as String?, level: row['level'] as int?, partOfSpeech: row['partOfSpeech'] as int?, category: row['category'] as int?, frequency: row['frequency'] as int?, rankFrequency: row['rankFrequency'] as int?),
+        arguments: [search]);
   }
 
   @override
