@@ -45,16 +45,15 @@ class TangoListController extends StateNotifier<TangoMaster> {
 
     final sheetRepos = folder.spreadsheets.where((element) => element.name.contains(Config.dictionarySpreadSheetName)).map((e) => SheetRepo(e.id));
     List<List<Object?>> entryList = [];
+    final targetRange = RemoteConfigUtil().getSpreadsheetTargetRange();
     await Future.forEach<SheetRepo>(sheetRepos, (element) async {
-      List<List<Object?>>? _entryList = await Utils.retry(retries: 3, aFuture: element.getEntriesFromRange("A2:L3000"));
+      List<List<Object?>>? _entryList = await Utils.retry(retries: 3, aFuture: element.getEntriesFromRange(targetRange));
       logger.d('SheetId ${element.spreadsheetId}: ${_entryList?.length ?? 0}');
       if (_entryList != null) {
         entryList.addAll(_entryList);
-        logger.d('entryList: ${entryList.length}');
       }
     });
 
-    logger.d('entryList: ${entryList.length}');
     if (entryList.isEmpty) {
       throw UnsupportedError("There are no questions nor answers.");
     }

@@ -1,5 +1,5 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:indonesia_flash_card/utils/utils.dart';
+import 'package:indonesia_flash_card/utils/logger.dart';
 
 class RemoteConfigUtil {
   static final RemoteConfigUtil _instance = RemoteConfigUtil._internal();
@@ -21,6 +21,10 @@ class RemoteConfigUtil {
   
   String getLatestDataUpdateDate() {
     return _remoteConfig.getString('last_tango_update_date');
+  }
+
+  String getSpreadsheetTargetRange() {
+    return _remoteConfig.getString('spreadsheet_target_range');
   }
 
 }

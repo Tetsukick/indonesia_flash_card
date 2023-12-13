@@ -66,9 +66,9 @@ class LessonCard extends ConsumerWidget {
 
     final lectures = ref.watch(fileControllerProvider);
     final _isLoadingLecture = lectures.isEmpty;
-    if (_isLoadingLecture) {
-      return shimmerLessonCard();
-    }
+    // if (_isLoadingLecture) {
+    //   return shimmerLessonCard();
+    // }
 
     return Card(
       child: InkWell(
@@ -92,13 +92,12 @@ class LessonCard extends ConsumerWidget {
           if (!context.mounted) return;
           FlashCardScreen.navigateTo(context);
         },
-        child: Container(
+        child: SizedBox(
           width: itemCardWidth,
           height: itemCardHeight,
           child: Stack(
             children: <Widget>[
               _svg.svg(
-                alignment: Alignment.center,
                 width: double.infinity,
                 height: double.infinity,
               ),
@@ -108,6 +107,10 @@ class LessonCard extends ConsumerWidget {
                   width: double.infinity,
                   height: itemCardHeight * 0.6,
                   decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10),
+                    ),
                     gradient: LinearGradient(
                       begin: FractionalOffset.bottomCenter,
                       end: FractionalOffset.topCenter,
@@ -119,9 +122,7 @@ class LessonCard extends ConsumerWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                width: double.infinity,
-                height: double.infinity,
+              SizedBox.expand(
                 child: Padding(
                   padding: const EdgeInsets.all(SizeConfig.smallMargin),
                   child: Column(
@@ -166,29 +167,27 @@ class LessonCard extends ConsumerWidget {
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                child: Container(
-                  width: double.infinity,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: FractionalOffset.bottomCenter,
-                      end: FractionalOffset.topCenter,
-                      colors: [
-                        Colors.black.withOpacity(0.5),
-                        Colors.black.withOpacity(0),
-                      ],
-                    ),
+                width: double.infinity,
+                height: 100,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: FractionalOffset.bottomCenter,
+                    end: FractionalOffset.topCenter,
+                    colors: [
+                      Colors.black.withOpacity(0.5),
+                      Colors.black.withOpacity(0),
+                    ],
                   ),
                 ),
               ),
             ),
-            SizedBox.expand(
+            const SizedBox.expand(
               child: Padding(
-                padding: const EdgeInsets.all(SizeConfig.smallMargin),
+                padding: EdgeInsets.all(SizeConfig.smallMargin),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     ShimmerWidget.rectangular(
                       height: 20,
                     ),

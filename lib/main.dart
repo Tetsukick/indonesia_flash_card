@@ -12,6 +12,7 @@ import 'package:indonesia_flash_card/screen/home_navigation.dart';
 import 'package:indonesia_flash_card/utils/admob.dart';
 import 'package:indonesia_flash_card/utils/analytics/firebase_analytics.dart';
 import 'package:indonesia_flash_card/utils/crash_reporter.dart';
+import 'package:indonesia_flash_card/utils/remote_config.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
 
 void main() async {
@@ -20,6 +21,7 @@ void main() async {
   FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
   FirebaseAnalyticsUtils();
   Admob();
+  RemoteConfigUtil().init();
   MobileAds.instance.initialize();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
