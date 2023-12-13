@@ -1,4 +1,3 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -8,6 +7,7 @@ import 'package:indonesia_flash_card/model/question_entity.dart';
 import 'package:indonesia_flash_card/repository/question_tweet_repo.dart';
 import 'package:indonesia_flash_card/utils/common_border.dart';
 import 'package:lottie/lottie.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../../flutter_flow/flutter_flow_icon_button.dart';
 import '../../flutter_flow/flutter_flow_theme.dart';
@@ -254,17 +254,32 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
   }
 
   Future<void> showConfirmToPostQuestionDialog() async {
-    await AwesomeDialog(
+    await Alert(
       context: context,
-      dialogType: DialogType.warning,
-      headerAnimationLoop: false,
-      animType: AnimType.bottomSlide,
+      type: AlertType.warning,
       title: 'この内容で質問を投稿しますか?',
       desc: '質問を投稿後に削除・編集することはできません。質問は一日に一度までしか投稿できません。',
-      buttonsTextStyle: const TextStyle(color: Colors.black),
-      showCloseIcon: true,
-      btnCancelOnPress: () {},
-      btnOkOnPress: sendQuestion,
+      buttons: [
+        DialogButton(
+          onPressed: () => Navigator.pop(context),
+          color: ColorConfig.red,
+          child: const Text(
+            'キャンセル',
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+        ),
+        DialogButton(
+          onPressed: sendQuestion,
+          gradient: const LinearGradient(colors: [
+            ColorConfig.green,
+            Color.fromRGBO(52, 138, 199, 1),
+          ]),
+          child: const Text(
+            '投稿',
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+        )
+      ],
     ).show();
   }
 

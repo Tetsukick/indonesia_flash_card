@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
@@ -15,7 +16,6 @@ import 'package:indonesia_flash_card/model/floor_entity/activity.dart';
 import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
 import 'package:indonesia_flash_card/model/frequency.dart';
 import 'package:indonesia_flash_card/model/lecture.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indonesia_flash_card/model/level.dart';
 import 'package:indonesia_flash_card/model/part_of_speech.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
@@ -27,7 +27,6 @@ import 'package:indonesia_flash_card/utils/analytics/firebase_analytics.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
 import 'package:indonesia_flash_card/utils/shared_preference.dart';
-import 'package:indonesia_flash_card/utils/shimmer.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
 import 'package:lottie/lottie.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -162,13 +161,36 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
         ),
         Visibility(
           visible: !_isLoadTangoList,
-          child: Container(
+          child: ColoredBox(
             color: Colors.black.withOpacity(0.2),
             child: Center(
-              child: Lottie.asset(
-                Assets.lottie.splashScreen,
-                height: 300,
-              ),
+              child: Expanded(
+                child: Column(
+                  children: [
+                    const Spacer(),
+                    Container(
+                      height: 200,
+                      width: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const CircularProgressIndicator(
+                            color: ColorConfig.primaryRed700,
+                          ),
+                          const SizedBox(height: SizeConfig.mediumMargin,),
+                          TextWidget.titleGraySmall('データを更新中です。'),
+                          TextWidget.titleGraySmall('しばらくお待ちください。'),
+                        ],
+                      ),
+                    ),
+                    const Spacer(),
+                  ],
+                ),
+              )
             ),
           ),
         ),
@@ -520,12 +542,12 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
               return GestureDetector(
                 onTap: () => controller.animateToPage(entry.key),
                 child: Container(
-                  width: 8.0,
-                  height: 8.0,
-                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                  width: 8,
+                  height: 8,
+                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: (ColorConfig.primaryRed900)
+                      color: ColorConfig.primaryRed900
                           .withOpacity(index == entry.key ? 0.9 : 0.2)),
                 ),
               );

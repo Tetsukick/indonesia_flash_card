@@ -20,7 +20,7 @@ import 'package:indonesia_flash_card/screen/dictionary_detail_screen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:material_floating_search_bar_2/material_floating_search_bar_2.dart';
 
 import '../config/config.dart';
 import '../model/floor_database/database.dart';
