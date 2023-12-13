@@ -72,6 +72,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     RefreshController(initialRefresh: false);
   bool _isAlreadyTestedToday = false;
   bool _isLoadTangoList = false;
+  double progressReloadData = 0;
 
   @override
   void initState() {
@@ -96,7 +97,12 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
 
   Future<void> initTangoList() async {
     final lectures = await ref.read(fileControllerProvider.notifier).getPossibleLectures();
-    await ref.read(tangoListControllerProvider.notifier).getAllTangoList(folder: lectures.first);
+    await ref.read(tangoListControllerProvider.notifier).getAllTangoList(
+      folder: lectures.first,
+      onProgress: (percentage) {
+        setState(() => progressReloadData = percentage);
+      }
+    );
     setState(() => _isLoadTangoList = true);
   }
 
@@ -164,32 +170,31 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
           child: ColoredBox(
             color: Colors.black.withOpacity(0.2),
             child: Center(
-              child: Expanded(
-                child: Column(
-                  children: [
-                    const Spacer(),
-                    Container(
-                      height: 200,
-                      width: 200,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const CircularProgressIndicator(
-                            color: ColorConfig.primaryRed700,
-                          ),
-                          const SizedBox(height: SizeConfig.mediumMargin,),
-                          TextWidget.titleGraySmall('データを更新中です。'),
-                          TextWidget.titleGraySmall('しばらくお待ちください。'),
-                        ],
-                      ),
+              child: Column(
+                children: [
+                  const Spacer(),
+                  Container(
+                    height: 200,
+                    width: 200,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    const Spacer(),
-                  ],
-                ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const CircularProgressIndicator(
+                          color: ColorConfig.primaryRed700,
+                        ),
+                        const SizedBox(height: SizeConfig.mediumMargin,),
+                        TextWidget.titleGraySmall('${(progressReloadData*100).toStringAsFixed(2)} %'),
+                        TextWidget.titleGraySmall('データを更新中です。'),
+                        TextWidget.titleGraySmall('しばらくお待ちください。'),
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
+                ],
               )
             ),
           ),
