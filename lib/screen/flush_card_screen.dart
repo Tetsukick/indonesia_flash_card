@@ -10,6 +10,7 @@ import 'package:indonesia_flash_card/model/tango_entity.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/screen/quiz_screen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
+import 'package:indonesia_flash_card/utils/lottie_cache.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
 import 'package:lottie/lottie.dart';
@@ -351,9 +352,9 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
           },
           child: Padding(
             padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
-            child: Lottie.asset(
-              Assets.lottie.speaker,
+            child: SizedBox(
               height: _cardHeight / 3,
+              child: lottieCache.load(Assets.lottie.speaker),
             ),
           ),
         ),
@@ -384,23 +385,6 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
           child: Align(
             alignment: Alignment.center,
             child: TextButton(
-              child: Container(
-                height: _cardHeight,
-                width: double.infinity,
-                child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Lottie.asset(
-                          Assets.lottie.tap,
-                          height: _cardHeight / 3,
-                        ),
-                        SizedBox(height: SizeConfig.smallMargin,),
-                        TextWidget.titleGraySmallBold('タップして日本語の意味を表示')
-                      ],
-                    )
-                ),
-              ),
               style: TextButton.styleFrom(
                 primary: ColorConfig.bgGreySeparater,
               ),
@@ -408,6 +392,23 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
                 analytics(FlushCardItem.openCard);
                 cardFlipped = true;
               }),
+              child: SizedBox(
+                height: _cardHeight,
+                width: double.infinity,
+                child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: _cardHeight / 3,
+                          child: lottieCache.load(Assets.lottie.tap,),
+                        ),
+                        const SizedBox(height: SizeConfig.smallMargin,),
+                        TextWidget.titleGraySmallBold('タップして日本語の意味を表示')
+                      ],
+                    )
+                ),
+              ),
             ),
           ),
         )

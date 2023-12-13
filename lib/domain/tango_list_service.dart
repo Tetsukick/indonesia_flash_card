@@ -32,7 +32,7 @@ final tangoListControllerProvider = StateNotifierProvider<TangoListController, T
 class TangoListController extends StateNotifier<TangoMaster> {
   TangoListController({required TangoMaster initialTangoMaster}) : super(initialTangoMaster);
 
-  Future<void> resetTangoData({required LectureFolder folder}) async {
+  Future<void> resetTangoData({required LectureFolder folder, void Function(double percent)? onProgress}) async {
     final database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
         .addMigrations([migration1to2, migration2to3])
@@ -45,21 +45,27 @@ class TangoListController extends StateNotifier<TangoMaster> {
 
     final sheetRepos = folder.spreadsheets.where((element) => element.name.contains(Config.dictionarySpreadSheetName)).map((e) => SheetRepo(e.id));
     List<List<Object?>> entryList = [];
+    final targetRange = RemoteConfigUtil().getSpreadsheetTargetRange();
     await Future.forEach<SheetRepo>(sheetRepos, (element) async {
-      List<List<Object?>>? _entryList = await Utils.retry(retries: 3, aFuture: element.getEntriesFromRange("A2:L3000"));
+      List<List<Object?>>? _entryList = await Utils.retry(retries: 3, aFuture: element.getEntriesFromRange(targetRange));
       logger.d('SheetId ${element.spreadsheetId}: ${_entryList?.length ?? 0}');
       if (_entryList != null) {
         entryList.addAll(_entryList);
-        logger.d('entryList: ${entryList.length}');
       }
     });
 
-    logger.d('entryList: ${entryList.length}');
     if (entryList.isEmpty) {
       throw UnsupportedError("There are no questions nor answers.");
     }
 
+    var currentIndex = 0;
     for (var element in entryList) {
+      if (currentIndex % 300 == 0) {
+        if (onProgress != null) {
+          onProgress(currentIndex/entryList.length);
+        }
+      }
+      currentIndex++;
       if (element.isEmpty) continue;
       if (element[1].toString().trim() == ''
           || element[2].toString().trim() == '') {
@@ -87,11 +93,11 @@ class TangoListController extends StateNotifier<TangoMaster> {
     }
   }
 
-  Future<List<TangoEntity>> getAllTangoList({required LectureFolder folder}) async {
+  Future<List<TangoEntity>> getAllTangoList({required LectureFolder folder, void Function(double percent)? onProgress}) async {
     final lastUpdateDate = await PreferenceKey.lastTangoUpdateDate.getString();
     if (lastUpdateDate == null ||
         lastUpdateDate != RemoteConfigUtil().getLatestDataUpdateDate()) {
-      await resetTangoData(folder: folder);
+      await resetTangoData(folder: folder, onProgress: onProgress);
       await PreferenceKey.lastTangoUpdateDate
           .setString(RemoteConfigUtil().getLatestDataUpdateDate());
     }

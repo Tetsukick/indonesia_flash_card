@@ -12,15 +12,16 @@ import 'package:indonesia_flash_card/screen/home_navigation.dart';
 import 'package:indonesia_flash_card/utils/admob.dart';
 import 'package:indonesia_flash_card/utils/analytics/firebase_analytics.dart';
 import 'package:indonesia_flash_card/utils/crash_reporter.dart';
+import 'package:indonesia_flash_card/utils/remote_config.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+  FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
   FirebaseAnalyticsUtils();
   Admob();
+  RemoteConfigUtil().init();
   MobileAds.instance.initialize();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

@@ -120,7 +120,7 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
 
   Widget _scoreArea() {
     final tangoList = ref.watch(tangoListControllerProvider);
-    return Screenshot<dynamic>(
+    return Screenshot(
         controller: screenshotController,
         child: Container(
           color: ColorConfig.bgPinkColor,
