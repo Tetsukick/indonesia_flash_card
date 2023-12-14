@@ -73,8 +73,8 @@ class LessonCard extends ConsumerWidget {
     return Card(
       child: InkWell(
         onTap: () async {
-          var rand = new math.Random();
-          int lottery = rand.nextInt(3);
+          final rand = math.Random();
+          final lottery = rand.nextInt(3);
           if (lottery == 0) {
             await Admob().showInterstitialAd();
           }
