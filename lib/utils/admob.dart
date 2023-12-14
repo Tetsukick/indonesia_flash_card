@@ -1,14 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:indonesia_flash_card/config/config.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
 
-import 'utils.dart';
-
 class Admob {
 
   factory Admob() {
-    _instance._loadInterstitialAd();
     return _instance;
   }
 
@@ -17,13 +13,14 @@ class Admob {
 
   InterstitialAd? interstitialAd;
 
-  Future<void> _loadInterstitialAd() async {
+  Future<void> loadInterstitialAd() async {
     if (_instance.interstitialAd == null) {
       await InterstitialAd.load(
           adUnitId: Config.getAdUnitIdInterstitial(),
           request: const AdRequest(),
           adLoadCallback: InterstitialAdLoadCallback(
             onAdLoaded: (InterstitialAd ad) {
+              logger.d('intersitial Ad success to load: $ad');
               _instance.interstitialAd = ad;
             },
             onAdFailedToLoad: (LoadAdError error) {
@@ -35,9 +32,11 @@ class Admob {
   }
 
   Future<void> showInterstitialAd() async {
-    if (interstitialAd != null) {
+    if (_instance.interstitialAd != null) {
       await interstitialAd!.show();
-      await _loadInterstitialAd();
+      loadInterstitialAd();
+    } else {
+      loadInterstitialAd();
     }
   }
 }

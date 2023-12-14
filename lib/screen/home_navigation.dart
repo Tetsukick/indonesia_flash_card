@@ -9,6 +9,7 @@ import 'package:indonesia_flash_card/screen/lesson_selector/lesson_selector_scre
 import 'package:indonesia_flash_card/screen/menu_screen.dart';
 import 'package:indonesia_flash_card/screen/question/question_list.dart';
 import 'package:indonesia_flash_card/screen/translation_screen.dart';
+import 'package:indonesia_flash_card/utils/admob.dart';
 
 import '../config/color_config.dart';
 
@@ -36,6 +37,7 @@ class _HomeNavigationState extends State<HomeNavigation> {
   void initState() {
     super.initState();
     confirmATTStatus();
+    Admob().loadInterstitialAd();
   }
 
   @override
