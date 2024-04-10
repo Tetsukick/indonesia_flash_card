@@ -188,7 +188,7 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
           children: [
             img.image(height: 20, width: 20),
             const SizedBox(width: SizeConfig.smallMargin),
-            TextWidget.titleRedMedium(title)
+            Expanded(child: TextWidget.titleRedMedium(title))
           ],
         ),
       ),

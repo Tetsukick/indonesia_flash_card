@@ -305,6 +305,13 @@ class TangoListController extends StateNotifier<TangoMaster> {
       }
     }
 
+    if (filteredTangos.isEmpty
+        && category == null && levelGroup == null
+        && partOfSpeech == null && frequencyGroup == null) {
+      filteredTangos =
+        await tangoDao.getAllTangoList(0, 20000);
+    }
+
     if (wordStatusType != null) {
       final wordStatusList = await getAllWordStatus();
       filteredTangos = filteredTangos.where((element) {
@@ -456,10 +463,11 @@ class TangoListController extends StateNotifier<TangoMaster> {
     return rate;
   }
 
-  void getTotalAchievement() async {
+  Future<void> getTotalAchievement() async {
     final rate = await achievementRate();
-
-    state = state
-      ..totalAchievement = rate;
+    if (!rate.isNaN) {
+      state = state
+        ..totalAchievement = rate;
+    }
   }
 }
