@@ -383,10 +383,9 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
         Visibility(
           visible: isTappable,
           child: Align(
-            alignment: Alignment.center,
             child: TextButton(
               style: TextButton.styleFrom(
-                primary: ColorConfig.bgGreySeparater,
+                foregroundColor: ColorConfig.bgGreySeparater,
               ),
               onPressed: () => setState(() {
                 analytics(FlushCardItem.openCard);
@@ -473,7 +472,8 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     if (wordStatus != null) {
       await wordStatusDao.updateWordStatus(wordStatus..status = type.id);
     } else {
-      await wordStatusDao.insertWordStatus(WordStatus(wordId: currentTango.id!, status: type.id));
+      await wordStatusDao.insertWordStatus(
+          WordStatus(wordId: currentTango.id!, status: type.id),);
     }
   }
 

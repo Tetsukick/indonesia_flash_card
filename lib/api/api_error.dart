@@ -4,6 +4,6 @@ class ApiError {
   ApiError({required this.detail});
 
   factory ApiError.fromJson(Map<String, dynamic> json) {
-    return ApiError(detail: json['text'] ?? '');
+    return ApiError(detail: json['text'] as String ?? '');
   }
 }
