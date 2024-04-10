@@ -104,6 +104,8 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
       }
     );
     setState(() => _isLoadTangoList = true);
+    await ref.read(tangoListControllerProvider.notifier).getTotalAchievement();
+    setState(() {});
   }
 
   void initFCM() async {
