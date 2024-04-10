@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -49,22 +51,40 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
 
   @override
   void initState() {
-    FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: AnalyticsScreen.dictionaryDetail.name);
+    FirebaseAnalyticsUtils.analytics.setCurrentScreen(
+        screenName: AnalyticsScreen.dictionaryDetail.name);
     initializeDB();
     super.initState();
-    setTTS();
-    loadSoundSetting();
+    setTTSandLoadSoundSetting();
   }
 
-  void setTTS() {
-    flutterTts.setLanguage('id-ID');
+  Future<void> setTTSandLoadSoundSetting() async {
+    await setTTS();
+    await loadSoundSetting();
   }
 
-  void loadSoundSetting() async {
+  Future<void> setTTS() async {
+    await flutterTts.setLanguage('id-ID');
+    if (Platform.isIOS) {
+      await flutterTts.setSharedInstance(true);
+      await flutterTts.setIosAudioCategory(IosTextToSpeechAudioCategory.playback,
+        [
+          IosTextToSpeechAudioCategoryOptions.allowBluetooth,
+          IosTextToSpeechAudioCategoryOptions.allowBluetoothA2DP,
+          IosTextToSpeechAudioCategoryOptions.mixWithOthers
+        ],
+        IosTextToSpeechAudioMode.voicePrompt,
+      );
+    } else if (Platform.isAndroid) {
+      await flutterTts.setSilence(2);
+    }
+  }
+
+  Future<void> loadSoundSetting() async {
     _isSoundOn = await PreferenceKey.isSoundOn.getBool();
     setState(() {});
     if (_isSoundOn) {
-      flutterTts.speak(this.widget.tangoEntity.indonesian ?? '');
+      await flutterTts.speak(widget.tangoEntity.indonesian ?? '');
     }
   }
 
