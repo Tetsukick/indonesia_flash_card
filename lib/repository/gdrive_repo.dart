@@ -13,11 +13,19 @@ class GDriveRepo {
 
   Future<List<File>> getFilesAndFolders() async {
     await init;
-    final result = await driveApi.files.list();
-    logger.d('getFilesAndFolders result: ${result.items}');
-    var files = result.items;
-    if (files == null) throw UnsupportedError("No files found");
-    return files;
+    try {
+      final result = await driveApi.files.list();
+      logger.d('getFilesAndFolders result: ${result.items}');
+      final files = result.items;
+      if (files == null) {
+        throw UnsupportedError('No files found');
+      }
+      return files;
+    } catch (e) {
+      logger.d(e);
+      await Future.delayed(Duration(seconds: 3));
+      return getFilesAndFolders();
+    }
   }
 
   Future<void> initSheetRepo() async {
