@@ -177,8 +177,8 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        primary: Colors.white,
-        onPrimary: ColorConfig.primaryRed900,
+        foregroundColor: ColorConfig.primaryRed900,
+        backgroundColor: Colors.white,
         shape: const StadiumBorder(),
       ),
       child: SizedBox(

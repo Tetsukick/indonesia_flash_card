@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -13,7 +15,6 @@ import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/lottie_cache.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
-import 'package:lottie/lottie.dart';
 
 import '../config/config.dart';
 import '../model/floor_database/database.dart';
@@ -30,7 +31,7 @@ class FlashCardScreen extends ConsumerStatefulWidget {
   static void navigateTo(BuildContext context) {
     Navigator.push<void>(context, MaterialPageRoute(
       builder: (context) {
-        return FlashCardScreen();
+        return const FlashCardScreen();
       },
     ));
   }
@@ -38,7 +39,7 @@ class FlashCardScreen extends ConsumerStatefulWidget {
   static void navigateReplacementTo(BuildContext context) {
     Navigator.pushReplacement<void, void>(context, MaterialPageRoute(
       builder: (context) {
-        return FlashCardScreen();
+        return const FlashCardScreen();
       },
     ));
   }
@@ -62,18 +63,36 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
   
   @override
   void initState() {
-    FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: AnalyticsScreen.flushCard.name);
+    FirebaseAnalyticsUtils.analytics.setCurrentScreen(
+        screenName: AnalyticsScreen.flushCard.name);
     initializeDB();
-    setTTS();
-    loadSoundSetting();
+    setTTSandLoadSoundSetting();
     super.initState();
   }
   
-  void setTTS() {
-    flutterTts.setLanguage('id-ID');
+  Future<void> setTTSandLoadSoundSetting() async {
+    await setTTS();
+    await loadSoundSetting();
+  }
+  
+  Future<void> setTTS() async {
+    await flutterTts.setLanguage('id-ID');
+    if (Platform.isIOS) {
+      await flutterTts.setSharedInstance(true);
+      await flutterTts.setIosAudioCategory(IosTextToSpeechAudioCategory.playback,
+          [
+            IosTextToSpeechAudioCategoryOptions.allowBluetooth,
+            IosTextToSpeechAudioCategoryOptions.allowBluetoothA2DP,
+            IosTextToSpeechAudioCategoryOptions.mixWithOthers
+          ],
+          IosTextToSpeechAudioMode.voicePrompt,
+      );
+    } else if (Platform.isAndroid) {
+      await flutterTts.setSilence(2);
+    }  
   }
 
-  void loadSoundSetting() async {
+  Future<void> loadSoundSetting() async {
     _isSoundOn = await PreferenceKey.isSoundOn.getBool();
     setState(() {});
     final questionAnswerList = ref.watch(tangoListControllerProvider);
@@ -81,7 +100,8 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
       return;
     }
     if (_isSoundOn) {
-      flutterTts.speak(questionAnswerList.lesson.tangos[currentIndex].indonesian ?? '');
+      await flutterTts.speak(
+          questionAnswerList.lesson.tangos[currentIndex].indonesian ?? '');
     }
   }
 
@@ -383,10 +403,9 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
         Visibility(
           visible: isTappable,
           child: Align(
-            alignment: Alignment.center,
             child: TextButton(
               style: TextButton.styleFrom(
-                primary: ColorConfig.bgGreySeparater,
+                foregroundColor: ColorConfig.bgGreySeparater,
               ),
               onPressed: () => setState(() {
                 analytics(FlushCardItem.openCard);
@@ -473,7 +492,8 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     if (wordStatus != null) {
       await wordStatusDao.updateWordStatus(wordStatus..status = type.id);
     } else {
-      await wordStatusDao.insertWordStatus(WordStatus(wordId: currentTango.id!, status: type.id));
+      await wordStatusDao.insertWordStatus(
+          WordStatus(wordId: currentTango.id!, status: type.id),);
     }
   }
 

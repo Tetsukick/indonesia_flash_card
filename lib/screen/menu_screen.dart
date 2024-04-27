@@ -3,9 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 import 'package:in_app_review/in_app_review.dart';
-import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
@@ -32,12 +30,13 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
 
   @override
   void initState() {
-    FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: AnalyticsScreen.menu.name);
+    FirebaseAnalyticsUtils.analytics.setCurrentScreen(
+        screenName: AnalyticsScreen.menu.name,);
     loadSoundSetting();
     super.initState();
   }
 
-  void loadSoundSetting() async {
+  Future<void> loadSoundSetting() async {
     setState(() async => _isSoundOn = await PreferenceKey.isSoundOn.getBool());
   }
 
@@ -47,8 +46,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
       child: Padding(
         padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Lottie.asset(
               Assets.lottie.bicycleIndonesia,
@@ -80,16 +77,15 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
           _isSoundOn = !_isSoundOn;
         },
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
+          padding: const EdgeInsets.symmetric(
+              horizontal: SizeConfig.mediumSmallMargin,),
           height: _menuItemBarHeight,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               menuItem.img,
-              SizedBox(width: SizeConfig.smallMargin),
+              const SizedBox(width: SizeConfig.smallMargin),
               TextWidget.titleBlackMediumBold(menuItem.title),
-              Spacer(),
+              const Spacer(),
               Utils.soundSettingSwitch(value: _isSoundOn,
                 onToggle: (val) {
                   analytics(menuItem.analyticsItem);
@@ -116,7 +112,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
               applicationName: info.appName,
               applicationVersion: info.version,
               applicationIcon: Assets.icon.appIcon.image(),
-              applicationLegalese: "BINTANGOアプリのライセンス情報",
+              applicationLegalese: 'BINTANGOアプリのライセンス情報',
             );
           } else if (menuItem == MenuItem.feedback) {
             final inAppReview = InAppReview.instance;
@@ -124,18 +120,16 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
               await inAppReview.requestReview();
             }
           } else {
-            setBrowserPage(menuItem.url);
+            await setBrowserPage(menuItem.url);
           }
         },
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
           height: _menuItemBarHeight,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               menuItem.img,
-              SizedBox(width: SizeConfig.smallMargin),
+              const SizedBox(width: SizeConfig.smallMargin),
               TextWidget.titleBlackMediumBold(menuItem.title),
             ],
           ),
@@ -145,7 +139,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
   }
 
   Future<void> setBrowserPage(String url) async {
-    MyInAppBrowser browser = new MyInAppBrowser();
+    final browser = MyInAppBrowser();
     await browser.openUrlRequest(
       urlRequest: URLRequest(url: Uri.parse(url)),
       options: InAppBrowserClassOptions(
@@ -167,7 +161,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
 
   void analytics(MenuAnalyticsItem item, {String? others = ''}) {
     final eventDetail = AnalyticsEventAnalyticsEventDetail()
-      ..id = item.id.toString()
+      ..id = item.id
       ..screen = AnalyticsScreen.lectureSelector.name
       ..item = item.shortName
       ..action = AnalyticsActionType.tap.name
@@ -221,21 +215,21 @@ extension MenuItemExt on MenuItem {
   }
 
   Widget get img {
-    const _height = 24.0;
-    const _width = 24.0;
+    const height = 24.0;
+    const width = 24.0;
     switch (this) {
       case MenuItem.settingSound:
-        return Assets.png.soundOn64.image(height: _height, width: _width);
+        return Assets.png.soundOn64.image(height: height, width: width);
       case MenuItem.addNewTango:
-        return Assets.png.addDocument128.image(height: _height, width: _width);
+        return Assets.png.addDocument128.image(height: height, width: width);
       case MenuItem.privacyPolicy:
-        return Assets.png.privacypolicy128.image(height: _height, width: _width);
+        return Assets.png.privacypolicy128.image(height: height, width: width);
       case MenuItem.feedback:
-        return Assets.png.feedback128.image(height: _height, width: _width);
+        return Assets.png.feedback128.image(height: height, width: width);
       case MenuItem.developerInfo:
-        return Assets.png.developer128.image(height: _height, width: _width);
+        return Assets.png.developer128.image(height: height, width: width);
       case MenuItem.licence:
-        return Assets.png.licence128.image(height: _height, width: _width);
+        return Assets.png.licence128.image(height: height, width: width);
     }
   }
 
