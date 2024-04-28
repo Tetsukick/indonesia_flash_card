@@ -3,7 +3,7 @@ description: Flash card application of Indonesian language for Japanese
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 3.3.1+81
+version: 3.3.3+83
 
 environment:
   sdk: ">=2.15.1 <3.0.0"
@@ -33,36 +33,36 @@ dependencies:
   shared_preferences: ^2.2.2
 
   ## Firebase packages
-  firebase_core:
-  firebase_crashlytics: ^3.0.8
-  firebase_messaging: ^14.2.0
-  firebase_analytics: ^10.0.8
-  cloud_firestore:
-  firebase_remote_config:
+  firebase_core: ^2.30.1
+  firebase_crashlytics: ^3.5.4
+  firebase_messaging: ^14.9.1
+  firebase_analytics: ^10.10.4
+  cloud_firestore: ^4.17.2
+  firebase_remote_config: ^4.4.4
 
-  lottie: ^2.1.0
-  carousel_slider: ^4.1.1
+  lottie: ^3.1.0
+  carousel_slider: ^4.2.1
   curved_navigation_bar: ^1.0.3
   flutter_inappwebview:
-  floor: ^1.2.0
+  floor: ^1.4.2
   collection:
   flutter_tts: ^4.0.2
   flutter_switch: ^0.3.2
   material_floating_search_bar_2: ^0.5.0
-  app_tracking_transparency: ^2.0.2+1
+  app_tracking_transparency: ^2.0.5
   pull_to_refresh: ^2.0.0
-  pin_code_fields: ^7.3.0
+  pin_code_fields: ^8.0.1
   flutter_countdown_timer: ^4.1.0
-  in_app_review: ^2.0.4
+  in_app_review: ^2.0.9
   flutter_dialogs: ^3.0.0
-  social_share: ^2.2.1
-  screenshot: ^2.1.0
-  percent_indicator: ^4.0.0
+  social_share: ^2.3.1
+  screenshot: ^2.3.0
+  percent_indicator: ^4.2.3
   font_awesome_flutter:
   json_path:
   timeago:
   rflutter_alert: ^2.0.7
-  flutter_native_splash: ^2.3.8
+  flutter_native_splash: ^2.4.0
 
 dev_dependencies:
   flutter_test:

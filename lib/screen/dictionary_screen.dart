@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'dart:math' as math;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/domain/tango_list_service.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/category.dart';
 import 'package:indonesia_flash_card/model/filter_type.dart';
@@ -67,7 +66,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
     super.initState();
   }
 
-  void initializeDB() async {
+  Future<void> initializeDB() async {
     final _database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
         .addMigrations([migration1to2, migration2to3])
@@ -491,7 +490,8 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
   }
 
   Widget buildFloatingSearchBar() {
-    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     return FloatingSearchBar(
       scrollPadding: const EdgeInsets.only(top: 16, bottom: SizeConfig.bottomBarHeight),
@@ -499,9 +499,10 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
       transitionCurve: Curves.easeInOut,
       physics: const BouncingScrollPhysics(),
       axisAlignment: isPortrait ? 0.0 : -1.0,
-      openAxisAlignment: 0.0,
+      openAxisAlignment: 0,
       width: isPortrait ? 600 : 500,
       debounceDelay: const Duration(milliseconds: 500),
+      automaticallyImplyDrawerHamburger: false,
       onQueryChanged: (query) {
         logger.d(query);
 
