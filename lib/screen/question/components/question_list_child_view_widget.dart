@@ -31,12 +31,12 @@ class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidge
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsetsDirectional.fromSTEB(2, 2, 2, 2),
+      padding: const EdgeInsetsDirectional.fromSTEB(2, 2, 2, 2),
       child: Card(
         clipBehavior: Clip.antiAliasWithSaveLayer,
         color: Color(0xFFF5F5F5),
         child: Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+          padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
           child: Column(
             children: [
               QuestionTitle(question: widget.questionEntity.question, maxLines: 5),
@@ -81,7 +81,7 @@ class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidge
                           ),
                           InkWell(
                             onTap: shareSNS,
-                            child: Padding(
+                            child: const Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
                               child: Icon(
                                 Icons.ios_share,
@@ -116,9 +116,11 @@ class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidge
       }
     );
     questionsRef.doc(widget.questionEntity.id).collection('answers').count().get().then((value) {
-      setState(() {
-        answerCount = value.count;
-      });
+      if (value.count != null) {
+        setState(() {
+          answerCount = value.count!;
+        });
+      }
     });
   }
 
