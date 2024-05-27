@@ -22,16 +22,16 @@ class HomeNavigation extends StatefulWidget {
 
 class _HomeNavigationState extends State<HomeNavigation> {
   final List<Widget> _pages = [
-    LessonSelectorScreen(),
-    DictionaryScreen(),
-    QuestionListScreen(),
-    TranslationScreen(),
-    MenuScreen(),
+    const LessonSelectorScreen(),
+    const DictionaryScreen(),
+    const QuestionListScreen(),
+    const TranslationScreen(),
+    const MenuScreen(),
   ];
   final iconWidth = 32.0;
   final iconHeight = 32.0;
   int _pageIndex = 0;
-  GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
+  final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
   @override
   void initState() {
@@ -59,7 +59,7 @@ class _HomeNavigationState extends State<HomeNavigation> {
       ),
       body: SafeArea(
           bottom: false,
-          child: _pages[_pageIndex]),
+          child: _pages[_pageIndex],),
     );
   }
 

@@ -1,6 +1,8 @@
 import '../utils/user_friendly_exception.dart';
 
 class CustomException implements UserFriendlyException {
+
+  CustomException(this.detail, this.innerException, this.code);
   String detail;
   int code;
   // TODO: It throws an error when there's an `Error` data type supplied here
@@ -8,8 +10,7 @@ class CustomException implements UserFriendlyException {
   // TODO: look for a better data type here.
   dynamic innerException;
 
-  CustomException(this.detail, this.innerException, this.code);
-
+  @override
   String getUserFriendlyMessage() {
     return detail;
   }

@@ -26,7 +26,7 @@ class Admob {
             onAdFailedToLoad: (LoadAdError error) {
               logger.d(error);
             },
-          )
+          ),
       );
     }
   }
@@ -34,9 +34,9 @@ class Admob {
   Future<void> showInterstitialAd() async {
     if (_instance.interstitialAd != null) {
       await interstitialAd!.show();
-      loadInterstitialAd();
+      await loadInterstitialAd();
     } else {
-      loadInterstitialAd();
+      await loadInterstitialAd();
     }
   }
 }

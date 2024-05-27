@@ -15,13 +15,13 @@ class AnswerTitle extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+            padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
             child: Assets.png.hijabTeacher128.image(
-                width: 24, height: 24, fit: BoxFit.cover)
+                width: 24, height: 24, fit: BoxFit.cover,),
         ),
         Expanded(
           child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+            padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
             child: AutoSizeText(
               answer ?? '',
               maxLines: maxLines,

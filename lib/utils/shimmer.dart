@@ -1,19 +1,18 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ShimmerWidget extends StatelessWidget {
 
-  const ShimmerWidget.circular({
+  const ShimmerWidget.circular({Key? key, 
     required this.width,
     required this.height,
-    this.shapeBorder = const CircleBorder()
-  });
+    this.shapeBorder = const CircleBorder(),
+  }) : super(key: key);
 
-  const ShimmerWidget.rectangular({
+  const ShimmerWidget.rectangular({Key? key, 
     this.width = double.infinity,
     required this.height,
-  }) : this.shapeBorder = const RoundedRectangleBorder();
+  }) : shapeBorder = const RoundedRectangleBorder(), super(key: key);
 
   final double width;
   final double height;
@@ -28,7 +27,7 @@ class ShimmerWidget extends StatelessWidget {
         width: width,
         decoration: ShapeDecoration(
           color: Colors.grey[400],
-          shape: shapeBorder
+          shape: shapeBorder,
         ),
       ),
   );

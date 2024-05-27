@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -18,16 +17,16 @@ import 'package:indonesia_flash_card/utils/utils.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+  await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
   FirebaseAnalyticsUtils();
   Admob();
-  RemoteConfigUtil().init();
-  MobileAds.instance.initialize();
-  SystemChrome.setPreferredOrientations([
+  await RemoteConfigUtil().init();
+  await MobileAds.instance.initialize();
+  await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
 
-  runZonedGuarded(() async {
+  await runZonedGuarded(() async {
     await CrashReporter.instance.initialize();
 
     FlutterError.onError = (FlutterErrorDetails details) {

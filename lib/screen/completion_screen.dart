@@ -29,7 +29,7 @@ class CompletionScreen extends ConsumerStatefulWidget {
       builder: (context) {
         return const CompletionScreen();
       },
-    ));
+    ),);
   }
 
   @override
@@ -49,7 +49,7 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
     super.initState();
   }
 
-  void initializeDB() async {
+  Future<void> initializeDB() async {
     final _database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
         .addMigrations([migration1to2, migration2to3])
@@ -63,7 +63,7 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
     return Scaffold(
       backgroundColor: ColorConfig.bgPinkColor,
       body: Container(
-        padding: EdgeInsets.all(SizeConfig.mediumSmallMargin),
+        padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
         height: double.infinity,
         width: double.infinity,
         child: Column(
@@ -84,15 +84,15 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
             const SizedBox(height: SizeConfig.smallMargin),
             Flexible(
               child: ListView.builder(
-                padding: EdgeInsets.symmetric(vertical: SizeConfig.smallMargin),
+                padding: const EdgeInsets.symmetric(vertical: SizeConfig.smallMargin),
                 itemBuilder: (BuildContext context, int index){
-                  TangoEntity tango = tangoList.lesson.tangos[index];
+                  final tango = tangoList.lesson.tangos[index];
                   return tangoListItem(tango);
                 },
                 itemCount: tangoList.lesson.tangos.length,
               ),
             ),
-            SizedBox(height: SizeConfig.smallMargin),
+            const SizedBox(height: SizeConfig.smallMargin),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -103,7 +103,7 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
                       FlashCardScreen.navigateReplacementTo(context);
                     },
                     img: Assets.png.continue128,
-                    title: '同設定で継続'
+                    title: '同設定で継続',
                 ),
                 const SizedBox(width: SizeConfig.smallMargin),
                 _button(
@@ -112,7 +112,7 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
                       Navigator.of(context).popUntil((route) => route.isFirst);
                     },
                     img: Assets.png.home128,
-                    title: 'トップに戻る'
+                    title: 'トップに戻る',
                 ),
               ],
             ),
@@ -124,14 +124,14 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
 
   Widget tangoListItem(TangoEntity tango) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: SizeConfig.mediumSmallMargin),
+      padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
       child: InkWell(
         onTap: () {
           analytics(LessonCompItem.tangoCard);
           DictionaryDetail.navigateTo(context, tangoEntity: tango);
         },
         child: Card(
-          child: Container(
+          child: SizedBox(
             width: double.infinity,
             height: itemCardHeight,
             child: Stack(
@@ -142,9 +142,9 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       wordStatus(tango),
-                      SizedBox(height: SizeConfig.smallestMargin,),
+                      const SizedBox(height: SizeConfig.smallestMargin,),
                       TextWidget.titleBlackMediumBold(tango.indonesian ?? ''),
-                      SizedBox(height: 2,),
+                      const SizedBox(height: 2,),
                       TextWidget.titleGraySmall(tango.japanese ?? ''),
                     ],
                   ),
@@ -152,7 +152,7 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
                 Align(
                   alignment: Alignment.topRight,
                   child: bookmark(tango),
-                )
+                ),
               ],
             ),
           ),
@@ -188,7 +188,7 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
           children: [
             img.image(height: 20, width: 20),
             const SizedBox(width: SizeConfig.smallMargin),
-            Expanded(child: TextWidget.titleRedMedium(title))
+            Expanded(child: TextWidget.titleRedMedium(title)),
           ],
         ),
       ),
@@ -200,8 +200,8 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
         future: getBookmark(entity),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            WordStatus? status = snapshot.data as WordStatus?;
-            bool isBookmark = status == null ? false : status.isBookmarked;
+            final status = snapshot.data as WordStatus?;
+            final isBookmark = status == null ? false : status.isBookmarked;
             return Visibility(
               visible: isBookmark,
               child: Padding(
@@ -210,12 +210,12 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
               ),
             );
           } else {
-            return  Padding(
-              padding: const EdgeInsets.only(right: SizeConfig.mediumSmallMargin),
+            return  const Padding(
+              padding: EdgeInsets.only(right: SizeConfig.mediumSmallMargin),
               child: ShimmerWidget.rectangular(width: 24, height: 24,),
             );
           }
-        });
+        },);
   }
 
   Widget wordStatus(TangoEntity entity) {
@@ -228,12 +228,12 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
             return Row(
               children: [
                 statusType.icon,
-                SizedBox(width: SizeConfig.smallestMargin),
+                const SizedBox(width: SizeConfig.smallestMargin),
                 TextWidget.titleGraySmallest(statusType.title),
               ],
             );
           } else {
-            return Row(
+            return const Row(
               children: [
                 ShimmerWidget.circular(width: 16, height: 16),
                 SizedBox(width: SizeConfig.smallestMargin),
@@ -241,19 +241,19 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
               ],
             );
           }
-        });
+        },);
   }
 
   void analytics(LessonCompItem item, {String? others = ''}) {
     final eventDetail = AnalyticsEventAnalyticsEventDetail()
-      ..id = item.id.toString()
+      ..id = item.id
       ..screen = AnalyticsScreen.lectureSelector.name
       ..item = item.shortName
       ..action = AnalyticsActionType.tap.name
       ..others = others;
     FirebaseAnalyticsUtils.eventsTrack(AnalyticsEventEntity()
       ..name = item.name
-      ..analyticsEventDetail = eventDetail);
+      ..analyticsEventDetail = eventDetail,);
   }
 
   String calculateTotalScore(List<QuizResult> results) {

@@ -10,7 +10,6 @@ import 'package:indonesia_flash_card/domain/tango_list_service.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/category.dart';
 import 'package:indonesia_flash_card/model/filter_type.dart';
-import 'package:indonesia_flash_card/model/floor_dao/tango_dao.dart';
 import 'package:indonesia_flash_card/model/level.dart';
 import 'package:indonesia_flash_card/model/sort_type.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
@@ -41,7 +40,7 @@ class DictionaryScreen extends ConsumerStatefulWidget {
       builder: (context) {
         return const DictionaryScreen();
       },
-    ));
+    ),);
   }
 }
 
@@ -84,22 +83,22 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
       body: Stack(
         children: [
           ListView.builder(
-            padding: EdgeInsets.fromLTRB(0, 64, 0, SizeConfig.bottomBarHeight),
+            padding: const EdgeInsets.fromLTRB(0, 64, 0, SizeConfig.bottomBarHeight),
             itemBuilder: (BuildContext context, int index){
               if (index == 0) {
                 return Container();
-                return Container(
+                return SizedBox(
                   height: 50,
                   width: double.infinity,
                   child: AdWidget(ad: bannerAd),
                 );
               }
-              TangoEntity tango = tangoList.dictionary.sortAndFilteredTangos[index - 1];
+              final tango = tangoList.dictionary.sortAndFilteredTangos[index - 1];
               return tangoListItem(tango);
             },
             itemCount: tangoList.dictionary.sortAndFilteredTangos.length + 1,
           ),
-          buildFloatingSearchBar()
+          buildFloatingSearchBar(),
         ],
       ),
       floatingActionButton: sortAndFilterButton(),
@@ -109,12 +108,12 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
   
   Widget tangoListItem(TangoEntity tango) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: SizeConfig.mediumSmallMargin),
+      padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
       child: InkWell(
         onTap: () async {
           analytics(DictionaryItem.dictionaryItem);
-          var rand = new math.Random();
-          int lottery = rand.nextInt(4);
+          final rand = math.Random();
+          final lottery = rand.nextInt(4);
           if (lottery == 0) {
             await showInterstitialAd();
           }
@@ -122,7 +121,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
           DictionaryDetail.navigateTo(context, tangoEntity: tango);
         },
         child: Card(
-          child: Container(
+          child: SizedBox(
             width: double.infinity,
             height: itemCardHeight,
             child: Stack(
@@ -133,9 +132,9 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       wordStatus(tango),
-                      SizedBox(height: SizeConfig.smallestMargin,),
+                      const SizedBox(height: SizeConfig.smallestMargin,),
                       TextWidget.titleBlackMediumBold(tango.indonesian ?? ''),
-                      SizedBox(height: 2,),
+                      const SizedBox(height: 2,),
                       TextWidget.titleGraySmall(tango.japanese ?? ''),
                     ],
                   ),
@@ -143,7 +142,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
                 Align(
                   alignment: Alignment.topRight,
                   child: bookmark(tango),
-                )
+                ),
               ],
             ),
           ),
@@ -169,8 +168,8 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
         future: getBookmark(entity),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            WordStatus? status = snapshot.data as WordStatus?;
-            bool isBookmark = status == null ? false : status.isBookmarked;
+            final status = snapshot.data as WordStatus?;
+            final isBookmark = status == null ? false : status.isBookmarked;
             return Visibility(
               visible: isBookmark,
               child: Padding(
@@ -179,12 +178,12 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
               ),
             );
           } else {
-            return  Padding(
-              padding: const EdgeInsets.only(right: SizeConfig.mediumSmallMargin),
+            return  const Padding(
+              padding: EdgeInsets.only(right: SizeConfig.mediumSmallMargin),
               child: ShimmerWidget.rectangular(width: 24, height: 24,),
             );
           }
-        });
+        },);
   }
 
   Widget sortAndFilterButton() {
@@ -205,17 +204,16 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
     return Drawer(
       child: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _filterHeader(),
-            SizedBox(height: SizeConfig.smallMargin,),
+            const SizedBox(height: SizeConfig.smallMargin,),
             filterItems(),
-            SizedBox(height: SizeConfig.mediumSmallMargin),
+            const SizedBox(height: SizeConfig.mediumSmallMargin),
             _sortHeader(),
-            SizedBox(height: SizeConfig.smallMargin),
+            const SizedBox(height: SizeConfig.smallMargin),
             sortItems(),
-            SizedBox(height: SizeConfig.bottomBarHeight,)
+            const SizedBox(height: SizeConfig.bottomBarHeight,),
           ],
         ),
       ),
@@ -228,7 +226,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
       child: Row(
         children: [
           Assets.png.filter64.image(height: 20, width: 20),
-          SizedBox(width: SizeConfig.mediumSmallMargin),
+          const SizedBox(width: SizeConfig.mediumSmallMargin),
           TextWidget.titleGraySmallBold('フィルタ'),
         ],
       ),
@@ -241,7 +239,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
       child: Row(
         children: [
           Assets.png.sort64.image(height: 20, width: 20),
-          SizedBox(width: SizeConfig.mediumSmallMargin),
+          const SizedBox(width: SizeConfig.mediumSmallMargin),
           TextWidget.titleGraySmallBold('ソート'),
         ],
       ),
@@ -252,11 +250,11 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.symmetric(vertical: SizeConfig.smallMargin, horizontal: SizeConfig.mediumLargeMargin),
+      padding: const EdgeInsets.symmetric(vertical: SizeConfig.smallMargin, horizontal: SizeConfig.mediumLargeMargin),
       itemBuilder: (BuildContext context, int index){
-        SortType sortType = SortType.values[index];
+        final sortType = SortType.values[index];
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: SizeConfig.mediumSmallMargin),
+          padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
           child: Card(
             child: InkWell(
               onTap: () async {
@@ -267,9 +265,9 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
                       category: _selectedCategory,
                       levelGroup: _selectedLevelGroup,
                       wordStatusType: _selectedWordStatusType,
-                      sortType: sortType);
+                      sortType: sortType,);
               },
-              child: Container(
+              child: SizedBox(
                 width: double.infinity,
                 height: 40,
                 child: Padding(
@@ -278,8 +276,8 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
                     children: [
                       Visibility(
                           visible: _selectedSortType == sortType,
-                          child: Assets.png.checkedGreen128.image(width: 20, height: 20)),
-                      SizedBox(width: SizeConfig.smallestMargin),
+                          child: Assets.png.checkedGreen128.image(width: 20, height: 20),),
+                      const SizedBox(width: SizeConfig.smallestMargin),
                       TextWidget.titleBlackMediumBold(sortType.title),
                     ],
                   ),
@@ -297,9 +295,9 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.symmetric(vertical: SizeConfig.smallMargin, horizontal: SizeConfig.mediumLargeMargin),
+      padding: const EdgeInsets.symmetric(vertical: SizeConfig.smallMargin, horizontal: SizeConfig.mediumLargeMargin),
       itemBuilder: (BuildContext context, int index){
-        FilterType filterType = FilterType.values[index];
+        final filterType = FilterType.values[index];
         return Column(
           children: [
             Padding(
@@ -332,11 +330,11 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.symmetric(vertical: SizeConfig.smallMargin, horizontal: SizeConfig.mediumLargeMargin),
+      padding: const EdgeInsets.symmetric(vertical: SizeConfig.smallMargin, horizontal: SizeConfig.mediumLargeMargin),
       itemBuilder: (BuildContext context, int index){
-        WordStatusType wordStatusType = WordStatusType.values[index];
+        final wordStatusType = WordStatusType.values[index];
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: SizeConfig.mediumSmallMargin),
+          padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
           child: Card(
             child: InkWell(
               onTap: () async {
@@ -347,9 +345,9 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
                       category: _selectedCategory,
                       levelGroup: _selectedLevelGroup,
                       wordStatusType: wordStatusType,
-                      sortType: _selectedSortType);
+                      sortType: _selectedSortType,);
               },
-              child: Container(
+              child: SizedBox(
                 width: double.infinity,
                 height: 40,
                 child: Padding(
@@ -358,8 +356,8 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
                     children: [
                       Visibility(
                           visible: _selectedWordStatusType == wordStatusType,
-                          child: Assets.png.checkedGreen128.image(width: 20, height: 20)),
-                      SizedBox(width: SizeConfig.smallestMargin),
+                          child: Assets.png.checkedGreen128.image(width: 20, height: 20),),
+                      const SizedBox(width: SizeConfig.smallestMargin),
                       TextWidget.titleBlackMediumBold(wordStatusType.title),
                     ],
                   ),
@@ -377,11 +375,11 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.symmetric(vertical: SizeConfig.smallMargin, horizontal: SizeConfig.mediumLargeMargin),
+      padding: const EdgeInsets.symmetric(vertical: SizeConfig.smallMargin, horizontal: SizeConfig.mediumLargeMargin),
       itemBuilder: (BuildContext context, int index){
-        TangoCategory tangoCategory = TangoCategory.values[index];
+        final tangoCategory = TangoCategory.values[index];
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: SizeConfig.mediumSmallMargin),
+          padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
           child: Card(
             child: InkWell(
               onTap: () async {
@@ -392,9 +390,9 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
                       category: tangoCategory,
                       levelGroup: _selectedLevelGroup,
                       wordStatusType: _selectedWordStatusType,
-                      sortType: _selectedSortType);
+                      sortType: _selectedSortType,);
               },
-              child: Container(
+              child: SizedBox(
                 width: double.infinity,
                 height: 40,
                 child: Padding(
@@ -403,8 +401,8 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
                     children: [
                       Visibility(
                           visible: _selectedCategory == tangoCategory,
-                          child: Assets.png.checkedGreen128.image(width: 20, height: 20)),
-                      SizedBox(width: SizeConfig.smallestMargin),
+                          child: Assets.png.checkedGreen128.image(width: 20, height: 20),),
+                      const SizedBox(width: SizeConfig.smallestMargin),
                       TextWidget.titleBlackMediumBold(tangoCategory.title),
                     ],
                   ),
@@ -422,11 +420,11 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.symmetric(vertical: SizeConfig.smallMargin, horizontal: SizeConfig.mediumLargeMargin),
+      padding: const EdgeInsets.symmetric(vertical: SizeConfig.smallMargin, horizontal: SizeConfig.mediumLargeMargin),
       itemBuilder: (BuildContext context, int index){
-        LevelGroup levelGroup = LevelGroup.values[index];
+        final levelGroup = LevelGroup.values[index];
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: SizeConfig.mediumSmallMargin),
+          padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
           child: Card(
             child: InkWell(
               onTap: () async {
@@ -437,9 +435,9 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
                       category: _selectedCategory,
                       levelGroup: levelGroup,
                       wordStatusType: _selectedWordStatusType,
-                      sortType: _selectedSortType);
+                      sortType: _selectedSortType,);
               },
-              child: Container(
+              child: SizedBox(
                 width: double.infinity,
                 height: 40,
                 child: Padding(
@@ -448,8 +446,8 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
                     children: [
                       Visibility(
                           visible: _selectedLevelGroup == levelGroup,
-                          child: Assets.png.checkedGreen128.image(width: 20, height: 20)),
-                      SizedBox(width: SizeConfig.smallestMargin),
+                          child: Assets.png.checkedGreen128.image(width: 20, height: 20),),
+                      const SizedBox(width: SizeConfig.smallestMargin),
                       TextWidget.titleBlackMediumBold(levelGroup.title),
                     ],
                   ),
@@ -473,12 +471,12 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
           return Row(
             children: [
               statusType.icon,
-              SizedBox(width: SizeConfig.smallestMargin),
+              const SizedBox(width: SizeConfig.smallestMargin),
               TextWidget.titleGraySmallest(statusType.title),
             ],
           );
         } else {
-          return Row(
+          return const Row(
             children: [
               ShimmerWidget.circular(width: 16, height: 16),
               SizedBox(width: SizeConfig.smallestMargin),
@@ -486,7 +484,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
             ],
           );
         }
-      });
+      },);
   }
 
   Widget buildFloatingSearchBar() {
@@ -522,9 +520,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
           borderRadius: BorderRadius.circular(8),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: _searchedTango.map((tango) {
-              return tangoListItem(tango);
-            }).toList(),
+            children: _searchedTango.map(tangoListItem).toList(),
           ),
         );
       },
@@ -532,7 +528,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
   }
 
   Future<List<TangoEntity>> search(String search) async {
-    final TangoDao? tangoDao = database?.tangoDao;
+    final tangoDao = database?.tangoDao;
 
     final searchTangos =
       await tangoDao?.getTangoListByIndonesian(search.toLowerCase()) ?? [];
@@ -549,19 +545,19 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
 
   void analytics(DictionaryItem item, {String? others = ''}) {
     final eventDetail = AnalyticsEventAnalyticsEventDetail()
-      ..id = item.id.toString()
+      ..id = item.id
       ..screen = AnalyticsScreen.lectureSelector.name
       ..item = item.shortName
       ..action = AnalyticsActionType.tap.name
       ..others = others;
     FirebaseAnalyticsUtils.eventsTrack(AnalyticsEventEntity()
       ..name = item.name
-      ..analyticsEventDetail = eventDetail);
+      ..analyticsEventDetail = eventDetail,);
   }
 
   void initializeBannerAd() {
-    final BannerAdListener listener = BannerAdListener(
-      onAdLoaded: (Ad ad) => logger.d('Ad loaded.${ad}'),
+    final listener = BannerAdListener(
+      onAdLoaded: (Ad ad) => logger.d('Ad loaded.$ad'),
       onAdFailedToLoad: (Ad ad, LoadAdError error) {
         ad.dispose();
         logger.d('Ad failed to load: $error');
@@ -575,7 +571,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
       bannerAd = BannerAd(
         adUnitId: Platform.isIOS ? Config.adUnitIdIosBanner : Config.adUnitIdAndroidBanner,
         size: AdSize.banner,
-        request: AdRequest(),
+        request: const AdRequest(),
         listener: listener,
       );
     });
@@ -587,16 +583,16 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
     await InterstitialAd.load(
         adUnitId: Platform.isIOS ?
         Config.adUnitIdIosInterstitial : Config.adUnitIdAndroidInterstitial,
-        request: AdRequest(),
+        request: const AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
             _interstitialAd = ad;
-            logger.d('Ad loaded.${ad}');
+            logger.d('Ad loaded.$ad');
           },
           onAdFailedToLoad: (LoadAdError error) {
             logger.d('Ad failed to load: $error');
           },
-        ));
+        ),);
   }
 
   Future<void> showInterstitialAd() async {

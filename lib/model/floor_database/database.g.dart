@@ -330,7 +330,7 @@ class _$TangoDao extends TangoDao {
   @override
   Future<int?> getCountTangoList() async {
     return _queryAdapter.query('SELECT COUNT(*) FROM TangoEntity',
-        mapper: (Map<String, Object?> row) => row['COUNT(*)'] as int);
+        mapper: (Map<String, Object?> row) => row.values.first as int);
   }
 
   @override

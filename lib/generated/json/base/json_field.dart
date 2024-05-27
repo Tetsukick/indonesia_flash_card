@@ -9,6 +9,8 @@ class JsonSerializable{
 }
 
 class JSONField {
+
+  const JSONField({this.name, this.serialize, this.deserialize});
   //Specify the parse field name
   final String? name;
 
@@ -17,6 +19,4 @@ class JSONField {
   
   //Whether to participate in fromMap
   final bool? deserialize;
-
-  const JSONField({this.name, this.serialize, this.deserialize});
 }

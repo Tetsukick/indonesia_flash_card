@@ -10,7 +10,7 @@ class CommonBorder {
   );
 
   final grayOutlineInputBorder = OutlineInputBorder(
-    borderSide: BorderSide(
+    borderSide: const BorderSide(
       color: Color(0xFFE0E3E7),
       width: 2,
     ),

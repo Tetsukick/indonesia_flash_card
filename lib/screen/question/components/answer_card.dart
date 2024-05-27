@@ -11,17 +11,17 @@ class AnswerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+      padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
           color: Colors.white,
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               blurRadius: 4,
               color: Color(0x33000000),
               offset: Offset(0, 2),
-            )
+            ),
           ],
           borderRadius: BorderRadius.circular(16),
         ),
@@ -30,7 +30,7 @@ class AnswerCard extends StatelessWidget {
             AnswerTitle(answer: answerEntity.answer),
             Padding(
               padding:
-              EdgeInsetsDirectional.fromSTEB(16, 4, 16, 12),
+              const EdgeInsetsDirectional.fromSTEB(16, 4, 16, 12),
               child: Row(
                 children: [
                   Expanded(
@@ -41,7 +41,7 @@ class AnswerCard extends StatelessWidget {
                           .bodyText2
                           .override(
                         fontFamily: 'Lexend Deca',
-                        color: Color(0xFF95A1AC),
+                        color: const Color(0xFF95A1AC),
                         fontSize: 14,
                         fontWeight: FontWeight.normal,
                       ),

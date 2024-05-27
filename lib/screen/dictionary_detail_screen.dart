@@ -24,19 +24,19 @@ import '../utils/shared_preference.dart';
 import '../utils/shimmer.dart';
 
 class DictionaryDetail extends ConsumerStatefulWidget {
+
+  const DictionaryDetail({Key? key, required this.tangoEntity}) : super(key: key);
   final TangoEntity tangoEntity;
 
   static void navigateTo(
       BuildContext context,
-      {required TangoEntity tangoEntity}) {
+      {required TangoEntity tangoEntity,}) {
     Navigator.push<void>(context, MaterialPageRoute(
       builder: (context) {
         return DictionaryDetail(tangoEntity: tangoEntity);
       },
-    ));
+    ),);
   }
-
-  const DictionaryDetail({Key? key, required this.tangoEntity}) : super(key: key);
 
   @override
   ConsumerState<DictionaryDetail> createState() => _DictionaryDetailState();
@@ -52,7 +52,7 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
   @override
   void initState() {
     FirebaseAnalyticsUtils.analytics.setCurrentScreen(
-        screenName: AnalyticsScreen.dictionaryDetail.name);
+        screenName: AnalyticsScreen.dictionaryDetail.name,);
     initializeDB();
     super.initState();
     setTTSandLoadSoundSetting();
@@ -71,7 +71,7 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
         [
           IosTextToSpeechAudioCategoryOptions.allowBluetooth,
           IosTextToSpeechAudioCategoryOptions.allowBluetoothA2DP,
-          IosTextToSpeechAudioCategoryOptions.mixWithOthers
+          IosTextToSpeechAudioCategoryOptions.mixWithOthers,
         ],
         IosTextToSpeechAudioMode.voicePrompt,
       );
@@ -88,11 +88,11 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
     }
   }
 
-  void initializeDB() async {
+  Future<void> initializeDB() async {
     final _database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
         .addMigrations([migration1to2, migration2to3])
-        .build();;
+        .build();
     setState(() => database = _database);
   }
 
@@ -110,35 +110,34 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
                   child: Padding(
                     padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _topBarSection(),
                         _partOfSpeech(),
-                        SizedBox(height: SizeConfig.smallMargin),
+                        const SizedBox(height: SizeConfig.smallMargin),
                         _indonesian(),
-                        SizedBox(height: SizeConfig.smallestMargin),
+                        const SizedBox(height: SizeConfig.smallestMargin),
                         _separater(),
                         _japanese(),
-                        SizedBox(height: SizeConfig.smallMargin),
+                        const SizedBox(height: SizeConfig.smallMargin),
                         _english(),
-                        SizedBox(height: SizeConfig.smallMargin),
+                        const SizedBox(height: SizeConfig.smallMargin),
                         _exampleHeader(),
-                        SizedBox(height: SizeConfig.smallMargin),
+                        const SizedBox(height: SizeConfig.smallMargin),
                         _example(),
-                        SizedBox(height: SizeConfig.smallMargin),
+                        const SizedBox(height: SizeConfig.smallMargin),
                         _exampleJp(),
-                        SizedBox(height: SizeConfig.smallMargin),
+                        const SizedBox(height: SizeConfig.smallMargin),
                         _descriptionHeader(),
-                        SizedBox(height: SizeConfig.smallMargin),
+                        const SizedBox(height: SizeConfig.smallMargin),
                         _description(),
-                        SizedBox(height: SizeConfig.smallMargin),
+                        const SizedBox(height: SizeConfig.smallMargin),
                       ],
                     ),
                   ),
                 ),
               ),
-              bookmark(this.widget.tangoEntity)
+              bookmark(widget.tangoEntity),
             ],
           ),
         ),
@@ -153,10 +152,10 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
         future: getBookmark(entity),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            WordStatus? status = snapshot.data as WordStatus?;
-            bool isBookmark = status == null ? false : status.isBookmarked;
+            var status = snapshot.data as WordStatus?;
+            var isBookmark = status == null ? false : status.isBookmarked;
             if (status == null) {
-              status = WordStatus(wordId: entity.id!, status: WordStatusType.notLearned.id, isBookmarked: false);
+              status = WordStatus(wordId: entity.id!, status: WordStatusType.notLearned.id);
               wordStatusDao?.insertWordStatus(status);
             }
             return Padding(
@@ -172,12 +171,12 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
               ),
             );
           } else {
-            return  Padding(
-              padding: const EdgeInsets.only(left: SizeConfig.mediumSmallMargin),
+            return  const Padding(
+              padding: EdgeInsets.only(left: SizeConfig.mediumSmallMargin),
               child: ShimmerWidget.rectangular(width: 24, height: 24,),
             );
           }
-        });
+        },);
   }
 
   Future<WordStatus?> getBookmark(TangoEntity entity) async {
@@ -190,16 +189,16 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _soundButton(this.widget.tangoEntity.indonesian!),
+        _soundButton(widget.tangoEntity.indonesian!),
         IconButton(
             onPressed: () {
               analytics(DictionaryDetailItem.close);
               Navigator.pop(context);
             },
-            icon: Icon(Icons.close,
+            icon: const Icon(Icons.close,
               color: ColorConfig.bgGrey,
               size: SizeConfig.largeSmallMargin,
-            ))
+            ),),
       ],
     );
   }
@@ -207,8 +206,8 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
   Widget _partOfSpeech() {
     return Row(
       children: [
-        TextWidget.titleWhiteSmallBoldWithBackGround(PartOfSpeechExt.intToPartOfSpeech(value: this.widget.tangoEntity.partOfSpeech!).title),
-        SizedBox(width: SizeConfig.mediumSmallMargin),
+        TextWidget.titleWhiteSmallBoldWithBackGround(PartOfSpeechExt.intToPartOfSpeech(value: widget.tangoEntity.partOfSpeech!).title),
+        const SizedBox(width: SizeConfig.mediumSmallMargin),
       ],
     );
   }
@@ -217,8 +216,13 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
     return Row(
       children: [
         Assets.png.indonesia64.image(height: _iconHeight, width: _iconWidth),
-        SizedBox(width: SizeConfig.mediumSmallMargin),
-        Flexible(child: TextWidget.titleBlackLargestBold(this.widget.tangoEntity.indonesian!, maxLines: 2)),
+        const SizedBox(width: SizeConfig.mediumSmallMargin),
+        Flexible(
+            child: TextWidget.titleBlackLargestBoldSelectable(
+                widget.tangoEntity.indonesian!,
+                maxLines: 2,
+            ),
+        ),
       ],
     );
   }
@@ -227,8 +231,13 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
     return Row(
       children: [
         Assets.png.japanFuji64.image(height: _iconHeight, width: _iconWidth),
-        SizedBox(width: SizeConfig.mediumSmallMargin),
-        Flexible(child: TextWidget.titleGrayLargeBold(this.widget.tangoEntity.japanese!, maxLines: 2)),
+        const SizedBox(width: SizeConfig.mediumSmallMargin),
+        Flexible(
+            child: TextWidget.titleGrayLargeBoldSelectable(
+                widget.tangoEntity.japanese!,
+                maxLines: 2,
+            ),
+        ),
       ],
     );
   }
@@ -237,8 +246,13 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
     return Row(
       children: [
         Assets.png.english64.image(height: _iconHeight, width: _iconWidth),
-        SizedBox(width: SizeConfig.mediumSmallMargin),
-        Flexible(child: TextWidget.titleGrayLargeBold(this.widget.tangoEntity.english!, maxLines: 2)),
+        const SizedBox(width: SizeConfig.mediumSmallMargin),
+        Flexible(
+            child: TextWidget.titleGrayLargeBoldSelectable(
+                widget.tangoEntity.english!,
+                maxLines: 2,
+            ),
+        ),
       ],
     );
   }
@@ -246,21 +260,21 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
   Widget _exampleHeader() {
     return Row(
       children: [
-        TextWidget.titleRedMedium('例文', maxLines: 1),
-        SizedBox(width: SizeConfig.mediumSmallMargin),
-        Flexible(child: _separater())
+        TextWidget.titleRedMedium('例文'),
+        const SizedBox(width: SizeConfig.mediumSmallMargin),
+        Flexible(child: _separater()),
       ],
     );
   }
 
   Widget _descriptionHeader() {
     return Visibility(
-      visible: this.widget.tangoEntity.description != null && this.widget.tangoEntity.description != '',
+      visible: widget.tangoEntity.description != null && widget.tangoEntity.description != '',
       child: Row(
         children: [
-          TextWidget.titleRedMedium('豆知識', maxLines: 1),
-          SizedBox(width: SizeConfig.mediumSmallMargin),
-          Flexible(child: _separater())
+          TextWidget.titleRedMedium('豆知識'),
+          const SizedBox(width: SizeConfig.mediumSmallMargin),
+          Flexible(child: _separater()),
         ],
       ),
     );
@@ -270,8 +284,13 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
     return Row(
       children: [
         Assets.png.example64.image(height: _iconHeight, width: _iconWidth),
-        SizedBox(width: SizeConfig.mediumSmallMargin),
-        Flexible(child: TextWidget.titleBlackLargeBold(this.widget.tangoEntity.example!, maxLines: 5)),
+        const SizedBox(width: SizeConfig.mediumSmallMargin),
+        Flexible(
+            child: TextWidget.titleBlackLargeBoldSelectable(
+                widget.tangoEntity.example!,
+                maxLines: 5,
+            ),
+        ),
       ],
     );
   }
@@ -280,20 +299,30 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
     return Row(
       children: [
         Assets.png.japan64.image(height: _iconHeight, width: _iconWidth),
-        SizedBox(width: SizeConfig.mediumSmallMargin),
-        Flexible(child: TextWidget.titleGrayMediumBold(this.widget.tangoEntity.exampleJp!, maxLines: 5)),
+        const SizedBox(width: SizeConfig.mediumSmallMargin),
+        Flexible(
+            child: TextWidget.titleGrayMediumBoldSelectable(
+                widget.tangoEntity.exampleJp!,
+                maxLines: 5,
+            ),
+        ),
       ],
     );
   }
 
   Widget _description() {
     return Visibility(
-      visible: this.widget.tangoEntity.description != null && this.widget.tangoEntity.description != '',
+      visible: widget.tangoEntity.description != null && widget.tangoEntity.description != '',
       child: Row(
         children: [
           Assets.png.infoNotes.image(height: _iconHeight, width: _iconWidth),
-          SizedBox(width: SizeConfig.mediumSmallMargin),
-          Flexible(child: TextWidget.titleGrayMediumBold(this.widget.tangoEntity.description ?? '', maxLines: 10)),
+          const SizedBox(width: SizeConfig.mediumSmallMargin),
+          Flexible(
+              child: TextWidget.titleGrayMediumBoldSelectable(
+                  widget.tangoEntity.description ?? '',
+                  maxLines: 10,
+              ),
+          ),
         ],
       ),
     );
@@ -333,13 +362,13 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
 
   void analytics(DictionaryDetailItem item, {String? others = ''}) {
     final eventDetail = AnalyticsEventAnalyticsEventDetail()
-      ..id = item.id.toString()
+      ..id = item.id
       ..screen = AnalyticsScreen.lectureSelector.name
       ..item = item.shortName
       ..action = AnalyticsActionType.tap.name
       ..others = others;
     FirebaseAnalyticsUtils.eventsTrack(AnalyticsEventEntity()
       ..name = item.name
-      ..analyticsEventDetail = eventDetail);
+      ..analyticsEventDetail = eventDetail,);
   }
 }

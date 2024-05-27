@@ -8,7 +8,7 @@ enum PreferenceKey {
 }
 
 extension PreferenceKeyEx on PreferenceKey {
-  String get keyString => this.name;
+  String get keyString => name;
 
   Future<bool> setBool(bool value) async {
     final pref = await SharedPreferences.getInstance();
@@ -18,7 +18,7 @@ extension PreferenceKeyEx on PreferenceKey {
   Future<bool> getBool() async {
     final pref = await SharedPreferences.getInstance();
     if (pref.containsKey(keyString)) {
-      return (await pref.getBool(keyString)) ?? false;
+      return (pref.getBool(keyString)) ?? false;
     } else {
       return false;
     }

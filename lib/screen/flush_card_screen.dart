@@ -28,12 +28,14 @@ import '../utils/shared_preference.dart';
 
 class FlashCardScreen extends ConsumerStatefulWidget {
 
+  const FlashCardScreen({Key? key}) : super(key: key);
+
   static void navigateTo(BuildContext context) {
     Navigator.push<void>(context, MaterialPageRoute(
       builder: (context) {
         return const FlashCardScreen();
       },
-    ));
+    ),);
   }
 
   static void navigateReplacementTo(BuildContext context) {
@@ -41,10 +43,8 @@ class FlashCardScreen extends ConsumerStatefulWidget {
       builder: (context) {
         return const FlashCardScreen();
       },
-    ));
+    ),);
   }
-
-  const FlashCardScreen({Key? key}) : super(key: key);
 
   @override
   ConsumerState<FlashCardScreen> createState() => _FlushScreenState();
@@ -64,7 +64,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
   @override
   void initState() {
     FirebaseAnalyticsUtils.analytics.setCurrentScreen(
-        screenName: AnalyticsScreen.flushCard.name);
+        screenName: AnalyticsScreen.flushCard.name,);
     initializeDB();
     setTTSandLoadSoundSetting();
     super.initState();
@@ -83,7 +83,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
           [
             IosTextToSpeechAudioCategoryOptions.allowBluetooth,
             IosTextToSpeechAudioCategoryOptions.allowBluetoothA2DP,
-            IosTextToSpeechAudioCategoryOptions.mixWithOthers
+            IosTextToSpeechAudioCategoryOptions.mixWithOthers,
           ],
           IosTextToSpeechAudioMode.voicePrompt,
       );
@@ -101,11 +101,11 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     }
     if (_isSoundOn) {
       await flutterTts.speak(
-          questionAnswerList.lesson.tangos[currentIndex].indonesian ?? '');
+          questionAnswerList.lesson.tangos[currentIndex].indonesian ?? '',);
     }
   }
 
-  void initializeDB() async {
+  Future<void> initializeDB() async {
     final _database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
         .addMigrations([migration1to2, migration2to3])
@@ -122,15 +122,13 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
           child: Padding(
             padding: const EdgeInsets.all(SizeConfig.mediumMargin),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 _topBarSection(),
-                SizedBox(height: SizeConfig.smallMargin),
+                const SizedBox(height: SizeConfig.smallMargin),
                 _flashCardFront(),
-                SizedBox(height: SizeConfig.smallMargin),
+                const SizedBox(height: SizeConfig.smallMargin),
                 _flashCardBack(),
-                _actionButtonSection()
+                _actionButtonSection(),
               ],
             ),
           ),
@@ -145,23 +143,23 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         TextWidget.titleGraySmallBold('${currentIndex + 1} / ${questionAnswerList.lesson.tangos.length} 問目'),
-        SizedBox(width: SizeConfig.smallMargin),
+        const SizedBox(width: SizeConfig.smallMargin),
         Utils.soundSettingSwitch(value: _isSoundOn,
             onToggle: (val) {
               setState(() => _isSoundOn = val);
               PreferenceKey.isSoundOn.setBool(val);
-            }
+            },
         ),
-        Spacer(),
+        const Spacer(),
         IconButton(
             onPressed: () {
               analytics(FlushCardItem.back);
               Navigator.pop(context);
             },
-            icon: Icon(Icons.close,
+            icon: const Icon(Icons.close,
               color: ColorConfig.bgGrey,
               size: SizeConfig.largeSmallMargin,
-            ))
+            ),),
       ],
     );
   }
@@ -176,7 +174,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     }
     return _flashCard(
         title: 'インドネシア語',
-        tango: questionAnswerList.lesson.tangos[currentIndex]);
+        tango: questionAnswerList.lesson.tangos[currentIndex],);
   }
 
   Widget _flashCardBack() {
@@ -192,21 +190,20 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
         child: Container(
           padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _partOfSpeech(entity),
-              SizedBox(height: SizeConfig.smallMargin),
+              const SizedBox(height: SizeConfig.smallMargin),
               _japanese(entity),
-              SizedBox(height: SizeConfig.smallMargin),
+              const SizedBox(height: SizeConfig.smallMargin),
               _english(entity),
-              SizedBox(height: SizeConfig.smallMargin),
+              const SizedBox(height: SizeConfig.smallMargin),
               _exampleHeader(),
-              SizedBox(height: SizeConfig.smallMargin),
+              const SizedBox(height: SizeConfig.smallMargin),
               _example(entity),
-              SizedBox(height: SizeConfig.smallMargin),
+              const SizedBox(height: SizeConfig.smallMargin),
               _exampleJp(entity),
-              SizedBox(height: SizeConfig.smallMargin),
+              const SizedBox(height: SizeConfig.smallMargin),
             ],
           ),
         ),
@@ -216,13 +213,12 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
 
   Widget _flashCard({required String title, required TangoEntity tango, bool isFront = true}) {
     return Card(
-      child: Container(
+      child: SizedBox(
         height: _cardHeight,
         width: double.infinity,
         child: Stack(
           children: [
             Align(
-              alignment: Alignment.center,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -246,7 +242,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
               ),
             ),
           ],
-        )
+        ),
       ),
     );
   }
@@ -258,10 +254,10 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
         future: getBookmark(entity),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            WordStatus? status = snapshot.data as WordStatus?;
-            bool isBookmark = status == null ? false : status.isBookmarked;
+            var status = snapshot.data as WordStatus?;
+            var isBookmark = status == null ? false : status.isBookmarked;
             if (status == null) {
-              status = WordStatus(wordId: entity.id!, status: WordStatusType.notLearned.id, isBookmarked: false);
+              status = WordStatus(wordId: entity.id!, status: WordStatusType.notLearned.id);
               wordStatusDao?.insertWordStatus(status);
             }
             return Padding(
@@ -277,12 +273,12 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
               ),
             );
           } else {
-            return  Padding(
-              padding: const EdgeInsets.only(left: SizeConfig.mediumSmallMargin),
+            return  const Padding(
+              padding: EdgeInsets.only(left: SizeConfig.mediumSmallMargin),
               child: ShimmerWidget.rectangular(width: 24, height: 24,),
             );
           }
-        });
+        },);
   }
 
   Future<WordStatus?> getBookmark(TangoEntity entity) async {
@@ -295,7 +291,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     return Row(
       children: [
         TextWidget.titleWhiteSmallBoldWithBackGround(PartOfSpeechExt.intToPartOfSpeech(value: entity.partOfSpeech!).title),
-        SizedBox(width: SizeConfig.mediumSmallMargin),
+        const SizedBox(width: SizeConfig.mediumSmallMargin),
       ],
     );
   }
@@ -304,7 +300,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     return Row(
       children: [
         Assets.png.japanFuji64.image(height: _iconHeight, width: _iconWidth),
-        SizedBox(width: SizeConfig.mediumSmallMargin),
+        const SizedBox(width: SizeConfig.mediumSmallMargin),
         Flexible(child: TextWidget.titleGrayLargeBold(entity.japanese!, maxLines: 2)),
       ],
     );
@@ -314,7 +310,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     return Row(
       children: [
         Assets.png.english64.image(height: _iconHeight, width: _iconWidth),
-        SizedBox(width: SizeConfig.mediumSmallMargin),
+        const SizedBox(width: SizeConfig.mediumSmallMargin),
         Flexible(child: TextWidget.titleGrayLargeBold(entity.english!, maxLines: 2)),
       ],
     );
@@ -323,9 +319,9 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
   Widget _exampleHeader() {
     return Row(
       children: [
-        TextWidget.titleRedMedium('例文', maxLines: 1),
-        SizedBox(width: SizeConfig.mediumSmallMargin),
-        Flexible(child: _separater())
+        TextWidget.titleRedMedium('例文'),
+        const SizedBox(width: SizeConfig.mediumSmallMargin),
+        Flexible(child: _separater()),
       ],
     );
   }
@@ -334,7 +330,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     return Row(
       children: [
         Assets.png.example64.image(height: _iconHeight, width: _iconWidth),
-        SizedBox(width: SizeConfig.mediumSmallMargin),
+        const SizedBox(width: SizeConfig.mediumSmallMargin),
         Flexible(child: TextWidget.titleBlackMediumBold(entity.example!, maxLines: 5)),
       ],
     );
@@ -344,7 +340,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     return Row(
       children: [
         Assets.png.japan64.image(height: _iconHeight, width: _iconWidth),
-        SizedBox(width: SizeConfig.mediumSmallMargin),
+        const SizedBox(width: SizeConfig.mediumSmallMargin),
         Flexible(child: TextWidget.titleGrayMediumSmallBold(entity.exampleJp!, maxLines: 5)),
       ],
     );
@@ -386,7 +382,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
     return Stack(
       children: [
         Card(
-          child: Container(
+          child: SizedBox(
             height: _cardHeight,
             width: double.infinity,
             child: Center(
@@ -394,7 +390,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   TextWidget.titleRedMedium(isJapanese ? '日本語' : 'インドネシア語'),
-                  ShimmerWidget.rectangular(height: 40, width: 240,)
+                  const ShimmerWidget.rectangular(height: 40, width: 240,),
                 ],
               ),
             ),
@@ -423,14 +419,14 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
                           child: lottieCache.load(Assets.lottie.tap,),
                         ),
                         const SizedBox(height: SizeConfig.smallMargin,),
-                        TextWidget.titleGraySmallBold('タップして日本語の意味を表示')
+                        TextWidget.titleGraySmallBold('タップして日本語の意味を表示'),
                       ],
-                    )
+                    ),
                 ),
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -454,19 +450,19 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
 
   Widget _actionButton({required WordStatusType type}) {
     return Card(
-      shape: CircleBorder(),
+      shape: const CircleBorder(),
       child: InkWell(
-        child: Container(
+        child: SizedBox(
             height: 120,
             width: 120,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 type.iconLarge,
-                SizedBox(height: SizeConfig.smallMargin),
-                TextWidget.titleGraySmallBold(type.actionTitle)
+                const SizedBox(height: SizeConfig.smallMargin),
+                TextWidget.titleGraySmallBold(type.actionTitle),
               ],
-            )
+            ),
         ),
         onTap: () async {
           analytics(type.analyticsItem);
@@ -512,13 +508,13 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
 
   void analytics(FlushCardItem item, {String? others = ''}) {
     final eventDetail = AnalyticsEventAnalyticsEventDetail()
-      ..id = item.id.toString()
+      ..id = item.id
       ..screen = AnalyticsScreen.lectureSelector.name
       ..item = item.shortName
       ..action = AnalyticsActionType.tap.name
       ..others = others;
     FirebaseAnalyticsUtils.eventsTrack(AnalyticsEventEntity()
       ..name = item.name
-      ..analyticsEventDetail = eventDetail);
+      ..analyticsEventDetail = eventDetail,);
   }
 }

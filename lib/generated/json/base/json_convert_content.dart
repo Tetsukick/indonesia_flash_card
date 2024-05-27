@@ -58,13 +58,13 @@ class JsonConvert {
     if (value is T) {
       return value;
     }
-    final String type = T.toString();
+    final type = T.toString();
     try {
-      final String valueS = value.toString();
+      final valueS = value.toString();
       if (type == "String") {
         return valueS as T;
       } else if (type == "int") {
-        final int? intValue = int.tryParse(valueS);
+        final intValue = int.tryParse(valueS);
         if (intValue == null) {
           return double.tryParse(valueS)?.toInt() as T?;
         } else {
@@ -97,25 +97,25 @@ class JsonConvert {
 	//list is returned by type
 	static M? _getListChildType<M>(List<Map<String, dynamic>> data) {
 		if(<QuestionAnswerEntity>[] is M){
-			return data.map<QuestionAnswerEntity>((Map<String, dynamic> e) => QuestionAnswerEntity.fromJson(e)).toList() as M;
+			return data.map<QuestionAnswerEntity>(QuestionAnswerEntity.fromJson).toList() as M;
 		}
 		if(<QuestionEntity>[] is M){
-			return data.map<QuestionEntity>((Map<String, dynamic> e) => QuestionEntity.fromJson(e)).toList() as M;
+			return data.map<QuestionEntity>(QuestionEntity.fromJson).toList() as M;
 		}
 		if(<TangoEntity>[] is M){
-			return data.map<TangoEntity>((Map<String, dynamic> e) => TangoEntity.fromJson(e)).toList() as M;
+			return data.map<TangoEntity>(TangoEntity.fromJson).toList() as M;
 		}
 		if(<TranslateResponseEntity>[] is M){
-			return data.map<TranslateResponseEntity>((Map<String, dynamic> e) => TranslateResponseEntity.fromJson(e)).toList() as M;
+			return data.map<TranslateResponseEntity>(TranslateResponseEntity.fromJson).toList() as M;
 		}
 		if(<AnalyticsEventEntity>[] is M){
-			return data.map<AnalyticsEventEntity>((Map<String, dynamic> e) => AnalyticsEventEntity.fromJson(e)).toList() as M;
+			return data.map<AnalyticsEventEntity>(AnalyticsEventEntity.fromJson).toList() as M;
 		}
 		if(<AnalyticsEventAnalyticsEventDetail>[] is M){
-			return data.map<AnalyticsEventAnalyticsEventDetail>((Map<String, dynamic> e) => AnalyticsEventAnalyticsEventDetail.fromJson(e)).toList() as M;
+			return data.map<AnalyticsEventAnalyticsEventDetail>(AnalyticsEventAnalyticsEventDetail.fromJson).toList() as M;
 		}
 
-		debugPrint("${M.toString()} not found");
+		debugPrint("$M not found");
 	
 		return null;
 }

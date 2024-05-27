@@ -40,32 +40,32 @@ extension WordStatusTypeExt on WordStatusType {
   }
 
   Widget get icon {
-    final _height = 16.0;
-    final _width = 16.0;
+    const height = 16.0;
+    const width = 16.0;
     switch (this) {
       case WordStatusType.notLearned:
-        return Assets.png.minus128.image(height: _height, width: _width);
+        return Assets.png.minus128.image(height: height, width: width);
       case WordStatusType.notRemembered:
-        return Assets.png.cancelRed128.image(height: _height, width: _width);
+        return Assets.png.cancelRed128.image(height: height, width: width);
       case WordStatusType.remembered:
-        return Assets.png.checkedGreen128.image(height: _height, width: _width);
+        return Assets.png.checkedGreen128.image(height: height, width: width);
       case WordStatusType.perfectRemembered:
-        return Assets.png.checkGreenRich64.image(height: _height, width: _width);
+        return Assets.png.checkGreenRich64.image(height: height, width: width);
     }
   }
 
   Widget get iconLarge {
-    final _height = 40.0;
-    final _width = 40.0;
+    const height = 40.0;
+    const width = 40.0;
     switch (this) {
       case WordStatusType.notLearned:
-        return Assets.png.minus128.image(height: _height, width: _width);
+        return Assets.png.minus128.image(height: height, width: width);
       case WordStatusType.notRemembered:
-        return Assets.png.cancelRed128.image(height: _height, width: _width);
+        return Assets.png.cancelRed128.image(height: height, width: width);
       case WordStatusType.remembered:
-        return Assets.png.checkedGreen128.image(height: _height, width: _width);
+        return Assets.png.checkedGreen128.image(height: height, width: width);
       case WordStatusType.perfectRemembered:
-        return Assets.png.checkGreenRich64.image(height: _height, width: _width);
+        return Assets.png.checkGreenRich64.image(height: height, width: width);
     }
   }
 

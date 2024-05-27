@@ -10,7 +10,7 @@ enum AnalyticsScreen {
 }
 
 extension AnalyticsScreenExt on AnalyticsScreen {
-  String get name => this.toString().split(".").last;
+  String get name => toString().split('.').last;
 }
 
 enum AnalyticsActionType {
@@ -19,7 +19,7 @@ enum AnalyticsActionType {
 }
 
 extension AnalyticsActionTypeExt on AnalyticsActionType {
-  String get name => this.toString().split(".").last;
+  String get name => toString().split('.').last;
 }
 
 enum LectureSelectorItem {
@@ -30,11 +30,11 @@ enum LectureSelectorItem {
 
 extension LectureSelectorItemExt on LectureSelectorItem {
   AnalyticsScreen get screen => AnalyticsScreen.lectureSelector;
-  String get shortName => this.toString().split(".").last;
-  String get name => '${this.screen.name}_${this.shortName}';
-  String get screenId => this.screen.index.toString().padLeft(2, '0');
+  String get shortName => toString().split('.').last;
+  String get name => '${screen.name}_$shortName';
+  String get screenId => screen.index.toString().padLeft(2, '0');
   String get id =>
-      '${this.screenId}${(this.index + 1).toString().padLeft(2, '0')}';
+      '$screenId${(index + 1).toString().padLeft(2, '0')}';
 }
 
 enum DictionaryItem {
@@ -47,11 +47,11 @@ enum DictionaryItem {
 
 extension DictionaryItemExt on DictionaryItem {
   AnalyticsScreen get screen => AnalyticsScreen.dictionary;
-  String get shortName => this.toString().split(".").last;
-  String get name => '${this.screen.name}_${this.shortName}';
-  String get screenId => this.screen.index.toString().padLeft(2, '0');
+  String get shortName => toString().split('.').last;
+  String get name => '${screen.name}_$shortName';
+  String get screenId => screen.index.toString().padLeft(2, '0');
   String get id =>
-      '${this.screenId}${(this.index + 1).toString().padLeft(2, '0')}';
+      '$screenId${(index + 1).toString().padLeft(2, '0')}';
 }
 
 enum DictionaryDetailItem {
@@ -62,11 +62,11 @@ enum DictionaryDetailItem {
 
 extension DictionaryDetailItemExt on DictionaryDetailItem {
   AnalyticsScreen get screen => AnalyticsScreen.dictionaryDetail;
-  String get shortName => this.toString().split(".").last;
-  String get name => '${this.screen.name}_${this.shortName}';
-  String get screenId => this.screen.index.toString().padLeft(2, '0');
+  String get shortName => toString().split('.').last;
+  String get name => '${screen.name}_$shortName';
+  String get screenId => screen.index.toString().padLeft(2, '0');
   String get id =>
-      '${this.screenId}${(this.index + 1).toString().padLeft(2, '0')}';
+      '$screenId${(index + 1).toString().padLeft(2, '0')}';
 }
 
 enum MenuAnalyticsItem {
@@ -80,11 +80,11 @@ enum MenuAnalyticsItem {
 
 extension MenuAnalyticsItemExt on MenuAnalyticsItem {
   AnalyticsScreen get screen => AnalyticsScreen.menu;
-  String get shortName => this.toString().split(".").last;
-  String get name => '${this.screen.name}_${this.shortName}';
-  String get screenId => this.screen.index.toString().padLeft(2, '0');
+  String get shortName => toString().split('.').last;
+  String get name => '${screen.name}_$shortName';
+  String get screenId => screen.index.toString().padLeft(2, '0');
   String get id =>
-      '${this.screenId}${(this.index + 1).toString().padLeft(2, '0')}';
+      '$screenId${(index + 1).toString().padLeft(2, '0')}';
 }
 
 enum FlushCardItem {
@@ -98,11 +98,11 @@ enum FlushCardItem {
 
 extension FlushCardItemExt on FlushCardItem {
   AnalyticsScreen get screen => AnalyticsScreen.flushCard;
-  String get shortName => this.toString().split(".").last;
-  String get name => '${this.screen.name}_${this.shortName}';
-  String get screenId => this.screen.index.toString().padLeft(2, '0');
+  String get shortName => toString().split('.').last;
+  String get name => '${screen.name}_$shortName';
+  String get screenId => screen.index.toString().padLeft(2, '0');
   String get id =>
-      '${this.screenId}${(this.index + 1).toString().padLeft(2, '0')}';
+      '$screenId${(index + 1).toString().padLeft(2, '0')}';
 }
 
 enum LessonCompItem {
@@ -113,9 +113,9 @@ enum LessonCompItem {
 
 extension LessonCompItemExt on LessonCompItem {
   AnalyticsScreen get screen => AnalyticsScreen.lessonComp;
-  String get shortName => this.toString().split(".").last;
-  String get name => '${this.screen.name}_${this.shortName}';
-  String get screenId => this.screen.index.toString().padLeft(2, '0');
+  String get shortName => toString().split('.').last;
+  String get name => '${screen.name}_$shortName';
+  String get screenId => screen.index.toString().padLeft(2, '0');
   String get id =>
-      '${this.screenId}${(this.index + 1).toString().padLeft(2, '0')}';
+      '$screenId${(index + 1).toString().padLeft(2, '0')}';
 }

@@ -3,11 +3,12 @@ import '../utils/user_friendly_exception.dart';
 
 // An exception thrown when an Api response isn't successful. Can include an ApiError and the status code of the response.
 class ApiException implements UserFriendlyException {
+
+  ApiException(this.error, this.statusCode);
   ApiError error;
   int? statusCode;
 
-  ApiException(this.error, this.statusCode);
-
+  @override
   String getUserFriendlyMessage() {
     return error.detail;
   }
