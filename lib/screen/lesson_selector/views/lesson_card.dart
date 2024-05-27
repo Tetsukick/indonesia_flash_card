@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -48,24 +47,24 @@ class LessonCard extends ConsumerWidget {
   }
 
   Widget _lectureCard(BuildContext context, WidgetRef ref, {TangoCategory? category, PartOfSpeechEnum? partOfSpeech, LevelGroup? levelGroup, FrequencyGroup? frequencyGroup}) {
-    String _title = '';
-    SvgGenImage _svg = Assets.svg.islam1;
+    var title = '';
+    var svg = Assets.svg.islam1;
     if (category != null) {
-      _title = category.title;
-      _svg = category.svg;
+      title = category.title;
+      svg = category.svg;
     } else if (partOfSpeech != null) {
-      _title = partOfSpeech.title;
-      _svg = partOfSpeech.svg;
+      title = partOfSpeech.title;
+      svg = partOfSpeech.svg;
     } else if (levelGroup != null) {
-      _title = levelGroup.title;
-      _svg = levelGroup.svg;
+      title = levelGroup.title;
+      svg = levelGroup.svg;
     } else if (frequencyGroup != null) {
-      _title = frequencyGroup.title;
-      _svg = frequencyGroup.svg;
+      title = frequencyGroup.title;
+      svg = frequencyGroup.svg;
     }
 
     final lectures = ref.watch(fileControllerProvider);
-    final _isLoadingLecture = lectures.isEmpty;
+    final isLoadingLecture = lectures.isEmpty;
     // if (_isLoadingLecture) {
     //   return shimmerLessonCard();
     // }
@@ -80,7 +79,7 @@ class LessonCard extends ConsumerWidget {
           }
 
           analytics(LectureSelectorItem.lessonCard,
-              others: 'category: ${category?.id}, partOfSpeech: ${partOfSpeech?.id}, levelGroup: ${levelGroup?.index}, frequencyGroup: ${frequencyGroup?.index}');
+              others: 'category: ${category?.id}, partOfSpeech: ${partOfSpeech?.id}, levelGroup: ${levelGroup?.index}, frequencyGroup: ${frequencyGroup?.index}',);
 
           await ref.read(tangoListControllerProvider.notifier)
               .setLessonsData(
@@ -97,7 +96,7 @@ class LessonCard extends ConsumerWidget {
           height: itemCardHeight,
           child: Stack(
             children: <Widget>[
-              _svg.svg(
+              svg.svg(
                 width: double.infinity,
                 height: double.infinity,
               ),
@@ -129,7 +128,7 @@ class LessonCard extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TextWidget.titleWhiteLargeBold(_title, maxLines: 2),
+                      TextWidget.titleWhiteLargeBold(title, maxLines: 2),
                       // SizedBox(height: SizeConfig.mediumMargin,)
                     ],
                   ),
@@ -203,14 +202,14 @@ class LessonCard extends ConsumerWidget {
 
   void analytics(LectureSelectorItem item, {String? others = ''}) {
     final eventDetail = AnalyticsEventAnalyticsEventDetail()
-      ..id = item.id.toString()
+      ..id = item.id
       ..screen = AnalyticsScreen.lectureSelector.name
       ..item = item.shortName
       ..action = AnalyticsActionType.tap.name
       ..others = others;
     FirebaseAnalyticsUtils.eventsTrack(AnalyticsEventEntity()
       ..name = item.name
-      ..analyticsEventDetail = eventDetail);
+      ..analyticsEventDetail = eventDetail,);
   }
 
   // void getAchievementRate() async {

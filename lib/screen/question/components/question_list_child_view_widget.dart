@@ -34,7 +34,7 @@ class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidge
       padding: const EdgeInsetsDirectional.fromSTEB(2, 2, 2, 2),
       child: Card(
         clipBehavior: Clip.antiAliasWithSaveLayer,
-        color: Color(0xFFF5F5F5),
+        color: const Color(0xFFF5F5F5),
         child: Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
           child: Column(
@@ -43,7 +43,7 @@ class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidge
               Visibility(
                 visible: questionAnswers.isNotEmpty,
                 child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
                   child: AnswerTitle(
                     answer: questionAnswers.isNotEmpty ? questionAnswers.first.answer ?? '' : '',
                     maxLines: 2,
@@ -51,7 +51,7 @@ class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidge
                 ),
               ),
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(8, 4, 8, 0),
+                padding: const EdgeInsetsDirectional.fromSTEB(8, 4, 8, 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -60,18 +60,17 @@ class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidge
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
+                            padding: const EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
                             child: Row(
-                              mainAxisSize: MainAxisSize.max,
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.mode_comment_outlined,
                                   color: Color(0xFF95A1AC),
                                   size: 24,
                                 ),
                                 Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      4, 0, 0, 0),
+                                  padding: const EdgeInsetsDirectional.fromSTEB(
+                                      4, 0, 0, 0,),
                                   child: Text(
                                     answerCount.toString(),
                                   ),
@@ -107,13 +106,13 @@ class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidge
     questionsRef.doc(widget.questionEntity.id).collection('answers').orderBy('created_at', descending: true).limit(1).get().then((value) {
         setState(() {
           questionAnswers = value.docs.map((e) =>
-            QuestionAnswerEntity.fromJson(e.data() as Map<String, dynamic>)..id = e.id
+            QuestionAnswerEntity.fromJson(e.data())..id = e.id,
           ).toList();
         });
       },
       onError: (e) {
         logger.d(e);
-      }
+      },
     );
     questionsRef.doc(widget.questionEntity.id).collection('answers').count().get().then((value) {
       if (value.count != null) {
@@ -124,7 +123,7 @@ class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidge
     });
   }
 
-  void shareSNS() async {
-    SocialShare.shareOptions('${widget.questionEntity.question} #インドネシア語についての質問');
+  Future<void> shareSNS() async {
+    await SocialShare.shareOptions('${widget.questionEntity.question} #インドネシア語についての質問');
   }
 }

@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
 
 class ApiResponse {
-  int? statusCode;
-  Map<String, dynamic> body;
 
   ApiResponse(this.statusCode, this.body);
+  int? statusCode;
+  Map<String, dynamic> body;
 
   bool wasSuccessful() {
     if (statusCode == null) {

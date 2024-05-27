@@ -14,7 +14,7 @@ class FirebaseAnalyticsUtils {
       FirebaseAnalyticsUtils.analytics.logLogin();
       FirebaseAnalyticsUtils.analytics.setUserId(id: userId);
       FirebaseAnalyticsUtils.analytics.setUserProperty(
-          name: "Email", value: email);
+          name: 'Email', value: email,);
     }
   }
 
@@ -28,7 +28,7 @@ class FirebaseAnalyticsUtils {
     if (FirebaseAnalyticsUtils._canTrack()) {
       FirebaseAnalyticsUtils.analytics.logEvent(
           name: event.name ?? '',
-          parameters: event.analyticsEventDetail?.toJson()
+          parameters: event.analyticsEventDetail?.toJson(),
       );
     }
   }

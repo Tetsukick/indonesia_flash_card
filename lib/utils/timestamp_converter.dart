@@ -13,7 +13,7 @@ class TimestampConverter implements JsonConverter<DateTime, dynamic> {
       timestamp = data;
     } else if (data is Map<String, int>) {
       try {
-        timestamp = Timestamp(data['_seconds'] as int, data['_nanoseconds'] as int);
+        timestamp = Timestamp(data['_seconds']!, data['_nanoseconds']!);
       } catch (e) {
         logger.d(e);
       }

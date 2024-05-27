@@ -5,15 +5,15 @@ import 'auth_repo.dart';
 import 'package:http/http.dart' as http;
 
 class SheetRepo {
+
+  SheetRepo(this.spreadsheetId) {
+    init = initSheetRepo();
+  }
   AuthRepo authRepo = AuthRepo();
   late SheetsApi sheetsApi;
   late http.Client client;
   late Future<void> init;
   final String spreadsheetId;
-
-  SheetRepo(this.spreadsheetId) {
-    init = initSheetRepo();
-  }
 
   Future<List<List<Object?>>?> getEntriesFromRange(String range) async {
     await init;

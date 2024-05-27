@@ -56,15 +56,15 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
               physics: const NeverScrollableScrollPhysics(),
               itemCount: MenuItem.values.length,
               itemBuilder: (BuildContext context, int index) {
-                final _menuItem = MenuItem.values[index];
-                if (_menuItem == MenuItem.settingSound) {
-                  return _switchSettingRow(_menuItem);
+                final menuItem = MenuItem.values[index];
+                if (menuItem == MenuItem.settingSound) {
+                  return _switchSettingRow(menuItem);
                 }
-                return _basicSettingRow(_menuItem);
+                return _basicSettingRow(menuItem);
               },
             ),
           ],
-        )
+        ),
       ),
     );
   }
@@ -91,7 +91,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
                   analytics(menuItem.analyticsItem);
                   setState(() => _isSoundOn = val);
                   PreferenceKey.isSoundOn.setBool(val);
-                }
+                },
               ),
             ],
           ),
@@ -153,7 +153,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
           // iOS用オプション
             toolbarTopTintColor: const Color(0xff2b374d),
             closeButtonCaption: '閉じる',
-            closeButtonColor: Colors.white
+            closeButtonColor: Colors.white,
         ),
       ),
     );
@@ -168,7 +168,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
       ..others = others;
     FirebaseAnalyticsUtils.eventsTrack(AnalyticsEventEntity()
       ..name = item.name
-      ..analyticsEventDetail = eventDetail);
+      ..analyticsEventDetail = eventDetail,);
   }
 }
 

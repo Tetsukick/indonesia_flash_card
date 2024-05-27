@@ -12,16 +12,16 @@ class QuestionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsetsDirectional.fromSTEB(0, 0, 2, 0),
+      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 2, 0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+            padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
             child: ClipRRect(
                 borderRadius: BorderRadius.circular(0),
                 child: Assets.png.askingQuestion128.image(
-                    width: 32, height: 32, fit: BoxFit.cover)
+                    width: 32, height: 32, fit: BoxFit.cover,),
             ),
           ),
           Expanded(

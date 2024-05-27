@@ -2,11 +2,6 @@ import 'package:floor/floor.dart';
 
 @entity
 class WordStatus {
-  @PrimaryKey(autoGenerate: true)
-  int? id;
-  final int wordId;
-  int status;
-  bool isBookmarked;
 
   WordStatus({
     this.id,
@@ -14,4 +9,9 @@ class WordStatus {
     required this.status,
     this.isBookmarked = false,
   });
+  @PrimaryKey(autoGenerate: true)
+  int? id;
+  final int wordId;
+  int status;
+  bool isBookmarked;
 }

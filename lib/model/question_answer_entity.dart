@@ -4,19 +4,19 @@ import 'package:indonesia_flash_card/generated/json/question_answer_entity.g.dar
 
 @JsonSerializable()
 class QuestionAnswerEntity {
-
-  String? id;
-	String? answer;
-	@JSONField(name: "is_best")
-	bool? isBest;
-	@JSONField(name: "user_token")
-	String? userToken;
-	@JSONField(name: "created_at")
-	DateTime? createdAt;
   
   QuestionAnswerEntity();
 
   factory QuestionAnswerEntity.fromJson(Map<String, dynamic> json) => $QuestionAnswerEntityFromJson(json);
+
+  String? id;
+	String? answer;
+	@JSONField(name: 'is_best')
+	bool? isBest;
+	@JSONField(name: 'user_token')
+	String? userToken;
+	@JSONField(name: 'created_at')
+	DateTime? createdAt;
 
   Map<String, dynamic> toJson() => $QuestionAnswerEntityToJson(this);
 

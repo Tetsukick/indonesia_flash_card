@@ -9,10 +9,10 @@ class Config {
   static const adUnitIdAndroidInterstitial = kDebugMode ? 'ca-app-pub-3940256099942544/8691691433' : 'ca-app-pub-8604906384604870/4045826689';
   static const adUnitIdIosInterstitial = kDebugMode ? 'ca-app-pub-3940256099942544/5135589807' : 'ca-app-pub-8604906384604870/9323926290';
 
-  static const apiKeyHeader = "x-api-key";
-  static const contentTypeHeader = "Content-type";
-  static const acceptHeader = "Accept";
-  static const authorizationHeader = "Authorization";
+  static const apiKeyHeader = 'x-api-key';
+  static const contentTypeHeader = 'Content-type';
+  static const acceptHeader = 'Accept';
+  static const authorizationHeader = 'Authorization';
 
   static String getAdUnitIdBanner() {
     return Platform.isIOS ? Config.adUnitIdIosBanner : Config.adUnitIdAndroidBanner;

@@ -1,9 +1,6 @@
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/question_entity.dart';
@@ -13,7 +10,6 @@ import 'package:indonesia_flash_card/utils/admob.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
 
-import '../../config/config.dart';
 import '../../config/size_config.dart';
 import 'components/question_list_child_view_widget.dart';
 
@@ -50,17 +46,17 @@ class _QuestionListScreenState extends State<QuestionListScreen> {
             await SendQuestionWidget.navigateTo(context);
             initQuestionList();
           },
-          backgroundColor: Color(0xFFB71C1C),
+          backgroundColor: const Color(0xFFB71C1C),
           elevation: 8,
           child: Assets.png.addQuestion128.image(
             width: 32,
             height: 32,
             fit: BoxFit.cover,
-          )
+          ),
         ),
       ),
       body: Padding(
-        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 32),
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 32),
         child: ListView.builder(
           itemCount: questionList.length,
           itemBuilder: (BuildContext context, int index) {
@@ -84,13 +80,13 @@ class _QuestionListScreenState extends State<QuestionListScreen> {
     questionsRef.orderBy('created_at', descending: true).get().then((value) {
         setState(() {
           questionList = value.docs.map((e) =>
-            QuestionEntity.fromJson(e.data() as Map<String, dynamic>)..id = e.id
+            QuestionEntity.fromJson(e.data()! as Map<String, dynamic>)..id = e.id,
           ).toList();
         });
       },
       onError: (e) {
         logger.d(e);
-      }
+      },
     );
   }
 }

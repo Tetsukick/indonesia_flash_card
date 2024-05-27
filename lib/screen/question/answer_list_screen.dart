@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
@@ -10,8 +10,6 @@ import 'package:lottie/lottie.dart';
 
 import '../../flutter_flow/flutter_flow_icon_button.dart';
 import '../../flutter_flow/flutter_flow_theme.dart';
-import 'package:flutter/material.dart';
-
 import '../../model/question_answer_entity.dart';
 import '../../model/question_entity.dart';
 import '../../utils/logger.dart';
@@ -23,12 +21,12 @@ class QuestionAnswerListWidget extends StatefulWidget {
 
   static void navigateTo(
       BuildContext context,
-      {required QuestionEntity questionEntity}) {
+      {required QuestionEntity questionEntity,}) {
     Navigator.push<void>(context, MaterialPageRoute(
       builder: (context) {
         return QuestionAnswerListWidget(questionEntity: questionEntity);
       },
-    ));
+    ),);
   }
 
   @override
@@ -73,7 +71,7 @@ class _QuestionAnswerListWidgetState extends State<QuestionAnswerListWidget> {
           borderColor: Colors.transparent,
           borderRadius: 30,
           buttonSize: 46,
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_rounded,
             color: Color(0xFF95A1AC),
             size: 24,
@@ -86,12 +84,12 @@ class _QuestionAnswerListWidgetState extends State<QuestionAnswerListWidget> {
           '質問',
           style: FlutterFlowTheme.of(context).subtitle1.override(
             fontFamily: 'Lexend Deca',
-            color: Color(0xFF090F13),
+            color: const Color(0xFF090F13),
             fontSize: 18,
             fontWeight: FontWeight.w500,
           ),
         ),
-        actions: [],
+        actions: const [],
         centerTitle: false,
         elevation: 0,
       ),
@@ -104,33 +102,30 @@ class _QuestionAnswerListWidgetState extends State<QuestionAnswerListWidget> {
                 children: [
                   SingleChildScrollView(
                     child: Column(
-                      mainAxisSize: MainAxisSize.max,
                       children: [
                         Container(
                           width: double.infinity,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: Colors.white,
                             boxShadow: [
                               BoxShadow(
                                 blurRadius: 3,
                                 color: Color(0x39000000),
                                 offset: Offset(0, 1),
-                              )
+                              ),
                             ],
                           ),
                           child: Column(
-                            mainAxisSize: MainAxisSize.max,
                             children: [
-                              Container(
-                                decoration: BoxDecoration(),
+                              DecoratedBox(
+                                decoration: const BoxDecoration(),
                                 child: QuestionTitle(
-                                  question: widget.questionEntity.question
+                                  question: widget.questionEntity.question,
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(16, 4, 16, 12),
+                                padding: const EdgeInsetsDirectional.fromSTEB(16, 4, 16, 12),
                                 child: Row(
-                                  mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Expanded(
                                       child: Text(
@@ -140,7 +135,7 @@ class _QuestionAnswerListWidgetState extends State<QuestionAnswerListWidget> {
                                             .bodyText2
                                             .override(
                                           fontFamily: 'Lexend Deca',
-                                          color: Color(0xFF95A1AC),
+                                          color: const Color(0xFF95A1AC),
                                           fontSize: 14,
                                           fontWeight: FontWeight.normal,
                                         ),
@@ -160,27 +155,27 @@ class _QuestionAnswerListWidgetState extends State<QuestionAnswerListWidget> {
                             return AnswerCard(answerEntity: questionAnswers[index]);
                           },
                         ),
-                        const SizedBox(height: 120)
+                        const SizedBox(height: 120),
                       ],
                     ),
                   ),
                   Align(
-                    alignment: AlignmentDirectional(0, 1),
+                    alignment: const AlignmentDirectional(0, 1),
                     child: Container(
                       height: _isOpenedKeyboard ? 120 : 80,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Color(0x9AFFFFFF),
                       ),
                       child: Align(
-                        alignment: AlignmentDirectional(0, 1),
+                        alignment: const AlignmentDirectional(0, 1),
                         child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 8),
+                          padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 8),
                           child: Row(
                             children: [
                               Expanded(
                                 child: Padding(
                                   padding:
-                                  EdgeInsetsDirectional.fromSTEB(16, 12, 8, 0),
+                                  const EdgeInsetsDirectional.fromSTEB(16, 12, 8, 0),
                                   child: TextFormField(
                                     controller: answerTextEditingController,
                                     focusNode: answerTextFieldFocusNode,
@@ -190,7 +185,7 @@ class _QuestionAnswerListWidgetState extends State<QuestionAnswerListWidget> {
                                           .bodyText2
                                           .override(
                                         fontFamily: 'Outfit',
-                                        color: Color(0xFF57636C),
+                                        color: const Color(0xFF57636C),
                                         fontSize: 14,
                                         fontWeight: FontWeight.normal,
                                       ),
@@ -198,7 +193,7 @@ class _QuestionAnswerListWidgetState extends State<QuestionAnswerListWidget> {
                                           .bodyText2
                                           .override(
                                         fontFamily: 'Outfit',
-                                        color: Color(0xFF57636C),
+                                        color: const Color(0xFF57636C),
                                         fontSize: 14,
                                         fontWeight: FontWeight.normal,
                                       ),
@@ -207,15 +202,15 @@ class _QuestionAnswerListWidgetState extends State<QuestionAnswerListWidget> {
                                       errorBorder: CommonBorder().grayOutlineInputBorder,
                                       focusedErrorBorder: CommonBorder().grayOutlineInputBorder,
                                       filled: true,
-                                      fillColor: Color(0xFFF1F4F8),
-                                      contentPadding: EdgeInsetsDirectional.fromSTEB(
-                                          16, 16, 12, 16),
+                                      fillColor: const Color(0xFFF1F4F8),
+                                      contentPadding: const EdgeInsetsDirectional.fromSTEB(
+                                          16, 16, 12, 16,),
                                     ),
                                     style: FlutterFlowTheme.of(context)
                                         .bodyText1
                                         .override(
                                       fontFamily: 'Outfit',
-                                      color: Color(0xFF1D2429),
+                                      color: const Color(0xFF1D2429),
                                       fontSize: 14,
                                       fontWeight: FontWeight.normal,
                                     ),
@@ -224,13 +219,13 @@ class _QuestionAnswerListWidgetState extends State<QuestionAnswerListWidget> {
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(0, 12, 12, 0),
+                                padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 12, 0),
                                 child: FlutterFlowIconButton(
                                   borderColor: Colors.transparent,
                                   borderRadius: 30,
                                   borderWidth: 1,
                                   buttonSize: 50,
-                                  icon: Icon(
+                                  icon: const Icon(
                                     Icons.send,
                                     color: Color(0xFFB71C1C),
                                     size: 30,
@@ -273,26 +268,25 @@ class _QuestionAnswerListWidgetState extends State<QuestionAnswerListWidget> {
         .orderBy('created_at', descending: true).get().then((value) {
           setState(() {
             questionAnswers = value.docs.map((e) =>
-            QuestionAnswerEntity.fromJson(e.data() as Map<String, dynamic>)..id = e.id
+            QuestionAnswerEntity.fromJson(e.data())..id = e.id,
             ).toList();
           });
         },
         onError: (e) {
           logger.d(e);
-        }
+        },
     );
   }
 
-  void sendAnswer() async {
+  Future<void> sendAnswer() async {
     if (answerTextEditingController.text.length < 15) {
-      Fluttertoast.showToast(
+      await Fluttertoast.showToast(
           msg: '回答は15文字以上で入力してください。',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
           backgroundColor: Colors.red,
           textColor: Colors.white,
-          fontSize: 16.0
+          fontSize: 16,
       );
       return;
     }

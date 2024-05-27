@@ -19,7 +19,7 @@ class TangoEntity {
 		this.partOfSpeech,
 		this.category,
 		this.frequency,
-		this.rankFrequency
+		this.rankFrequency,
 	});
 
   factory TangoEntity.fromJson(Map<String, dynamic> json) => $TangoEntityFromJson(json);
@@ -31,10 +31,10 @@ class TangoEntity {
 	String? english;
 	String? description;
 	String? example;
-	@JSONField(name: "example_jp")
+	@JSONField(name: 'example_jp')
 	String? exampleJp;
 	int? level;
-	@JSONField(name: "part_of_speech")
+	@JSONField(name: 'part_of_speech')
 	int? partOfSpeech;
 	int? category;
 	int? frequency;

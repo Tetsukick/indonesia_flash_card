@@ -57,7 +57,7 @@ extension LevelGroupExt on LevelGroup {
   double get testFactor {
     switch (this) {
       case LevelGroup.superEasy:
-        return 1.0;
+        return 1;
       case LevelGroup.easy:
         return 1.2;
       case LevelGroup.medium:
@@ -65,7 +65,7 @@ extension LevelGroupExt on LevelGroup {
       case LevelGroup.hard:
         return 1.8;
       case LevelGroup.superHard:
-        return 2.0;
+        return 2;
     }
   }
 

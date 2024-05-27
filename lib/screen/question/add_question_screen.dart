@@ -22,9 +22,9 @@ class SendQuestionWidget extends StatefulWidget {
   static Future<void> navigateTo(BuildContext context) {
     return Navigator.push<void>(context, MaterialPageRoute(
       builder: (context) {
-        return SendQuestionWidget();
+        return const SendQuestionWidget();
       },
-    ));
+    ),);
   }
 
   @override
@@ -48,7 +48,7 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
 
   @override
   void dispose() {
-    questionTextController?.dispose();
+    questionTextController.dispose();
     super.dispose();
   }
 
@@ -66,7 +66,7 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
             '質問を新規作成',
             style: FlutterFlowTheme.of(context).title2.override(
               fontFamily: 'Lexend Deca',
-              color: Color(0xFF090F13),
+              color: const Color(0xFF090F13),
               fontSize: 22,
               fontWeight: FontWeight.bold,
             ),
@@ -74,12 +74,12 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
         ),
         actions: [
           Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
             child: FlutterFlowIconButton(
               borderColor: Colors.transparent,
               borderRadius: 30,
               buttonSize: 48,
-              icon: Icon(
+              icon: const Icon(
                 Icons.close_rounded,
                 color: Color(0xFF95A1AC),
                 size: 30,
@@ -126,7 +126,7 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
                                                   .bodyText2
                                                   .override(
                                                 fontFamily: 'Lexend Deca',
-                                                color: Color(0xFF95A1AC),
+                                                color: const Color(0xFF95A1AC),
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.normal,
                                               ),
@@ -138,7 +138,7 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
                                               fillColor: Colors.white,
                                               contentPadding:
                                               const EdgeInsetsDirectional.fromSTEB(
-                                                  20, 32, 20, 12),
+                                                  20, 32, 20, 12,),
                                             ),
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyText1
@@ -273,12 +273,12 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
           gradient: const LinearGradient(colors: [
             ColorConfig.green,
             Color.fromRGBO(52, 138, 199, 1),
-          ]),
+          ],),
           child: const Text(
             '投稿',
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
-        )
+        ),
       ],
     ).show();
   }
@@ -289,10 +289,9 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
           msg: '質問は20文字以上で入力してください。',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
           backgroundColor: Colors.red,
           textColor: Colors.white,
-          fontSize: 16.0
+          fontSize: 16,
       );
       return;
     }
@@ -311,15 +310,15 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
   }
 
   Future<bool> _confirmAlreadyTestedToday() async {
-    bool _tmpIsAlradySentQuestionToday = false;
+    var tmpIsAlradySentQuestionToday = false;
     final lastTestDate = await PreferenceKey.lastQuestionPostDate.getString();
     if (lastTestDate == null) {
-      _tmpIsAlradySentQuestionToday = false;
+      tmpIsAlradySentQuestionToday = false;
     } else {
-      _tmpIsAlradySentQuestionToday =
+      tmpIsAlradySentQuestionToday =
           lastTestDate == Utils.dateTimeToString(DateTime.now());
     }
-    setState(() => _isAlreadySentQuestionToday = _tmpIsAlradySentQuestionToday);
-    return _tmpIsAlradySentQuestionToday;
+    setState(() => _isAlreadySentQuestionToday = tmpIsAlradySentQuestionToday);
+    return tmpIsAlradySentQuestionToday;
   }
 }

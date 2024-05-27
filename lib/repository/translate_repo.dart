@@ -7,23 +7,23 @@ class TranslateRepo {
   Api translateApi = Api(generalClient: GeneralClient(
     apiKey: '',
     baseUrl: 'https://script.google.com/macros/s/AKfycbwwsokn-ihd3ffq0rTu--Qa5p4XtQLgJbL3audTm397ZwFwVQplNPYlEeKrH4AsSIuS',
-    logger: logger
-  ));
+    logger: logger,
+  ),);
 
   Future<TranslateResponseEntity> translate(String origin, {bool isIndonesianToJapanese = true}) {
-    final _japaneseCode = 'ja';
-    final _indonesianCode = 'id';
+    const japaneseCode = 'ja';
+    const indonesianCode = 'id';
 
     return translateApi.generalClient.get<TranslateResponseEntity>(
         endpoint: 'exec',
         queryParams: {
           'text': origin,
-          'source': isIndonesianToJapanese ? _indonesianCode : _japaneseCode,
-          'target': isIndonesianToJapanese ? _japaneseCode : _indonesianCode,
+          'source': isIndonesianToJapanese ? indonesianCode : japaneseCode,
+          'target': isIndonesianToJapanese ? japaneseCode : indonesianCode,
         },
         serializer: (json) {
           final response = TranslateResponseEntity.fromJson(json);
           return response;
-        });
+        },);
   }
 }

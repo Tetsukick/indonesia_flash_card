@@ -7,10 +7,11 @@ import 'package:json_path/json_path.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
-import '../main.dart';
-export 'dart:math' show min, max;
-export 'dart:convert' show jsonEncode, jsonDecode;
+export 'dart:convert' show jsonDecode, jsonEncode;
+export 'dart:math' show max, min;
+
 export 'package:intl/intl.dart';
+
 export 'internationalization.dart' show FFLocalizations;
 
 T valueOrDefault<T>(T? value, T defaultValue) =>
@@ -27,7 +28,7 @@ String dateTimeFormat(String format, DateTime? dateTime) {
 }
 
 Future launchURL(String url) async {
-  var uri = Uri.parse(url).toString();
+  final uri = Uri.parse(url).toString();
   try {
     await launch(uri);
   } catch (e) {
@@ -177,12 +178,12 @@ void showSnackbar(
       content: Row(
         children: [
           if (loading)
-            Padding(
-              padding: EdgeInsetsDirectional.only(end: 10.0),
-              child: Container(
+            const Padding(
+              padding: EdgeInsetsDirectional.only(end: 10),
+              child: SizedBox(
                 height: 20,
                 width: 20,
-                child: const CircularProgressIndicator(
+                child: CircularProgressIndicator(
                   color: Colors.white,
                 ),
               ),

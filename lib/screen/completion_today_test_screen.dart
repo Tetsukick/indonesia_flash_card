@@ -6,7 +6,6 @@ import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/domain/tango_list_service.dart';
 import 'package:indonesia_flash_card/model/level.dart';
 import 'package:indonesia_flash_card/model/rank.dart';
-import 'package:indonesia_flash_card/screen/flush_card_screen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/shared_preference.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
@@ -39,7 +38,7 @@ class CompletionTodayTestScreen extends ConsumerStatefulWidget {
       builder: (context) {
         return const CompletionTodayTestScreen();
       },
-    ));
+    ),);
   }
 
   @override
@@ -63,7 +62,7 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
     loadInterstitialAd();
   }
 
-  void initializeDB() async {
+  Future<void> initializeDB() async {
     final _database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
         .addMigrations([migration1to2, migration2to3])
@@ -78,7 +77,7 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
       backgroundColor: ColorConfig.bgPinkColor,
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.all(SizeConfig.mediumSmallMargin),
+          padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
           height: double.infinity,
           width: double.infinity,
           child: Column(
@@ -89,15 +88,15 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
               const SizedBox(height: SizeConfig.smallMargin),
               Flexible(
                 child: ListView.builder(
-                  padding: EdgeInsets.symmetric(vertical: SizeConfig.smallMargin),
+                  padding: const EdgeInsets.symmetric(vertical: SizeConfig.smallMargin),
                   itemBuilder: (BuildContext context, int index){
-                    TangoEntity tango = tangoList.lesson.tangos[index];
+                    final tango = tangoList.lesson.tangos[index];
                     return tangoListItem(tango);
                   },
                   itemCount: tangoList.lesson.tangos.length,
                 ),
               ),
-              SizedBox(height: SizeConfig.smallMargin),
+              const SizedBox(height: SizeConfig.smallMargin),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -107,7 +106,7 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
                         Navigator.of(context).popUntil((route) => route.isFirst);
                       },
                       img: Assets.png.home128,
-                      title: 'トップに戻る'
+                      title: 'トップに戻る',
                   ),
                 ],
               ),
@@ -137,33 +136,33 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
                     TextWidget.titleGrayLargeBold('総合スコア: '),
                     TextWidget.titleRedLargestBold(calculateTotalScore(tangoList.lesson.quizResults).toStringAsFixed(3)),
                     TextWidget.titleGrayLargeBold(' 点'),
-                  ]
+                  ],
               ),
               Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     RankExt.doubleToRank(score: calculateTotalScore(tangoList.lesson.quizResults)).img.image(width: 30, height: 30),
-                    SizedBox(width: SizeConfig.mediumSmallMargin),
+                    const SizedBox(width: SizeConfig.mediumSmallMargin),
                     TextWidget.titleRedLargestBold(RankExt.doubleToRank(score: calculateTotalScore(tangoList.lesson.quizResults)).title),
-                  ]
+                  ],
               ),
               const SizedBox(height: SizeConfig.smallMargin),
             ],
           ),
-        )
+        ),
     );
   }
 
   Widget tangoListItem(TangoEntity tango) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: SizeConfig.mediumSmallMargin),
+      padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
       child: InkWell(
         onTap: () {
           analytics(LessonCompItem.tangoCard);
           DictionaryDetail.navigateTo(context, tangoEntity: tango);
         },
         child: Card(
-          child: Container(
+          child: SizedBox(
             width: double.infinity,
             height: itemCardHeight,
             child: Stack(
@@ -174,9 +173,9 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       wordStatus(tango),
-                      SizedBox(height: SizeConfig.smallestMargin,),
+                      const SizedBox(height: SizeConfig.smallestMargin,),
                       TextWidget.titleBlackMediumBold(tango.indonesian ?? ''),
-                      SizedBox(height: 2,),
+                      const SizedBox(height: 2,),
                       TextWidget.titleGraySmall(tango.japanese ?? ''),
                     ],
                   ),
@@ -184,7 +183,7 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
                 Align(
                   alignment: Alignment.topRight,
                   child: bookmark(tango),
-                )
+                ),
               ],
             ),
           ),
@@ -220,7 +219,7 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
           children: [
             img.image(height: 20, width: 20),
             const SizedBox(width: SizeConfig.smallMargin),
-            TextWidget.titleRedMedium(title)
+            TextWidget.titleRedMedium(title),
           ],
         ),
       ),
@@ -232,8 +231,8 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
         future: getBookmark(entity),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            WordStatus? status = snapshot.data as WordStatus?;
-            bool isBookmark = status == null ? false : status.isBookmarked;
+            final status = snapshot.data as WordStatus?;
+            final isBookmark = status == null ? false : status.isBookmarked;
             return Visibility(
               visible: isBookmark,
               child: Padding(
@@ -242,12 +241,12 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
               ),
             );
           } else {
-            return  Padding(
-              padding: const EdgeInsets.only(right: SizeConfig.mediumSmallMargin),
+            return  const Padding(
+              padding: EdgeInsets.only(right: SizeConfig.mediumSmallMargin),
               child: ShimmerWidget.rectangular(width: 24, height: 24,),
             );
           }
-        });
+        },);
   }
 
   Widget wordStatus(TangoEntity entity) {
@@ -260,12 +259,12 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
             return Row(
               children: [
                 statusType.icon,
-                SizedBox(width: SizeConfig.smallestMargin),
+                const SizedBox(width: SizeConfig.smallestMargin),
                 TextWidget.titleGraySmallest(statusType.title),
               ],
             );
           } else {
-            return Row(
+            return const Row(
               children: [
                 ShimmerWidget.circular(width: 16, height: 16),
                 SizedBox(width: SizeConfig.smallestMargin),
@@ -273,19 +272,19 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
               ],
             );
           }
-        });
+        },);
   }
 
   void analytics(LessonCompItem item, {String? others = ''}) {
     final eventDetail = AnalyticsEventAnalyticsEventDetail()
-      ..id = item.id.toString()
+      ..id = item.id
       ..screen = AnalyticsScreen.lectureSelector.name
       ..item = item.shortName
       ..action = AnalyticsActionType.tap.name
       ..others = others;
     FirebaseAnalyticsUtils.eventsTrack(AnalyticsEventEntity()
       ..name = item.name
-      ..analyticsEventDetail = eventDetail);
+      ..analyticsEventDetail = eventDetail,);
   }
 
   double calculateTotalScore(List<QuizResult> results) {
@@ -306,16 +305,15 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
         child: InkWell(
           onTap: () async {
             await showInterstitialAd();
-            shareSNS();
+            await shareSNS();
           },
-          child: Container(
+          child: SizedBox(
               height: 40,
               width: double.infinity,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
@@ -324,26 +322,26 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
                       TextWidget.titleGraySmallBold('SNSでシェア'),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
                     child: Icon(Icons.arrow_forward_ios_sharp, size: 20),
-                  )
+                  ),
                 ],
-              )
+              ),
           ),
-        )
+        ),
     );
   }
 
-  void shareSNS() async {
+  Future<void> shareSNS() async {
     final tangoList = ref.watch(tangoListControllerProvider);
     await screenshotController.capture().then((image) async {
       final directory = await getApplicationDocumentsDirectory();
       final file = await File('${directory.path}/temp.png').create();
       await file.writeAsBytes(image!);
-      SocialShare.shareOptions(
+      await SocialShare.shareOptions(
           '本日のインドネシア単語検定\nスコア: ${calculateTotalScore(tangoList.lesson.quizResults).toStringAsFixed(3)} 点\nランク: ${RankExt.doubleToRank(score: calculateTotalScore(tangoList.lesson.quizResults)).title}\n#BINTANGO #インドネシア語学習'
-          ,imagePath: file.path);
+          ,imagePath: file.path,);
     });
   }
 
@@ -352,16 +350,16 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
     await InterstitialAd.load(
         adUnitId: Platform.isIOS ?
           Config.adUnitIdIosInterstitial : Config.adUnitIdAndroidInterstitial,
-        request: AdRequest(),
+        request: const AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
             _interstitialAd = ad;
-            logger.d('Ad loaded.${ad}');
+            logger.d('Ad loaded.$ad');
           },
           onAdFailedToLoad: (LoadAdError error) {
             logger.d('Ad failed to load: $error');
           },
-        ));
+        ),);
   }
 
   Future<void> showInterstitialAd() async {

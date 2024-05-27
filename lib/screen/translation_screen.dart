@@ -1,12 +1,11 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/domain/tango_list_service.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
@@ -35,18 +34,18 @@ class TranslationScreen extends ConsumerStatefulWidget {
       builder: (context) {
         return const TranslationScreen();
       },
-    ));
+    ),);
   }
 }
 
 class _TranslationScreenState extends ConsumerState<TranslationScreen> {
   final itemCardHeight = 88.0;
   final GlobalKey<ScaffoldState> _key = GlobalKey();
-  List<TangoEntity> _searchedTango = [];
+  final List<TangoEntity> _searchedTango = [];
   AppDatabase? database;
   late BannerAd bannerAd;
   bool _isIndonesiaToJapanese = true;
-  TextEditingController _inputController = TextEditingController();
+  final TextEditingController _inputController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _inputFocusNode = FocusNode();
 
@@ -59,7 +58,7 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
     super.initState();
   }
 
-  void initializeDB() async {
+  Future<void> initializeDB() async {
     final _database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
         .addMigrations([migration1to2, migration2to3])
@@ -80,21 +79,21 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
           child: Column(
             children: [
               _titleBar(),
-              SizedBox(height: SizeConfig.smallMargin),
+              const SizedBox(height: SizeConfig.smallMargin),
               _inputField(),
               Flexible(
                 child: ListView.builder(
-                  padding: EdgeInsets.fromLTRB(0, SizeConfig.mediumSmallMargin, 0, SizeConfig.bottomBarHeight),
+                  padding: const EdgeInsets.fromLTRB(0, SizeConfig.mediumSmallMargin, 0, SizeConfig.bottomBarHeight),
                   itemBuilder: (BuildContext context, int index){
                     if (index == 0) {
                       return Container();
-                      return Container(
+                      return SizedBox(
                         height: 50,
                         width: double.infinity,
                         child: AdWidget(ad: bannerAd),
                       );
                     }
-                    TangoEntity tango = tangoList.translateMaster.includedTangos[index - 1];
+                    final tango = tangoList.translateMaster.includedTangos[index - 1];
                     return tangoListItem(tango);
                   },
                   itemCount: tangoList.translateMaster.includedTangos.length + 1,
@@ -108,30 +107,30 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
   }
 
   Widget _titleBar() {
-    const _japanese = 'Japanese';
-    const _indonesian = 'Indonesian';
+    const japanese = 'Japanese';
+    const indonesian = 'Indonesian';
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        TextWidget.titleRedMedium(_isIndonesiaToJapanese ? _indonesian : _japanese),
+        TextWidget.titleRedMedium(_isIndonesiaToJapanese ? indonesian : japanese),
         ElevatedButton(
           onPressed: () {
             setState(() => _isIndonesiaToJapanese = !_isIndonesiaToJapanese);
           },
-          child: Assets.png.reverse128.image(width: 24, height: 24),
           style: ElevatedButton.styleFrom(
-            shape: const CircleBorder()
+            shape: const CircleBorder(),
           ),
+          child: Assets.png.reverse128.image(width: 24, height: 24),
         ),
-        TextWidget.titleRedMedium(_isIndonesiaToJapanese ? _japanese : _indonesian),
+        TextWidget.titleRedMedium(_isIndonesiaToJapanese ? japanese : indonesian),
       ],
     );
   }
 
   Widget _inputField() {
-    const _japanese = '文章を入力してください';
-    const _indonesian = 'Silakan masukkan kalimatnya';
+    const japanese = '文章を入力してください';
+    const indonesian = 'Silakan masukkan kalimatnya';
     final tangoList = ref.watch(tangoListControllerProvider);
 
     return Form(
@@ -143,23 +142,22 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
               Flexible(
                 child: TextFormField(
                   maxLines: null,
-                  minLines: null,
                   focusNode: _inputFocusNode,
                   controller: _inputController,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     filled: true,
-                    hintText: _isIndonesiaToJapanese ? _indonesian : _japanese,
+                    hintText: _isIndonesiaToJapanese ? indonesian : japanese,
                     alignLabelWithHint: true,
                     suffixIcon: IconButton(
-                      icon: Icon(Icons.clear),
-                      onPressed: () => _inputController.clear(),
+                      icon: const Icon(Icons.clear),
+                      onPressed: _inputController.clear,
                     ),
                   ),
                   onSaved: (value) async {
                     logger.d('search orgin value: $value');
                     if (value != null) {
-                      ref.read(tangoListControllerProvider.notifier).translate(value, isIndonesianToJapanese: _isIndonesiaToJapanese).then((result) async {
+                      await ref.read(tangoListControllerProvider.notifier).translate(value, isIndonesianToJapanese: _isIndonesiaToJapanese).then((result) async {
                         if (!_isIndonesiaToJapanese) {
                           await ref.read(tangoListControllerProvider.notifier).searchIncludeWords(result.text ?? '');
                         } else {
@@ -176,14 +174,14 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
                   FocusScope.of(context).unfocus();
                   _formKey.currentState?.save();
                 },
-                child: Assets.png.search128.image(width: 24, height: 24),
                 style: ElevatedButton.styleFrom(
-                    shape: const CircleBorder()
+                    shape: const CircleBorder(),
                 ),
+                child: Assets.png.search128.image(width: 24, height: 24),
               ),
             ],
           ),
-          SizedBox(height: SizeConfig.mediumSmallMargin),
+          const SizedBox(height: SizeConfig.mediumSmallMargin),
           Container(
             decoration: BoxDecoration(
               border: Border.all(color: ColorConfig.bgGrey),
@@ -194,24 +192,24 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
               padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
               child: TextWidget.titleGrayMedium(
                   tangoList.translateMaster.translateApiResponse?.text ?? '',
-                  maxLines: 30),
+                  maxLines: 30,),
             ),
           ),
         ],
-      )
+      ),
     );
   }
 
   Widget tangoListItem(TangoEntity tango) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: SizeConfig.mediumSmallMargin),
+      padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
       child: InkWell(
         onTap: () {
           analytics(DictionaryItem.dictionaryItem);
           DictionaryDetail.navigateTo(context, tangoEntity: tango);
         },
         child: Card(
-          child: Container(
+          child: SizedBox(
             width: double.infinity,
             height: itemCardHeight,
             child: Stack(
@@ -222,9 +220,9 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       wordStatus(tango),
-                      SizedBox(height: SizeConfig.smallestMargin,),
+                      const SizedBox(height: SizeConfig.smallestMargin,),
                       TextWidget.titleBlackMediumBold(tango.indonesian ?? ''),
-                      SizedBox(height: 2,),
+                      const SizedBox(height: 2,),
                       TextWidget.titleGraySmall(tango.japanese ?? ''),
                     ],
                   ),
@@ -232,7 +230,7 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
                 Align(
                   alignment: Alignment.topRight,
                   child: bookmark(tango),
-                )
+                ),
               ],
             ),
           ),
@@ -258,8 +256,8 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
         future: getBookmark(entity),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            WordStatus? status = snapshot.data as WordStatus?;
-            bool isBookmark = status == null ? false : status.isBookmarked;
+            final status = snapshot.data as WordStatus?;
+            final isBookmark = status == null ? false : status.isBookmarked;
             return Visibility(
               visible: isBookmark,
               child: Padding(
@@ -268,12 +266,12 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
               ),
             );
           } else {
-            return  Padding(
-              padding: const EdgeInsets.only(right: SizeConfig.mediumSmallMargin),
+            return  const Padding(
+              padding: EdgeInsets.only(right: SizeConfig.mediumSmallMargin),
               child: ShimmerWidget.rectangular(width: 24, height: 24,),
             );
           }
-        });
+        },);
   }
 
   Widget wordStatus(TangoEntity entity) {
@@ -286,12 +284,12 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
             return Row(
               children: [
                 statusType.icon,
-                SizedBox(width: SizeConfig.smallestMargin),
+                const SizedBox(width: SizeConfig.smallestMargin),
                 TextWidget.titleGraySmallest(statusType.title),
               ],
             );
           } else {
-            return Row(
+            return const Row(
               children: [
                 ShimmerWidget.circular(width: 16, height: 16),
                 SizedBox(width: SizeConfig.smallestMargin),
@@ -299,24 +297,24 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
               ],
             );
           }
-        });
+        },);
   }
 
   void analytics(DictionaryItem item, {String? others = ''}) {
     final eventDetail = AnalyticsEventAnalyticsEventDetail()
-      ..id = item.id.toString()
+      ..id = item.id
       ..screen = AnalyticsScreen.lectureSelector.name
       ..item = item.shortName
       ..action = AnalyticsActionType.tap.name
       ..others = others;
     FirebaseAnalyticsUtils.eventsTrack(AnalyticsEventEntity()
       ..name = item.name
-      ..analyticsEventDetail = eventDetail);
+      ..analyticsEventDetail = eventDetail,);
   }
 
   void initializeBannerAd() {
-    final BannerAdListener listener = BannerAdListener(
-      onAdLoaded: (Ad ad) => logger.d('Ad loaded.${ad}'),
+    final listener = BannerAdListener(
+      onAdLoaded: (Ad ad) => logger.d('Ad loaded.$ad'),
       onAdFailedToLoad: (Ad ad, LoadAdError error) {
         ad.dispose();
         logger.d('Ad failed to load: $error');
@@ -330,7 +328,7 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
       bannerAd = BannerAd(
         adUnitId: Platform.isIOS ? Config.adUnitIdIosBanner : Config.adUnitIdAndroidBanner,
         size: AdSize.banner,
-        request: AdRequest(),
+        request: const AdRequest(),
         listener: listener,
       );
     });

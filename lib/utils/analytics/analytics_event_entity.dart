@@ -4,14 +4,14 @@ import 'package:indonesia_flash_card/generated/json/analytics_event_entity.g.dar
 
 @JsonSerializable()
 class AnalyticsEventEntity {
-
-	String? name;
-	@JSONField(name: "analytics_event_detail")
-	AnalyticsEventAnalyticsEventDetail? analyticsEventDetail;
   
   AnalyticsEventEntity();
 
   factory AnalyticsEventEntity.fromJson(Map<String, dynamic> json) => $AnalyticsEventEntityFromJson(json);
+
+	String? name;
+	@JSONField(name: 'analytics_event_detail')
+	AnalyticsEventAnalyticsEventDetail? analyticsEventDetail;
 
   Map<String, dynamic> toJson() => $AnalyticsEventEntityToJson(this);
 
@@ -23,16 +23,16 @@ class AnalyticsEventEntity {
 
 @JsonSerializable()
 class AnalyticsEventAnalyticsEventDetail {
+  
+  AnalyticsEventAnalyticsEventDetail();
+
+  factory AnalyticsEventAnalyticsEventDetail.fromJson(Map<String, dynamic> json) => $AnalyticsEventAnalyticsEventDetailFromJson(json);
 
 	String? id;
 	String? screen;
 	String? action;
 	String? item;
 	String? others;
-  
-  AnalyticsEventAnalyticsEventDetail();
-
-  factory AnalyticsEventAnalyticsEventDetail.fromJson(Map<String, dynamic> json) => $AnalyticsEventAnalyticsEventDetailFromJson(json);
 
   Map<String, dynamic> toJson() => $AnalyticsEventAnalyticsEventDetailToJson(this);
 

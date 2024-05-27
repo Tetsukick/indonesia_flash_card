@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:indonesia_flash_card/api/api_error.dart';
 import 'package:indonesia_flash_card/api/response/response_object.dart';
 import 'package:indonesia_flash_card/config/config.dart';
@@ -12,11 +11,11 @@ import 'custom_exception.dart';
 final DIO = Dio();
 
 class ApiClient {
+
+  ApiClient(this.apiKey, this._baseUrl, this.logger);
   final String _baseUrl;
   final String apiKey;
   final Logger logger;
-
-  ApiClient(this.apiKey, this._baseUrl, this.logger);
 
   // Http requests
 
@@ -28,10 +27,10 @@ class ApiClient {
     Map<String, String>? queryParams,
     String? preferredUrl,
     Map<String, dynamic>? headers,
-    String? token
+    String? token,
   }) async {
-    final String url = buildUrl(endpoint: endpoint, queryParams: queryParams, preferredUrl: preferredUrl);
-    Map<String, dynamic> requestHeaders = buildHeaders(token: token);
+    final url = buildUrl(endpoint: endpoint, queryParams: queryParams, preferredUrl: preferredUrl);
+    final requestHeaders = buildHeaders(token: token);
     if (headers != null) {
       requestHeaders.addAll(headers);
     }
@@ -39,7 +38,7 @@ class ApiClient {
     try {
       final response = await DIO.get<dynamic>(url, options: Options(headers: requestHeaders));
 
-      ApiResponse apiResponse = handleResponse(response);
+      final apiResponse = handleResponse(response);
 
       if (serializer == null) {
         return apiResponse.body as T;
@@ -47,28 +46,19 @@ class ApiClient {
       return serializer(apiResponse.body);
     } on ApiException catch (ex) {
       // If the exception caught is an ApiException, then it isn't actually unexpected. We just throw it again
-      logger.d('Unexepected exception obtained with request GET ' +
-          endpoint +
-          '\nException: ' +
-          ex.toString());
-      throw ex;
+      logger.d('Unexepected exception obtained with request GET $endpoint\nException: $ex',);
+      rethrow;
     } on DioError catch (ex) {
-      logger.d('Unexepected exception obtained with request GET ' +
-          endpoint +
-          '\nException: ' +
-          ex.toString());
+      logger.d('Unexepected exception obtained with request GET $endpoint\nException: $ex',);
 
       handleError(ex.response);
       throw ApiException(
           ApiError(detail: ex.error.toString()),
-          ex.response?.statusCode ?? -1);
+          ex.response?.statusCode ?? -1,);
     } catch (ex) {
-      logger.d('Unexepected exception obtained with request GET ' +
-          endpoint +
-          '\nException: ' +
-          ex.toString());
+      logger.d('Unexepected exception obtained with request GET $endpoint\nException: $ex',);
       throw CustomException(
-          "Something is wrong with your request!", ex, -1);
+          'Something is wrong with your request!', ex, -1,);
     }
   }
 
@@ -80,46 +70,40 @@ class ApiClient {
     Map? body,
     Map<String, dynamic>? headers,
     String? token,
-    String? preferredUrl
+    String? preferredUrl,
   }) async {
-    final String url = buildUrl(endpoint: endpoint, preferredUrl: preferredUrl);
-    Map<String, dynamic> requestHeaders = buildHeaders(token: token);
+    final url = buildUrl(endpoint: endpoint, preferredUrl: preferredUrl);
+    final requestHeaders = buildHeaders(token: token);
     if (headers != null) {
       requestHeaders.addAll(headers);
     }
     try {
       print(body);
 
-      final Response response = await DIO.post<dynamic>(
+      final response = await DIO.post<dynamic>(
           url,
           options: Options(headers: requestHeaders),
           data: body,
       );
 
-      print(response.data.toString());
+      print(response.data);
 
-      ApiResponse apiResponse = handleResponse(response);
+      final apiResponse = handleResponse(response);
 
       return serializer(apiResponse.body);
-    } on ApiException catch (ex) {
+    } on ApiException {
       // If the exception caught is an ApiException, then it isn't actually unexpected. We just throw it again
-      throw ex;
+      rethrow;
     } on DioError catch (ex) {
-      logger.d('Unexepected exception obtained with request POST ' +
-          endpoint +
-          '\nException: ' +
-          ex.toString());
+      logger.d('Unexepected exception obtained with request POST $endpoint\nException: $ex',);
 
       handleError(ex.response);
       throw CustomException(
-          "Something is wrong with your request", ex, ex.response?.statusCode ?? -1);
+          'Something is wrong with your request', ex, ex.response?.statusCode ?? -1,);
     } catch (ex) {
-      logger.d('Unexepected exception obtained with request POST ' +
-          endpoint +
-          '\nException: ' +
-          ex.toString());
+      logger.d('Unexepected exception obtained with request POST $endpoint\nException: $ex',);
       throw CustomException(
-          "Something is wrong with your request", ex, -1);
+          'Something is wrong with your request', ex, -1,);
     }
 
   }
@@ -128,15 +112,10 @@ class ApiClient {
   // It works for either successful and failing responses, and the status code should be used later to understand whether the response succeeded or not
   // In the case of obtaining an invalid body (i.e. an XML that would fail when parsed as a JSON), it will throw the corresponding exception
   ApiResponse handleResponse(Response response) {
-    logger.d('Response for ' +
-        response.requestOptions.path +
-        '\nStatus code: ' +
-        response.statusCode.toString() +
-        '\nBody:\n' +
-        response.data.toString());
+    logger.d('Response for ${response.requestOptions.path}\nStatus code: ${response.statusCode}\nBody:\n${response.data}',);
 
 
-    Map<String, dynamic> body = Map<String, dynamic>();
+    var body = <String, dynamic>{};
     if (response.data != null) {
       body = response.data as Map<String, dynamic>;
     }
@@ -147,7 +126,7 @@ class ApiClient {
       return apiResponse;
     } else {
       handleError(response);
-      ApiError error = ApiError.fromJson(apiResponse.body);
+      final error = ApiError.fromJson(apiResponse.body);
       throw ApiException(error, apiResponse.statusCode);
     }
   }
@@ -155,30 +134,30 @@ class ApiClient {
 
   // Creates a Map with the necessary headers for any request sent to our API
   Map<String, dynamic> buildHeaders({
-    String? token
+    String? token,
   }) {
-    Map<String, String> headers = Map();
+    final headers = <String, String>{};
 
     headers[Config.apiKeyHeader] = apiKey;
-    headers[Config.contentTypeHeader] = "application/json";
+    headers[Config.contentTypeHeader] = 'application/json';
 
-    print("token is $token");
+    print('token is $token');
     if (token != null) {
-      headers[Config.authorizationHeader] = "Bearer $token";
+      headers[Config.authorizationHeader] = 'Bearer $token';
     }
 
     return headers;
   }
 
   String buildUrl(
-      {required String endpoint, Map<String, String>? queryParams, String? preferredUrl}) {
-    var apiUri = preferredUrl != null ? Uri.parse(preferredUrl) : Uri.parse(_baseUrl);
-    final apiPath = apiUri.path+"/"+endpoint;
+      {required String endpoint, Map<String, String>? queryParams, String? preferredUrl,}) {
+    final apiUri = preferredUrl != null ? Uri.parse(preferredUrl) : Uri.parse(_baseUrl);
+    final apiPath = '${apiUri.path}/$endpoint';
     final uri = Uri(
       scheme: apiUri.scheme,
       host: apiUri.host,
       path: apiPath,
-      queryParameters: queryParams
+      queryParameters: queryParams,
     ).toString();
     return uri;
   }

@@ -48,19 +48,19 @@ class LessonSelectorScreen extends ConsumerStatefulWidget {
       builder: (context) {
         return const LessonSelectorScreen();
       },
-    ));
+    ),);
   }
 }
 
 class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   late Future<List<LectureFolder>> getPossibleLectures;
-  int _currentFrequencyIndex = 0;
+  final int _currentFrequencyIndex = 0;
   final CarouselController _frequencyCarouselController = CarouselController();
-  int _currentLevelIndex = 0;
+  final int _currentLevelIndex = 0;
   final CarouselController _levelCarouselController = CarouselController();
-  int _currentCategoryIndex = 0;
+  final int _currentCategoryIndex = 0;
   final CarouselController _categoryCarouselController = CarouselController();
-  int _currentPartOfSpeechIndex = 0;
+  final int _currentPartOfSpeechIndex = 0;
   final CarouselController _partOfSpeechCarouselController = CarouselController();
   List<WordStatus> wordStatusList = [];
   List<WordStatus> bookmarkList = [];
@@ -68,7 +68,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   late AppDatabase database;
   late BannerAd bannerAd;
   final RefreshController _refreshController =
-    RefreshController(initialRefresh: false);
+    RefreshController();
   bool _isAlreadyTestedToday = false;
   bool _isLoadTangoList = false;
   double progressReloadData = 0;
@@ -82,16 +82,16 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     initializeBannerAd();
   }
 
-  void initializeDB() async {
+  Future<void> initializeDB() async {
     final _database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
         .addMigrations([migration1to2, migration2to3])
         .build();
     setState(() => database = _database);
 
-    getAllWordStatus();
-    getAllActivity();
-    getBookmark();
+    await getAllWordStatus();
+    await getAllActivity();
+    await getBookmark();
   }
 
   Future<void> initTangoList() async {
@@ -100,24 +100,18 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
       folder: lectures.first,
       onProgress: (percentage) {
         setState(() => progressReloadData = percentage);
-      }
+      },
     );
     setState(() => _isLoadTangoList = true);
     await ref.read(tangoListControllerProvider.notifier).getTotalAchievement();
     setState(() {});
   }
 
-  void initFCM() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
+  Future<void> initFCM() async {
+    final messaging = FirebaseMessaging.instance;
 
-    NotificationSettings settings = await messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
+    final settings = await messaging.requestPermission(
+      
     );
 
     logger.d('FCM User granted permission: ${settings.authorizationStatus}');
@@ -131,7 +125,6 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     return Stack(
       children: [
         SmartRefresher(
-          enablePullDown: true,
           controller: _refreshController,
           header: WaterDropMaterialHeader(
             backgroundColor: Theme.of(context).primaryColor,
@@ -143,10 +136,9 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                   SizeConfig.mediumMargin,
                   SizeConfig.mediumMargin,
                   SizeConfig.mediumMargin,
-                  SizeConfig.bottomBarHeight),
+                  SizeConfig.bottomBarHeight,),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   _userSection(),
                   _todayTangTest(),
@@ -196,7 +188,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                   ),
                   const Spacer(),
                 ],
-              )
+              ),
             ),
           ),
         ),
@@ -208,7 +200,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     if (Platform.isAndroid) {
       return Container();
     } else {
-      return Container(
+      return SizedBox(
         height: 50,
         width: double.infinity,
         child: AdWidget(ad: bannerAd),
@@ -219,21 +211,20 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   Widget _userSection() {
     final tangoMaster = ref.watch(tangoListControllerProvider);
     return Card(
-        child: Container(
+        child: SizedBox(
             height: 120,
             width: double.infinity,
             child: Column(
               children: [
-                Container(
+                SizedBox(
                   height: 90,
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       _userSectionItem(
                           title: '総単語数',
                           data: tangoMaster.dictionary.count,
-                          unitTitle: '単語'
+                          unitTitle: '単語',
                       ),
                       _separater(),
                       _userSectionItemTangoStatus(title: '覚えた単語数'),
@@ -241,7 +232,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                       _userSectionItem(
                           title: '累計学習日数',
                           data: activityList.map((e) => e.date).toList().toSet().toList().length,
-                          unitTitle: '日'
+                          unitTitle: '日',
                       ),
                     ],
                   ),
@@ -249,7 +240,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                 LinearPercentIndicator(
                   width: MediaQuery.of(context).size.width - 40,
                   animation: true,
-                  lineHeight: 20.0,
+                  lineHeight: 20,
                   animationDuration: 2500,
                   percent: tangoMaster.totalAchievement,
                   center: Text('${(tangoMaster.totalAchievement*100).toStringAsFixed(2)} %'),
@@ -257,8 +248,8 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                   progressColor: ColorConfig.green,
                 ),
               ],
-            )
-        )
+            ),
+        ),
     );
   }
 
@@ -269,23 +260,22 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
           child: InkWell(
             onTap: () async {
               if (await _confirmAlreadyTestedToday()) {
-                Utils.showSimpleAlert(context,
+                await Utils.showSimpleAlert(context,
                     title: 'インドネシア語単語力検定は1日1回となっております。',
-                    content: 'また明日お待ちしております。');
+                    content: 'また明日お待ちしております。',);
               } else {
                 analytics(LectureSelectorItem.todayTest);
-                ref.read(tangoListControllerProvider.notifier).setTestData();
+                await ref.read(tangoListControllerProvider.notifier).setTestData();
                 QuizScreen.navigateTo(context);
               }
             },
-            child: Container(
+            child: SizedBox(
                 height: 40,
                 width: double.infinity,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
@@ -294,29 +284,29 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                         TextWidget.titleGraySmallBold('今日のインドネシア単語力検定'),
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
                       child: Icon(Icons.arrow_forward_ios_sharp, size: 20),
-                    )
+                    ),
                   ],
-                )
+                ),
             ),
-          )
+          ),
       ),
     );
   }
 
   Future<bool> _confirmAlreadyTestedToday() async {
-    bool _tmpIsAlradyTestedToday = false;
+    var tmpIsAlradyTestedToday = false;
     final lastTestDate = await PreferenceKey.lastTestDate.getString();
     if (lastTestDate == null) {
-      _tmpIsAlradyTestedToday = false;
+      tmpIsAlradyTestedToday = false;
     } else {
-      _tmpIsAlradyTestedToday =
+      tmpIsAlradyTestedToday =
           lastTestDate == Utils.dateTimeToString(DateTime.now());
     }
-    setState(() => _isAlreadyTestedToday = _tmpIsAlradyTestedToday);
-    return _tmpIsAlradyTestedToday;
+    setState(() => _isAlreadyTestedToday = tmpIsAlradyTestedToday);
+    return tmpIsAlradyTestedToday;
   }
 
   Widget _bookMarkLecture() {
@@ -329,14 +319,13 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
               ref.read(tangoListControllerProvider.notifier).setBookmarkLessonsData();
               FlashCardScreen.navigateTo(context);
             },
-            child: Container(
+            child: SizedBox(
                 height: 40,
                 width: double.infinity,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
@@ -345,14 +334,14 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                         TextWidget.titleGraySmallBold('ブックマークの復習 ${bookmarkList.length}語'),
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
                       child: Icon(Icons.arrow_forward_ios_sharp, size: 20),
-                    )
+                    ),
                   ],
-                )
+                ),
             ),
-          )
+          ),
       ),
     );
   }
@@ -360,21 +349,20 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   Widget _notRememberTangoLecture() {
     return Visibility(
       visible: wordStatusList.where((element)
-        => element.status == WordStatusType.notRemembered.id).isNotEmpty,
+        => element.status == WordStatusType.notRemembered.id,).isNotEmpty,
       child: Card(
           child: InkWell(
             onTap: () {
               ref.read(tangoListControllerProvider.notifier).setNotRememberedTangoLessonsData();
               FlashCardScreen.navigateTo(context);
             },
-            child: Container(
+            child: SizedBox(
                 height: 40,
                 width: double.infinity,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
@@ -383,21 +371,20 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                         TextWidget.titleGraySmallBold('未暗記・誤答の復習 ${wordStatusList.where((element) => element.status == WordStatusType.notRemembered.id).length}語'),
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
                       child: Icon(Icons.arrow_forward_ios_sharp, size: 20),
-                    )
+                    ),
                   ],
-                )
+                ),
             ),
-          )
+          ),
       ),
     );
   }
 
   Widget _userSectionItem({required String title, required int data, required String unitTitle}) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(
           padding: const EdgeInsets.all(SizeConfig.smallMargin),
@@ -407,21 +394,19 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(SizeConfig.smallMargin, 0, SizeConfig.smallMargin, SizeConfig.smallMargin,),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 TextWidget.titleBlackLargeBold(data.toString()),
                 TextWidget.titleGraySmallBold(unitTitle),
               ],
             ),
           ),
-        )
+        ),
       ],
     );
   }
 
   Widget _userSectionItemTangoStatus({required String title}) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(
           padding: const EdgeInsets.all(SizeConfig.smallMargin),
@@ -429,25 +414,23 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             wordStatus(WordStatusType.perfectRemembered),
-            SizedBox(width: SizeConfig.smallestMargin),
+            const SizedBox(width: SizeConfig.smallestMargin),
             TextWidget.titleBlackMediumBold(
                 wordStatusList.where((element)
-                  => element.status == WordStatusType.perfectRemembered.id)
-                    .length.toString()),
+                  => element.status == WordStatusType.perfectRemembered.id,)
+                    .length.toString(),),
           ],
         ),
         Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             wordStatus(WordStatusType.remembered),
-            SizedBox(width: SizeConfig.smallestMargin),
+            const SizedBox(width: SizeConfig.smallestMargin),
             TextWidget.titleBlackMediumBold(
                 wordStatusList.where((element)
-                => element.status == WordStatusType.remembered.id)
-                    .length.toString()),
+                => element.status == WordStatusType.remembered.id,)
+                    .length.toString(),),
           ],
         ),
       ],
@@ -458,7 +441,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     return Row(
       children: [
         statusType.icon,
-        SizedBox(width: SizeConfig.smallestMargin),
+        const SizedBox(width: SizeConfig.smallestMargin),
         TextWidget.titleGraySmallest(statusType.title),
       ],
     );
@@ -477,7 +460,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
 
   Widget _sectionTitle(String title) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(0, SizeConfig.mediumMargin, SizeConfig.mediumSmallMargin, SizeConfig.smallMargin),
+      padding: const EdgeInsets.fromLTRB(0, SizeConfig.mediumMargin, SizeConfig.mediumSmallMargin, SizeConfig.smallMargin),
       child: TextWidget.titleBlackLargeBold(title),
     );
   }
@@ -487,7 +470,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
       items: _frequencyWidgets(),
       controller: _frequencyCarouselController,
       index: _currentFrequencyIndex,
-      autoPlay: Platform.isIOS
+      autoPlay: Platform.isIOS,
     );
   }
 
@@ -496,7 +479,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
       items: _levelWidgets(),
       controller: _levelCarouselController,
       index: _currentLevelIndex,
-      autoPlay: Platform.isIOS
+      autoPlay: Platform.isIOS,
     );
   }
 
@@ -505,7 +488,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
       items: _categoryWidgets(),
       controller: _categoryCarouselController,
       index: _currentCategoryIndex,
-      autoPlay: Platform.isIOS
+      autoPlay: Platform.isIOS,
     );
   }
 
@@ -514,7 +497,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
       items: _partOfSpeechWidgets(),
       controller: _partOfSpeechCarouselController,
       index: _currentPartOfSpeechIndex,
-      autoPlay: Platform.isIOS
+      autoPlay: Platform.isIOS,
     );
   }
 
@@ -524,7 +507,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     required int index,
     bool autoPlay = false,
     bool visibleIndicator = false,
-    bool enlargeCenterPage = false}) {
+    bool enlargeCenterPage = false,}) {
     return Column(
       children: [
         CarouselSlider(
@@ -534,10 +517,10 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
               autoPlay: autoPlay,
               enlargeCenterPage: enlargeCenterPage,
               viewportFraction: 0.3,
-              aspectRatio: 2.0,
-              onPageChanged: (_index, reason) {
-                setState(() => index = _index);
-              }
+              aspectRatio: 2,
+              onPageChanged: (index, reason) {
+                setState(() => index = index);
+              },
           ),
         ),
         Visibility(
@@ -554,7 +537,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: ColorConfig.primaryRed900
-                          .withOpacity(index == entry.key ? 0.9 : 0.2)),
+                          .withOpacity(index == entry.key ? 0.9 : 0.2),),
                 ),
               );
             }).toList(),
@@ -565,35 +548,35 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   }
 
   List<Widget> _frequencyWidgets() {
-    List<Widget> _frequency = [];
-    FrequencyGroup.values.forEach((element) {
-      _frequency.add(LessonCard(frequencyGroup: element));
-    });
-    return _frequency;
+    final frequency = <Widget>[];
+    for (final element in FrequencyGroup.values) {
+      frequency.add(LessonCard(frequencyGroup: element));
+    }
+    return frequency;
   }
 
   List<Widget> _levelWidgets() {
-    List<Widget> _levels = [];
-    LevelGroup.values.forEach((element) {
-      _levels.add(LessonCard(levelGroup: element));
-    });
-    return _levels;
+    final levels = <Widget>[];
+    for (final element in LevelGroup.values) {
+      levels.add(LessonCard(levelGroup: element));
+    }
+    return levels;
   }
 
   List<Widget> _categoryWidgets() {
-    List<Widget> _categories = [];
-    TangoCategory.values.forEach((element) {
-      _categories.add(LessonCard(category: element));
-    });
-    return _categories;
+    final categories = <Widget>[];
+    for (final element in TangoCategory.values) {
+      categories.add(LessonCard(category: element));
+    }
+    return categories;
   }
 
   List<Widget> _partOfSpeechWidgets() {
-    List<Widget> _partOfSpeechs = [];
-    PartOfSpeechEnum.values.forEach((element) {
-      _partOfSpeechs.add(LessonCard(partOfSpeech: element));
-    });
-    return _partOfSpeechs;
+    final partOfSpeechs = <Widget>[];
+    for (final element in PartOfSpeechEnum.values) {
+      partOfSpeechs.add(LessonCard(partOfSpeech: element));
+    }
+    return partOfSpeechs;
   }
 
   Future<void> getAllWordStatus() async {
@@ -607,7 +590,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     final _activityList = await activityDao.findAllActivity();
     setState(() => activityList = _activityList);
 
-    _requestAppReview();
+    await _requestAppReview();
   }
 
   Future<void> _requestAppReview() async {
@@ -628,19 +611,19 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
 
   void analytics(LectureSelectorItem item, {String? others = ''}) {
     final eventDetail = AnalyticsEventAnalyticsEventDetail()
-      ..id = item.id.toString()
+      ..id = item.id
       ..screen = AnalyticsScreen.lectureSelector.name
       ..item = item.shortName
       ..action = AnalyticsActionType.tap.name
       ..others = others;
     FirebaseAnalyticsUtils.eventsTrack(AnalyticsEventEntity()
       ..name = item.name
-      ..analyticsEventDetail = eventDetail);
+      ..analyticsEventDetail = eventDetail,);
   }
 
   void initializeBannerAd() {
-    final BannerAdListener listener = BannerAdListener(
-      onAdLoaded: (Ad ad) => logger.d('Ad loaded.${ad}'),
+    final listener = BannerAdListener(
+      onAdLoaded: (Ad ad) => logger.d('Ad loaded.$ad'),
       onAdFailedToLoad: (Ad ad, LoadAdError error) {
         ad.dispose();
         logger.d('Ad failed to load: $error');
@@ -654,7 +637,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
       bannerAd = BannerAd(
         adUnitId: Platform.isIOS ? Config.adUnitIdIosBanner : Config.adUnitIdAndroidBanner,
         size: AdSize.banner,
-        request: AdRequest(),
+        request: const AdRequest(),
         listener: listener,
       );
     });
@@ -662,10 +645,10 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     bannerAd.load();
   }
 
-  void _onRefresh() async{
-    initializeDB();
+  Future<void> _onRefresh() async{
+    await initializeDB();
     await initTangoList();
-    _confirmAlreadyTestedToday();
+    await _confirmAlreadyTestedToday();
     _refreshController.refreshCompleted();
     setState(() {});
   }

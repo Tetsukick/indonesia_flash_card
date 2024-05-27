@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:indonesia_flash_card/api/clients/general_client.dart';
 import 'package:logger/logger.dart';
 
 class Api {
-  final GeneralClient generalClient;
 
   Api({
     required this.generalClient,
@@ -23,4 +21,5 @@ class Api {
         // add more clients here
     );
   }
+  final GeneralClient generalClient;
 }

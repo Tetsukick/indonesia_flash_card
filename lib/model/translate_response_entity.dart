@@ -4,13 +4,13 @@ import 'package:indonesia_flash_card/generated/json/translate_response_entity.g.
 
 @JsonSerializable()
 class TranslateResponseEntity {
-
-	int? code;
-	String? text;
   
   TranslateResponseEntity();
 
   factory TranslateResponseEntity.fromJson(Map<String, dynamic> json) => $TranslateResponseEntityFromJson(json);
+
+	int? code;
+	String? text;
 
   Map<String, dynamic> toJson() => $TranslateResponseEntityToJson(this);
 
