@@ -217,7 +217,12 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
       children: [
         Assets.png.indonesia64.image(height: _iconHeight, width: _iconWidth),
         const SizedBox(width: SizeConfig.mediumSmallMargin),
-        Flexible(child: TextWidget.titleBlackLargestBold(widget.tangoEntity.indonesian!, maxLines: 2)),
+        Flexible(
+            child: TextWidget.titleBlackLargestBoldSelectable(
+                widget.tangoEntity.indonesian!,
+                maxLines: 2,
+            ),
+        ),
       ],
     );
   }
@@ -227,7 +232,12 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
       children: [
         Assets.png.japanFuji64.image(height: _iconHeight, width: _iconWidth),
         const SizedBox(width: SizeConfig.mediumSmallMargin),
-        Flexible(child: TextWidget.titleGrayLargeBold(widget.tangoEntity.japanese!, maxLines: 2)),
+        Flexible(
+            child: TextWidget.titleGrayLargeBoldSelectable(
+                widget.tangoEntity.japanese!,
+                maxLines: 2,
+            ),
+        ),
       ],
     );
   }
@@ -237,7 +247,12 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
       children: [
         Assets.png.english64.image(height: _iconHeight, width: _iconWidth),
         const SizedBox(width: SizeConfig.mediumSmallMargin),
-        Flexible(child: TextWidget.titleGrayLargeBold(widget.tangoEntity.english!, maxLines: 2)),
+        Flexible(
+            child: TextWidget.titleGrayLargeBoldSelectable(
+                widget.tangoEntity.english!,
+                maxLines: 2,
+            ),
+        ),
       ],
     );
   }
@@ -270,7 +285,12 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
       children: [
         Assets.png.example64.image(height: _iconHeight, width: _iconWidth),
         const SizedBox(width: SizeConfig.mediumSmallMargin),
-        Flexible(child: TextWidget.titleBlackLargeBold(widget.tangoEntity.example!, maxLines: 5)),
+        Flexible(
+            child: TextWidget.titleBlackLargeBoldSelectable(
+                widget.tangoEntity.example!,
+                maxLines: 5,
+            ),
+        ),
       ],
     );
   }
@@ -280,7 +300,12 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
       children: [
         Assets.png.japan64.image(height: _iconHeight, width: _iconWidth),
         const SizedBox(width: SizeConfig.mediumSmallMargin),
-        Flexible(child: TextWidget.titleGrayMediumBold(widget.tangoEntity.exampleJp!, maxLines: 5)),
+        Flexible(
+            child: TextWidget.titleGrayMediumBoldSelectable(
+                widget.tangoEntity.exampleJp!,
+                maxLines: 5,
+            ),
+        ),
       ],
     );
   }
@@ -292,7 +317,12 @@ class _DictionaryDetailState extends ConsumerState<DictionaryDetail> {
         children: [
           Assets.png.infoNotes.image(height: _iconHeight, width: _iconWidth),
           const SizedBox(width: SizeConfig.mediumSmallMargin),
-          Flexible(child: TextWidget.titleGrayMediumBold(widget.tangoEntity.description ?? '', maxLines: 10)),
+          Flexible(
+              child: TextWidget.titleGrayMediumBoldSelectable(
+                  widget.tangoEntity.description ?? '',
+                  maxLines: 10,
+              ),
+          ),
         ],
       ),
     );

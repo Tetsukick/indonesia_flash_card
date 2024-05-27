@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 
@@ -46,6 +47,22 @@ class TextWidget {
     );
   }
 
+  static Widget titleBlackLargeBoldSelectable(String data, {int maxLines = 1}) {
+    return SelectionArea(
+      child: AutoSizeText(
+        data,
+        maxLines: maxLines,
+        minFontSize: 16,
+        maxFontSize: 28,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: ColorConfig.fontBlack,
+          fontSize: 24,
+        ),
+      ),
+    );
+  }
+
   static Widget titleBlackLargestBold(String data, {int maxLines = 1}) {
     return AutoSizeText(
       data,
@@ -56,6 +73,22 @@ class TextWidget {
           fontWeight: FontWeight.bold,
           color: ColorConfig.fontBlack,
           fontSize: 32,
+      ),
+    );
+  }
+
+  static Widget titleBlackLargestBoldSelectable(String data, {int maxLines = 1}) {
+    return SelectionArea(
+      child: AutoSizeText(
+        data,
+        maxLines: maxLines,
+        minFontSize: 24,
+        maxFontSize: 32,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: ColorConfig.fontBlack,
+          fontSize: 32,
+        ),
       ),
     );
   }
@@ -102,6 +135,22 @@ class TextWidget {
     );
   }
 
+  static Widget titleGrayLargeBoldSelectable(String data, {int maxLines = 1}) {
+    return SelectionArea(
+      child: AutoSizeText(
+        data,
+        maxLines: maxLines,
+        minFontSize: 16,
+        maxFontSize: 24,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: ColorConfig.fontGrey,
+          fontSize: 24,
+        ),
+      ),
+    );
+  }
+
   static Widget titleGrayMediumBold(String data, {int maxLines = 1}) {
     return AutoSizeText(
       data,
@@ -112,6 +161,22 @@ class TextWidget {
           fontWeight: FontWeight.bold,
           color: ColorConfig.fontGrey,
           fontSize: 20,
+      ),
+    );
+  }
+
+  static Widget titleGrayMediumBoldSelectable(String data, {int maxLines = 1}) {
+    return SelectionArea(
+      child: AutoSizeText(
+        data,
+        maxLines: maxLines,
+        minFontSize: 14,
+        maxFontSize: 20,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: ColorConfig.fontGrey,
+          fontSize: 20,
+        ),
       ),
     );
   }

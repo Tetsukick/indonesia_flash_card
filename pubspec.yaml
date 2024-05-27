@@ -3,7 +3,7 @@ description: Flash card application of Indonesian language for Japanese
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 3.3.3+83
+version: 3.3.5+85
 
 environment:
   sdk: ">=2.15.1 <3.0.0"
@@ -20,7 +20,7 @@ dependencies:
 
   ## basic packages
   auto_size_text:
-  flutter_svg: ^1.0.3
+  flutter_svg: ^2.0.10+1
   flutter_gen:
   fluttertoast: ^8.0.8
   flutter_riverpod: ^2.1.2
@@ -30,17 +30,17 @@ dependencies:
   intl:
   shimmer:
   package_info: ^2.0.2
-  shared_preferences: ^2.2.2
+  shared_preferences: ^2.2.3
 
   ## Firebase packages
-  firebase_core: ^2.30.1
-  firebase_crashlytics: ^3.5.4
-  firebase_messaging: ^14.9.1
-  firebase_analytics: ^10.10.4
-  cloud_firestore: ^4.17.2
-  firebase_remote_config: ^4.4.4
+  firebase_core: ^2.31.1
+  firebase_crashlytics: ^3.5.6
+  firebase_messaging: ^14.9.3
+  firebase_analytics: ^10.10.6
+  cloud_firestore: ^4.17.4
+  firebase_remote_config: ^4.4.6
 
-  lottie: ^3.1.0
+  lottie: ^3.1.2
   carousel_slider: ^4.2.1
   curved_navigation_bar: ^1.0.3
   flutter_inappwebview:
@@ -56,7 +56,7 @@ dependencies:
   in_app_review: ^2.0.9
   flutter_dialogs: ^3.0.0
   social_share: ^2.3.1
-  screenshot: ^2.3.0
+  screenshot: ^3.0.0
   percent_indicator: ^4.2.3
   font_awesome_flutter:
   json_path:
