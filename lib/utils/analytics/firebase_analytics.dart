@@ -34,6 +34,7 @@ class FirebaseAnalyticsUtils {
   }
 
   static bool _canTrack() {
+    return true;
     if (Platform.isIOS) {
       return AppTrackingTransparency.trackingAuthorizationStatus == TrackingStatus.authorized;
     } else {
