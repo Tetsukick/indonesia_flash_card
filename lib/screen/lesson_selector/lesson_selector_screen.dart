@@ -110,9 +110,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   Future<void> initFCM() async {
     final messaging = FirebaseMessaging.instance;
 
-    final settings = await messaging.requestPermission(
-      
-    );
+    final settings = await messaging.requestPermission();
 
     logger.d('FCM User granted permission: ${settings.authorizationStatus}');
 
