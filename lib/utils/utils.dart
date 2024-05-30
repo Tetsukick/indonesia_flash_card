@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -103,7 +104,7 @@ class Utils {
   }
 
   static Future<void> showUploadSuccessDialog(BuildContext context) async {
-    await showGeneralDialog(
+    unawaited(showGeneralDialog(
         context: context,
         barrierDismissible: false,
         transitionDuration: const Duration(milliseconds: 300),
@@ -121,7 +122,7 @@ class Utils {
             ),
           );
         },
-    );
+    ));
     await Future<void>.delayed(const Duration(seconds: 3));
     Navigator.of(context).pop();
   }

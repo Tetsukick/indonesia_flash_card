@@ -427,7 +427,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   }
 
   Future<void> showTrueFalseDialog(bool isTrue, {required TangoEntity entity, int? remainTime}) async {
-    await showGeneralDialog(
+    unawaited(showGeneralDialog(
         context: context,
         barrierDismissible: false,
         transitionDuration: const Duration(milliseconds: 300),
@@ -460,7 +460,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
             ),
           );
         },
-    );
+    ),);
     await Future<void>.delayed(const Duration(seconds: 2));
     Navigator.of(context).pop();
   }
