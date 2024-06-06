@@ -54,9 +54,9 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: MenuItem.values.length,
+              itemCount: MenuItemExt.menuItemList.length,
               itemBuilder: (BuildContext context, int index) {
-                final menuItem = MenuItem.values[index];
+                final menuItem = MenuItemExt.menuItemList[index];
                 if (menuItem == MenuItem.settingSound) {
                   return _switchSettingRow(menuItem);
                 }
@@ -247,6 +247,20 @@ extension MenuItemExt on MenuItem {
         return MenuAnalyticsItem.developer;
       case MenuItem.licence:
         return MenuAnalyticsItem.license;
+    }
+  }
+
+  static List<MenuItem> get menuItemList {
+    if (Platform.isAndroid) {
+      return [
+        MenuItem.settingSound,
+        MenuItem.addNewTango,
+        MenuItem.privacyPolicy,
+        MenuItem.developerInfo,
+        MenuItem.licence
+      ];
+    } else {
+      return MenuItemExt.menuItemList;
     }
   }
 }
