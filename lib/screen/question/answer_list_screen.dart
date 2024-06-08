@@ -1,13 +1,17 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lottie/lottie.dart';
+
+// Project imports:
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/screen/question/components/answer_card.dart';
 import 'package:indonesia_flash_card/screen/question/components/question_title.dart';
 import 'package:indonesia_flash_card/utils/common_border.dart';
-import 'package:lottie/lottie.dart';
-
 import '../../flutter_flow/flutter_flow_icon_button.dart';
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../model/question_answer_entity.dart';

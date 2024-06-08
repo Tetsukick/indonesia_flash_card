@@ -1,6 +1,8 @@
+// Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+// Project imports:
 import 'logger.dart';
 
 class TimestampConverter implements JsonConverter<DateTime, dynamic> {

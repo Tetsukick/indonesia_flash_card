@@ -1,10 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:social_share/social_share.dart';
+
+// Project imports:
 import 'package:indonesia_flash_card/model/question_answer_entity.dart';
 import 'package:indonesia_flash_card/model/question_entity.dart';
 import 'package:indonesia_flash_card/screen/question/components/question_title.dart';
-import 'package:social_share/social_share.dart';
-
 import '../../../utils/logger.dart';
 import 'answer_title.dart';
 

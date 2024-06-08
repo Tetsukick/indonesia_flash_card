@@ -1,6 +1,8 @@
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
-import 'package:indonesia_flash_card/gen/assets.gen.dart';
 
+// Project imports:
+import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import '../utils/analytics/analytics_parameters.dart';
 
 enum WordStatusType {

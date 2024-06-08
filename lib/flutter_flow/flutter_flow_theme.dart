@@ -1,8 +1,10 @@
 // ignore_for_file: overridden_fields, annotate_overrides
 
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
+// Package imports:
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const kThemeModeKey = '__theme_mode__';

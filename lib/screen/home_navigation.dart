@@ -1,8 +1,14 @@
+// Dart imports:
 import 'dart:io';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/screen/dictionary_screen.dart';
 import 'package:indonesia_flash_card/screen/lesson_selector/lesson_selector_screen.dart';
@@ -10,7 +16,6 @@ import 'package:indonesia_flash_card/screen/menu_screen.dart';
 import 'package:indonesia_flash_card/screen/question/question_list.dart';
 import 'package:indonesia_flash_card/screen/translation_screen.dart';
 import 'package:indonesia_flash_card/utils/admob.dart';
-
 import '../config/color_config.dart';
 
 class HomeNavigation extends StatefulWidget {

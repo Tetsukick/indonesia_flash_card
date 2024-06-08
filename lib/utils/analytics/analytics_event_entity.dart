@@ -1,6 +1,9 @@
+// Dart imports:
 import 'dart:convert';
-import 'package:indonesia_flash_card/generated/json/base/json_field.dart';
+
+// Project imports:
 import 'package:indonesia_flash_card/generated/json/analytics_event_entity.g.dart';
+import 'package:indonesia_flash_card/generated/json/base/json_field.dart';
 
 @JsonSerializable()
 class AnalyticsEventEntity {

@@ -1,9 +1,12 @@
+// Dart imports:
 import 'dart:io';
 
+// Package imports:
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:indonesia_flash_card/utils/analytics/analytics_event_entity.dart';
 
+// Project imports:
+import 'package:indonesia_flash_card/utils/analytics/analytics_event_entity.dart';
 import 'analytics_parameters.dart';
 
 class FirebaseAnalyticsUtils {
