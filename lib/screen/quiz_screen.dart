@@ -1,5 +1,6 @@
 // Dart imports:
 import 'dart:async';
+import 'dart:math' as math;
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 // Project imports:
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
@@ -22,6 +24,7 @@ import 'package:indonesia_flash_card/screen/completion_today_test_screen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
+import 'package:indonesia_flash_card/utils/shuffle_string.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -117,6 +120,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                 const SizedBox(height: SizeConfig.smallMargin),
                 _questionAnswerCard(),
                 const SizedBox(height: SizeConfig.smallMargin),
+                _randomKeyboard(),
                 _actionButton(type: WordStatusType.notRemembered),
               ],
             ),
@@ -541,5 +545,32 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
 
   String hintText(String value) {
     return value.replaceAll(RegExp(r'[a-zA-Z]'), '*');
+  }
+
+  Widget _randomKeyboard() {
+    final questionAnswerList = ref.watch(tangoListControllerProvider);
+    final entity = questionAnswerList.lesson.tangos[currentIndex];
+    final answerWord = entity.indonesian!.shuffled.split('');
+    final rand = math.Random();
+
+    return StaggeredGrid.count(
+      crossAxisCount: 7,
+      mainAxisSpacing: 4,
+      crossAxisSpacing: 4,
+      children: answerWord.map((e) {
+        final randomCrossAxisCellCount = rand.nextInt(2) + 1;
+        final randomMainAxisCellCount = rand.nextInt(2) + 1;
+        logger.d('cross: $randomCrossAxisCellCount, main: $randomMainAxisCellCount');
+        return StaggeredGridTile.count(
+            crossAxisCellCount: randomCrossAxisCellCount,
+            mainAxisCellCount: randomMainAxisCellCount,
+            child: CircleAvatar(
+              radius: 32,
+              backgroundColor: Colors.pink,
+              child: Text(e),
+            )
+        );
+      }).toList(),
+    );
   }
 }
