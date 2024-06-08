@@ -1,26 +1,28 @@
 // Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:social_share/social_share.dart';
-
+import 'package:flutter/material.dart';
 // Project imports:
 import 'package:indonesia_flash_card/model/question_answer_entity.dart';
 import 'package:indonesia_flash_card/model/question_entity.dart';
 import 'package:indonesia_flash_card/screen/question/components/question_title.dart';
+import 'package:social_share/social_share.dart';
+
 import '../../../utils/logger.dart';
 import 'answer_title.dart';
 
 class QuestionListChildViewWidget extends StatefulWidget {
-  const QuestionListChildViewWidget({Key? key, required this.questionEntity}) : super(key: key);
+  const QuestionListChildViewWidget({
+    Key? key, required this.questionEntity}) : super(key: key);
   final QuestionEntity questionEntity;
 
   @override
-  State<QuestionListChildViewWidget> createState() => _QuestionListChildViewWidgetState();
+  State<QuestionListChildViewWidget> createState() =>
+      _QuestionListChildViewWidgetState();
 }
 
-class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidget> {
+class _QuestionListChildViewWidgetState
+    extends State<QuestionListChildViewWidget> {
   List<QuestionAnswerEntity> questionAnswers = [];
   CollectionReference questionsRef = 
     FirebaseFirestore.instance.collection('questions');
@@ -43,13 +45,15 @@ class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidge
           padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
           child: Column(
             children: [
-              QuestionTitle(question: widget.questionEntity.question, maxLines: 5),
+              QuestionTitle(
+                  question: widget.questionEntity.question, maxLines: 5),
               Visibility(
                 visible: questionAnswers.isNotEmpty,
                 child: Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
                   child: AnswerTitle(
-                    answer: questionAnswers.isNotEmpty ? questionAnswers.first.answer ?? '' : '',
+                    answer: questionAnswers.isNotEmpty
+                        ? questionAnswers.first.answer ?? '' : '',
                     maxLines: 2,
                   ),
                 ),
@@ -64,7 +68,8 @@ class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidge
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
+                            padding: const EdgeInsetsDirectional
+                                .fromSTEB(8, 0, 8, 0),
                             child: Row(
                               children: [
                                 const Icon(
@@ -85,7 +90,8 @@ class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidge
                           InkWell(
                             onTap: shareSNS,
                             child: const Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
+                              padding: EdgeInsetsDirectional
+                                  .fromSTEB(0, 0, 8, 0),
                               child: Icon(
                                 Icons.ios_share,
                                 color: Color(0xFF95A1AC),
@@ -107,7 +113,8 @@ class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidge
   }
 
   void initQuestionAnswerList() {
-    questionsRef.doc(widget.questionEntity.id).collection('answers').orderBy('created_at', descending: true).limit(1).get().then((value) {
+    questionsRef.doc(widget.questionEntity.id).collection('answers')
+        .orderBy('created_at', descending: true).limit(1).get().then((value) {
         setState(() {
           questionAnswers = value.docs.map((e) =>
             QuestionAnswerEntity.fromJson(e.data())..id = e.id,
@@ -118,7 +125,8 @@ class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidge
         logger.d(e);
       },
     );
-    questionsRef.doc(widget.questionEntity.id).collection('answers').count().get().then((value) {
+    questionsRef.doc(widget.questionEntity.id).collection('answers')
+        .count().get().then((value) {
       if (value.count != null) {
         setState(() {
           answerCount = value.count!;
@@ -128,6 +136,7 @@ class _QuestionListChildViewWidgetState extends State<QuestionListChildViewWidge
   }
 
   Future<void> shareSNS() async {
-    await SocialShare.shareOptions('${widget.questionEntity.question} #インドネシア語についての質問');
+    await SocialShare
+        .shareOptions('${widget.questionEntity.question} #インドネシア語についての質問');
   }
 }
