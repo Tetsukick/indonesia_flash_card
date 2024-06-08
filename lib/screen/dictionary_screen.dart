@@ -4,12 +4,9 @@ import 'dart:math' as math;
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:material_floating_search_bar_2/material_floating_search_bar_2.dart';
-
 // Project imports:
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
@@ -26,6 +23,8 @@ import 'package:indonesia_flash_card/utils/admob.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
+import 'package:material_floating_search_bar_2/material_floating_search_bar_2.dart';
+
 import '../config/config.dart';
 import '../model/floor_database/database.dart';
 import '../model/floor_entity/word_status.dart';
@@ -60,7 +59,6 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
   List<TangoEntity> _searchedTango = [];
   AppDatabase? database;
   late BannerAd bannerAd;
-  InterstitialAd? _interstitialAd;
 
   @override
   void initState() {
@@ -116,11 +114,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
       child: InkWell(
         onTap: () async {
           analytics(DictionaryItem.dictionaryItem);
-          final rand = math.Random();
-          final lottery = rand.nextInt(4);
-          if (lottery == 0) {
-            await Admob().showInterstitialAd();
-          }
+          showInterstitialAd();
 
           DictionaryDetail.navigateTo(context, tangoEntity: tango);
         },
@@ -581,5 +575,13 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
     });
 
     bannerAd.load();
+  }
+
+  Future<void> showInterstitialAd() async {
+    final rand = math.Random();
+    final lottery = rand.nextInt(4);
+    if (lottery == 0) {
+      await Admob().showInterstitialAd();
+    }
   }
 }
