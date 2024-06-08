@@ -28,7 +28,7 @@ class FirebaseAnalyticsUtils {
     if (FirebaseAnalyticsUtils._canTrack()) {
       FirebaseAnalyticsUtils.analytics.logEvent(
           name: event.name ?? '',
-          parameters: event.analyticsEventDetail?.toJson(),
+          // parameters: event.analyticsEventDetail?.toJson() as Map<String, Object>,
       );
     }
   }

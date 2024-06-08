@@ -33,9 +33,15 @@ class Admob {
 
   Future<void> showInterstitialAd() async {
     if (_instance.interstitialAd != null) {
-      await interstitialAd!.show();
-      await loadInterstitialAd();
+      try {
+        await interstitialAd!.show();
+        _instance.interstitialAd = null;
+        loadInterstitialAd();
+      } catch (e) {
+        logger.d('show interstitial error: $e');
+      }
     } else {
+      logger.d('interstitialAd is Null.');
       await loadInterstitialAd();
     }
   }

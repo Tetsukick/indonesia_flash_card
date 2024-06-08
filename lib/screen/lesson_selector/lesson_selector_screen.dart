@@ -587,8 +587,6 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     final activityDao = database.activityDao;
     final _activityList = await activityDao.findAllActivity();
     setState(() => activityList = _activityList);
-
-    await _requestAppReview();
   }
 
   Future<void> _requestAppReview() async {

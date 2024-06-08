@@ -1,9 +1,14 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/domain/tango_list_service.dart';
 import 'package:indonesia_flash_card/screen/flush_card_screen.dart';
+import 'package:indonesia_flash_card/utils/admob.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
+import 'package:lottie/lottie.dart';
 
 import '../config/config.dart';
 import '../config/size_config.dart';
@@ -62,61 +67,57 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
     final tangoList = ref.watch(tangoListControllerProvider);
     return Scaffold(
       backgroundColor: ColorConfig.bgPinkColor,
-      body: Container(
-        padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
-        height: double.infinity,
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Assets.gif.birBintangKanpai.image(height: 150),
-            const SizedBox(height: SizeConfig.mediumSmallMargin),
-            TextWidget.titleGraySmallBold('おつかれさまでした!'),
-            const SizedBox(height: SizeConfig.smallMargin),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-            //     TextWidget.titleGrayLargeBold('総合スコア: '),
-            //     TextWidget.titleRedLargestBold(calculateTotalScore(tangoList.lesson.quizResults)),
-            //     TextWidget.titleGrayLargeBold(' 点'),
-            //   ]
-            // ),
-            const SizedBox(height: SizeConfig.smallMargin),
-            Flexible(
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(vertical: SizeConfig.smallMargin),
-                itemBuilder: (BuildContext context, int index){
-                  final tango = tangoList.lesson.tangos[index];
-                  return tangoListItem(tango);
-                },
-                itemCount: tangoList.lesson.tangos.length,
+      body: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
+          height: double.infinity,
+          width: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Lottie.asset(
+                Assets.lottie.goodJob,
+                height: 100,
               ),
-            ),
-            const SizedBox(height: SizeConfig.smallMargin),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _button(
-                    onPressed: () {
-                      analytics(LessonCompItem.continueBtn);
-                      ref.read(tangoListControllerProvider.notifier).resetLessonsData();
-                      FlashCardScreen.navigateReplacementTo(context);
-                    },
-                    img: Assets.png.continue128,
-                    title: '同設定で継続',
+              TextWidget.titleGraySmallBold('おつかれさまでした!'),
+              const SizedBox(height: SizeConfig.smallMargin),
+              Flexible(
+                child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(vertical: SizeConfig.smallMargin),
+                  itemBuilder: (BuildContext context, int index){
+                    final tango = tangoList.lesson.tangos[index];
+                    return tangoListItem(tango);
+                  },
+                  itemCount: tangoList.lesson.tangos.length,
                 ),
-                const SizedBox(width: SizeConfig.smallMargin),
-                _button(
-                    onPressed: () {
-                      analytics(LessonCompItem.backTop);
-                      Navigator.of(context).popUntil((route) => route.isFirst);
-                    },
-                    img: Assets.png.home128,
-                    title: 'トップに戻る',
-                ),
-              ],
-            ),
-          ],
+              ),
+              const SizedBox(height: SizeConfig.smallMargin),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _button(
+                      onPressed: () {
+                        analytics(LessonCompItem.continueBtn);
+                        ref.read(tangoListControllerProvider.notifier)
+                            .resetLessonsData();
+                        FlashCardScreen.navigateReplacementTo(context);
+                      },
+                      img: Assets.png.continue128,
+                      title: '同設定で継続',
+                  ),
+                  const SizedBox(width: SizeConfig.smallMargin),
+                  _button(
+                      onPressed: () {
+                        analytics(LessonCompItem.backTop);
+                        Navigator.of(context).popUntil((route) => route.isFirst);
+                      },
+                      img: Assets.png.home128,
+                      title: 'トップに戻る',
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -265,5 +266,23 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
       }
     });
     return score.toStringAsFixed(3);
+  }
+
+  Future<void> showAdmob() async {
+    final rand = math.Random();
+    final lottery = rand.nextInt(3);
+    if (lottery == 0) {
+      await Admob().showInterstitialAd();
+    } else {
+      _requestAppReview();
+    }
+  }
+
+  Future<void> _requestAppReview() async {
+    final inAppReview = InAppReview.instance;
+
+    if (await inAppReview.isAvailable()) {
+      await inAppReview.requestReview();
+    }
   }
 }

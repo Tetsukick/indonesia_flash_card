@@ -10,7 +10,7 @@ import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/shared_preference.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
 import 'package:lottie/lottie.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../utils/analytics/analytics_event_entity.dart';
 import '../utils/analytics/analytics_parameters.dart';
@@ -32,12 +32,15 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
   void initState() {
     FirebaseAnalyticsUtils.analytics.setCurrentScreen(
         screenName: AnalyticsScreen.menu.name,);
-    loadSoundSetting();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      loadSoundSetting();
+    });
   }
 
   Future<void> loadSoundSetting() async {
-    setState(() async => _isSoundOn = await PreferenceKey.isSoundOn.getBool());
+    _isSoundOn = await PreferenceKey.isSoundOn.getBool();
+    setState(() {});
   }
 
   @override
@@ -124,7 +127,8 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
           }
         },
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
+          padding: const EdgeInsets.symmetric(
+              horizontal: SizeConfig.mediumSmallMargin),
           height: _menuItemBarHeight,
           child: Row(
             children: [
@@ -260,7 +264,7 @@ extension MenuItemExt on MenuItem {
         MenuItem.licence
       ];
     } else {
-      return MenuItemExt.menuItemList;
+      return MenuItem.values;
     }
   }
 }
