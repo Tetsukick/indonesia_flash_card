@@ -4,6 +4,7 @@ import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/domain/tango_list_service.dart';
 import 'package:indonesia_flash_card/screen/flush_card_screen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
+import 'package:lottie/lottie.dart';
 
 import '../config/config.dart';
 import '../config/size_config.dart';
@@ -70,9 +71,11 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: SizeConfig.mediumSmallMargin),
+              Lottie.asset(
+                Assets.lottie.goodJob,
+                height: 100,
+              ),
               TextWidget.titleGraySmallBold('おつかれさまでした!'),
-              const SizedBox(height: SizeConfig.smallMargin),
               const SizedBox(height: SizeConfig.smallMargin),
               Flexible(
                 child: ListView.builder(

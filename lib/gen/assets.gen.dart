@@ -133,6 +133,9 @@ class $AssetsLottieGen {
   /// File path: assets/lottie/cross_red.json
   String get crossRed => 'assets/lottie/cross_red.json';
 
+  /// File path: assets/lottie/good-job.json
+  String get goodJob => 'assets/lottie/good-job.json';
+
   /// File path: assets/lottie/kanpai.json
   String get kanpai => 'assets/lottie/kanpai.json';
 
@@ -162,6 +165,7 @@ class $AssetsLottieGen {
         congratulation,
         countdown10s,
         crossRed,
+        goodJob,
         kanpai,
         sendingPaperPlane,
         speaker,
