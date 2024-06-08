@@ -1,8 +1,12 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/domain/tango_list_service.dart';
 import 'package:indonesia_flash_card/screen/flush_card_screen.dart';
+import 'package:indonesia_flash_card/utils/admob.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:lottie/lottie.dart';
 
@@ -262,5 +266,23 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
       }
     });
     return score.toStringAsFixed(3);
+  }
+
+  Future<void> showAdmob() async {
+    final rand = math.Random();
+    final lottery = rand.nextInt(3);
+    if (lottery == 0) {
+      await Admob().showInterstitialAd();
+    } else {
+      _requestAppReview();
+    }
+  }
+
+  Future<void> _requestAppReview() async {
+    final inAppReview = InAppReview.instance;
+
+    if (await inAppReview.isAvailable()) {
+      await inAppReview.requestReview();
+    }
   }
 }

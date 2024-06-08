@@ -15,6 +15,7 @@ import 'package:indonesia_flash_card/model/sort_type.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/screen/dictionary_detail_screen.dart';
+import 'package:indonesia_flash_card/utils/admob.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
@@ -60,8 +61,6 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
   void initState() {
     FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: AnalyticsScreen.dictionary.name);
     initializeDB();
-    // initializeBannerAd();
-    loadInterstitialAd();
     super.initState();
   }
 
@@ -115,7 +114,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
           final rand = math.Random();
           final lottery = rand.nextInt(4);
           if (lottery == 0) {
-            await showInterstitialAd();
+            await Admob().showInterstitialAd();
           }
 
           DictionaryDetail.navigateTo(context, tangoEntity: tango);
@@ -577,27 +576,5 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
     });
 
     bannerAd.load();
-  }
-
-  Future<void> loadInterstitialAd() async {
-    await InterstitialAd.load(
-        adUnitId: Platform.isIOS ?
-        Config.adUnitIdIosInterstitial : Config.adUnitIdAndroidInterstitial,
-        request: const AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (InterstitialAd ad) {
-            _interstitialAd = ad;
-            logger.d('Ad loaded.$ad');
-          },
-          onAdFailedToLoad: (LoadAdError error) {
-            logger.d('Ad failed to load: $error');
-          },
-        ),);
-  }
-
-  Future<void> showInterstitialAd() async {
-    if (_interstitialAd != null) {
-      await _interstitialAd?.show();
-    }
   }
 }

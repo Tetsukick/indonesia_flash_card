@@ -32,12 +32,15 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
   void initState() {
     FirebaseAnalyticsUtils.analytics.setCurrentScreen(
         screenName: AnalyticsScreen.menu.name,);
-    loadSoundSetting();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      loadSoundSetting();
+    });
   }
 
   Future<void> loadSoundSetting() async {
-    setState(() async => _isSoundOn = await PreferenceKey.isSoundOn.getBool());
+    _isSoundOn = await PreferenceKey.isSoundOn.getBool();
+    setState(() {});
   }
 
   @override
@@ -261,7 +264,7 @@ extension MenuItemExt on MenuItem {
         MenuItem.licence
       ];
     } else {
-      return MenuItemExt.menuItemList;
+      return MenuItem.values;
     }
   }
 }
