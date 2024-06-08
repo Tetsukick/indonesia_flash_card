@@ -3,14 +3,10 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lottie/lottie.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
-
 // Project imports:
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
@@ -27,6 +23,9 @@ import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
+import 'package:lottie/lottie.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
+
 import '../config/config.dart';
 import '../model/floor_database/database.dart';
 import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
@@ -74,7 +73,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
 
   @override
   void initState() {
-    FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: AnalyticsScreen.quiz.name);
+    FirebaseAnalyticsUtils.screenTrack(AnalyticsScreen.quiz);
     initializeDB();
     super.initState();
     initializePinCodeTextField();
@@ -175,8 +174,10 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
           children: [
             TextWidget.titleGrayMediumBold(questionExplanation, maxLines: 2),
             const SizedBox(height: SizeConfig.smallestMargin),
-            TextWidget.titleGraySmallest('ヒント (${entity.indonesian?.split(' ').length}語)', maxLines: 2),
-            TextWidget.titleGraySmallest(hintText(entity.indonesian!), maxLines: 2),
+            TextWidget.titleGraySmallest(
+                'ヒント (${entity.indonesian?.split(' ').length}語)', maxLines: 2),
+            TextWidget.titleGraySmallest(
+                hintText(entity.indonesian!), maxLines: 2),
             _separater(),
             if (pinCodeTextField != null) pinCodeTextField!,
           ],
@@ -197,14 +198,19 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         ..isCorrect = true
         ..answerTime = baseQuestionTime - remainTime;
       ref.read(tangoListControllerProvider.notifier).addQuizResult(result);
-      await showTrueFalseDialog(true, entity: entity, remainTime: remainTime);
+      await showTrueFalseDialog(
+          isTrue: true, entity: entity, remainTime: remainTime);
       await getNextCard();
     } else {
       errorController?.add(ErrorAnimationType.shake);
     }
   }
 
-  Widget _flashCard({required String title, required TangoEntity tango, bool isFront = true}) {
+  Widget _flashCard({
+    required String title,
+    required TangoEntity tango,
+    bool isFront = true,
+  }) {
     return Card(
       child: SizedBox(
           height: _cardHeight,
@@ -261,22 +267,33 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     final currentTango = questionAnswerList.lesson.tangos[currentIndex];
 
     final wordStatusDao = database?.wordStatusDao;
-    final wordStatus = await wordStatusDao?.findWordStatusById(currentTango.id!);
+    final wordStatus =
+      await wordStatusDao?.findWordStatusById(currentTango.id!);
     if (wordStatus != null) {
       if (isCorrect) {
-        if (wordStatus.status == WordStatusType.remembered.id || wordStatus.status == WordStatusType.perfectRemembered.id) {
-          await wordStatusDao?.updateWordStatus(wordStatus..status = WordStatusType.perfectRemembered.id);
+        if (wordStatus.status == WordStatusType.remembered.id
+            || wordStatus.status == WordStatusType.perfectRemembered.id) {
+          await wordStatusDao?.updateWordStatus(
+              wordStatus..status = WordStatusType.perfectRemembered.id);
         } else {
-          await wordStatusDao?.updateWordStatus(wordStatus..status = WordStatusType.remembered.id);
+          await wordStatusDao?.updateWordStatus(
+              wordStatus..status = WordStatusType.remembered.id);
         }
       } else {
-        await wordStatusDao?.updateWordStatus(wordStatus..status = WordStatusType.notRemembered.id);
+        await wordStatusDao?.updateWordStatus(
+            wordStatus..status = WordStatusType.notRemembered.id);
       }
     } else {
       if (isCorrect) {
-        await wordStatusDao?.insertWordStatus(WordStatus(wordId: currentTango.id!, status: WordStatusType.remembered.id));
+        await wordStatusDao?.insertWordStatus(
+            WordStatus(
+                wordId: currentTango.id!,
+                status: WordStatusType.remembered.id));
       } else {
-        await wordStatusDao?.insertWordStatus(WordStatus(wordId: currentTango.id!, status: WordStatusType.notRemembered.id));
+        await wordStatusDao?.insertWordStatus(
+            WordStatus(
+                wordId: currentTango.id!,
+                status: WordStatusType.notRemembered.id));
       }
     }
   }
@@ -287,7 +304,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
 
     final activityDao = database?.activityDao;
     final now = Utils.dateTimeToString(DateTime.now());
-    await activityDao?.insertActivity(Activity(date: now, wordId: currentTango.id!));
+    await activityDao?.insertActivity(
+        Activity(date: now, wordId: currentTango.id!));
   }
 
   Future<void> getNextCard() async {
@@ -431,13 +449,21 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     });
   }
 
-  Future<void> showTrueFalseDialog(bool isTrue, {required TangoEntity entity, int? remainTime}) async {
+  Future<void> showTrueFalseDialog({
+    required bool isTrue,
+    required TangoEntity entity,
+    int? remainTime,
+  }) async {
     unawaited(showGeneralDialog(
         context: context,
         barrierDismissible: false,
         transitionDuration: const Duration(milliseconds: 300),
         barrierColor: Colors.black.withOpacity(0.5),
-        pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
+        pageBuilder: (
+            BuildContext context,
+            Animation animation,
+            Animation secondaryAnimation
+            ) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -449,8 +475,10 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                 Visibility(
                   visible: remainTime != null,
                     child: Padding(
-                      padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
-                      child: TextWidget.titleWhiteLargeBold('回答時間: ${baseQuestionTime - (remainTime ?? 0)} ms'),
+                      padding: const EdgeInsets.all(
+                          SizeConfig.mediumSmallMargin),
+                      child: TextWidget.titleWhiteLargeBold(
+                          '回答時間: ${baseQuestionTime - (remainTime ?? 0)} ms'),
                     ),
                 ),
                 Visibility(
@@ -503,7 +531,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   Future<void> wrongAnswerAction(TangoEntity entity) async {
     await registerWordStatus(isCorrect: false);
     await registerActivity();
-    await showTrueFalseDialog(false, entity: entity);
+    await showTrueFalseDialog(isTrue: false, entity: entity);
     final result = QuizResult()
       ..entity = entity
       ..isCorrect = false;
