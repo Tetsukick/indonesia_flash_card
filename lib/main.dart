@@ -15,18 +15,17 @@ import 'package:indonesia_flash_card/utils/remote_config.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-  FirebaseAnalyticsUtils();
-  Admob();
-  await RemoteConfigUtil().init();
-  await MobileAds.instance.initialize();
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]);
-
   await runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+    FirebaseAnalyticsUtils();
+    Admob();
+    await RemoteConfigUtil().init();
+    await MobileAds.instance.initialize();
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     await CrashReporter.instance.initialize();
 
     FlutterError.onError = (FlutterErrorDetails details) {
