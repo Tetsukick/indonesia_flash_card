@@ -109,21 +109,19 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     return Scaffold(
       backgroundColor: ColorConfig.bgPinkColor,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(SizeConfig.mediumMargin),
-            child: Column(
-              children: [
-                _topBarSection(),
-                const SizedBox(height: SizeConfig.smallMargin),
-                _questionTitleCard(),
-                const SizedBox(height: SizeConfig.smallMargin),
-                _questionAnswerCard(),
-                const SizedBox(height: SizeConfig.smallMargin),
-                _randomKeyboard(),
-                _actionButton(type: WordStatusType.notRemembered),
-              ],
-            ),
+        child: Padding(
+          padding: const EdgeInsets.all(SizeConfig.mediumMargin),
+          child: Column(
+            children: [
+              _topBarSection(),
+              const SizedBox(height: SizeConfig.smallMargin),
+              _questionTitleCard(),
+              const SizedBox(height: SizeConfig.smallMargin),
+              _questionAnswerCard(),
+              const SizedBox(height: SizeConfig.smallMargin),
+              _randomKeyboard(),
+              // _actionButton(type: WordStatusType.notRemembered),
+            ],
           ),
         ),
       ),
