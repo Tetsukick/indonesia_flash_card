@@ -10,7 +10,7 @@ import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/shared_preference.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
 import 'package:lottie/lottie.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../utils/analytics/analytics_event_entity.dart';
 import '../utils/analytics/analytics_parameters.dart';
@@ -124,7 +124,8 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
           }
         },
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: SizeConfig.mediumSmallMargin),
+          padding: const EdgeInsets.symmetric(
+              horizontal: SizeConfig.mediumSmallMargin),
           height: _menuItemBarHeight,
           child: Row(
             children: [

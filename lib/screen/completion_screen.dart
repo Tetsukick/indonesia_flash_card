@@ -62,61 +62,55 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
     final tangoList = ref.watch(tangoListControllerProvider);
     return Scaffold(
       backgroundColor: ColorConfig.bgPinkColor,
-      body: Container(
-        padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
-        height: double.infinity,
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Assets.gif.birBintangKanpai.image(height: 150),
-            const SizedBox(height: SizeConfig.mediumSmallMargin),
-            TextWidget.titleGraySmallBold('おつかれさまでした!'),
-            const SizedBox(height: SizeConfig.smallMargin),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-            //     TextWidget.titleGrayLargeBold('総合スコア: '),
-            //     TextWidget.titleRedLargestBold(calculateTotalScore(tangoList.lesson.quizResults)),
-            //     TextWidget.titleGrayLargeBold(' 点'),
-            //   ]
-            // ),
-            const SizedBox(height: SizeConfig.smallMargin),
-            Flexible(
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(vertical: SizeConfig.smallMargin),
-                itemBuilder: (BuildContext context, int index){
-                  final tango = tangoList.lesson.tangos[index];
-                  return tangoListItem(tango);
-                },
-                itemCount: tangoList.lesson.tangos.length,
+      body: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
+          height: double.infinity,
+          width: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: SizeConfig.mediumSmallMargin),
+              TextWidget.titleGraySmallBold('おつかれさまでした!'),
+              const SizedBox(height: SizeConfig.smallMargin),
+              const SizedBox(height: SizeConfig.smallMargin),
+              Flexible(
+                child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(vertical: SizeConfig.smallMargin),
+                  itemBuilder: (BuildContext context, int index){
+                    final tango = tangoList.lesson.tangos[index];
+                    return tangoListItem(tango);
+                  },
+                  itemCount: tangoList.lesson.tangos.length,
+                ),
               ),
-            ),
-            const SizedBox(height: SizeConfig.smallMargin),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _button(
-                    onPressed: () {
-                      analytics(LessonCompItem.continueBtn);
-                      ref.read(tangoListControllerProvider.notifier).resetLessonsData();
-                      FlashCardScreen.navigateReplacementTo(context);
-                    },
-                    img: Assets.png.continue128,
-                    title: '同設定で継続',
-                ),
-                const SizedBox(width: SizeConfig.smallMargin),
-                _button(
-                    onPressed: () {
-                      analytics(LessonCompItem.backTop);
-                      Navigator.of(context).popUntil((route) => route.isFirst);
-                    },
-                    img: Assets.png.home128,
-                    title: 'トップに戻る',
-                ),
-              ],
-            ),
-          ],
+              const SizedBox(height: SizeConfig.smallMargin),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _button(
+                      onPressed: () {
+                        analytics(LessonCompItem.continueBtn);
+                        ref.read(tangoListControllerProvider.notifier)
+                            .resetLessonsData();
+                        FlashCardScreen.navigateReplacementTo(context);
+                      },
+                      img: Assets.png.continue128,
+                      title: '同設定で継続',
+                  ),
+                  const SizedBox(width: SizeConfig.smallMargin),
+                  _button(
+                      onPressed: () {
+                        analytics(LessonCompItem.backTop);
+                        Navigator.of(context).popUntil((route) => route.isFirst);
+                      },
+                      img: Assets.png.home128,
+                      title: 'トップに戻る',
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
