@@ -4,6 +4,7 @@ import 'dart:math' as math;
 
 // Flutter imports:
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
@@ -72,7 +73,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   AppDatabase? database;
   StreamController<ErrorAnimationType>? errorController;
   String currentText = '';
-  List<String> randomText = [];
+  Map<int, String> randomText = {};
+  List<(int, String)> inputtedTextList = [];
   List<(int, int)> randomAxisSize = [];
   PinCodeTextField? pinCodeTextField;
   TextEditingController? pinCodeTextFieldController;
@@ -217,28 +219,28 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                   await wrongAnswerAction(entity);
                 }
             ),
-            const SizedBox(width: SizeConfig.smallMargin,),
             _actionButton(
                 image: Assets.png.backOne,
                 title: 'back',
-                onTap: () {
+                onTap: currentText.length == 0 ? null : () async {
                   logger.d('back button currentText: $currentText');
                   final removedLastText = currentText.removeLast();
                   logger.d('back button tapped: $removedLastText');
                   setState(() {
                     currentText = removedLastText;
                     pinCodeTextFieldController?.text = removedLastText;
+                    inputtedTextList.removeLast();
                   });
                 }
             ),
-            const SizedBox(width: SizeConfig.smallMargin,),
             _actionButton(
                 image: Assets.png.delete,
                 title: 'delete',
-                onTap: () {
+                onTap: currentText.length == 0 ? null : () async {
                   setState(() {
                     currentText = '';
                     pinCodeTextFieldController?.text = '';
+                    inputtedTextList = [];
                   });
                 }
             )
@@ -384,6 +386,9 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     }
     setState(() {
       currentText = '';
+      randomText = {};
+      inputtedTextList = [];
+      randomAxisSize = [];
       currentIndex++;
     });
     final entity = questionAnswerList.lesson.tangos[currentIndex];
@@ -562,30 +567,31 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   Widget _actionButton({
     required AssetGenImage image,
     required String title,
-    GestureTapCallback? onTap,
+    AsyncCallback? onTap,
   }) {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final entity = questionAnswerList.lesson.tangos[currentIndex];
 
     return Visibility(
       visible: pinCodeTextField != null,
-      child: Card(
-        shape: const CircleBorder(),
-        child: InkWell(
-          child: SizedBox(
-              height: 56,
-              width: 56,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  image.image(height: 20),
-                  const SizedBox(height: SizeConfig.smallestMargin),
-                  TextWidget.titleGraySmallest(title),
-                ],
-              ),
-          ),
-          onTap: onTap,
+      child: WaitableElevatedButton(
+        child: SizedBox(
+            height: 56,
+            width: 56,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                image.image(height: 24),
+                TextWidget.titleGraySmallest(title),
+              ],
+            ),
         ),
+        style: ElevatedButton.styleFrom(
+          elevation: 2,
+          padding: EdgeInsets.zero,
+          shape: const CircleBorder(),
+        ),
+        onPressed: onTap,
       ),
     );
   }
@@ -611,33 +617,43 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       crossAxisCount: 7,
       mainAxisSpacing: 4,
       crossAxisSpacing: 4,
-      children: randomText.mapIndexed((i,e) {
+      children: randomText.map<int, Widget>((i,e) {
         final randomCrossAxisCellCount = randomAxisSize[i].$1;
         final randomMainAxisCellCount = randomAxisSize[i].$2;
-        return Visibility(
-          visible: pinCodeTextField != null,
-          child: StaggeredGridTile.count(
+        final isNotUsed = inputtedTextList
+            .firstWhereOrNull((e) => e.$1 == i) == null;
+        return MapEntry(
+          i,
+          Visibility(
+            visible: pinCodeTextField != null,
+            child: StaggeredGridTile.count(
               crossAxisCellCount: randomCrossAxisCellCount,
               mainAxisCellCount: randomMainAxisCellCount,
               child: WaitableElevatedButton(
-                child: Text(e),
+                child: Center(
+                  child: randomCrossAxisCellCount == 2
+                      && randomMainAxisCellCount == 2
+                      ? Flexible(child: TextWidget.titleGrayLargestBold(e))
+                      : Flexible(child: TextWidget.titleGrayMediumBold(e)),
+                ),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: ColorConfig.fontGrey,
                   backgroundColor: Colors.white,
-                  elevation: 16,
+                  elevation: 8,
                   shape: const CircleBorder(),
                 ),
-                onPressed: () async {
+                onPressed: isNotUsed ? () async {
                   setState(() {
                     pinCodeTextFieldController?.text += e;
                     currentText += e;
+                    inputtedTextList.add((i, e));
                   });
-                },
+                } : null,
               ),
-
+            ),
           ),
         );
-      }).toList(),
+      }).values.toList(),
     );
   }
 
@@ -652,7 +668,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       return (randomCrossAxisCellCount, randomMainAxisCellCount);
     }).toList();
     setState(() {
-      randomText = shuffledTextList;
+      randomText = shuffledTextList.asMap();
       randomAxisSize = randomAxisList;
     });
   }

@@ -130,12 +130,26 @@ class TextWidget {
     return AutoSizeText(
       data,
       maxLines: maxLines,
-      minFontSize: 16,
-      maxFontSize: 24,
+      minFontSize: 24,
+      maxFontSize: 32,
       style: const TextStyle(
           fontWeight: FontWeight.bold,
           color: ColorConfig.fontGrey,
-          fontSize: 24,
+          fontSize: 32,
+      ),
+    );
+  }
+
+  static Widget titleGrayLargestBold(String data, {int maxLines = 1}) {
+    return AutoSizeText(
+      data,
+      maxLines: maxLines,
+      minFontSize: 16,
+      maxFontSize: 24,
+      style: const TextStyle(
+        fontWeight: FontWeight.bold,
+        color: ColorConfig.fontGrey,
+        fontSize: 24,
       ),
     );
   }
