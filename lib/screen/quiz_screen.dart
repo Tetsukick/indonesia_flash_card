@@ -120,19 +120,21 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     return Scaffold(
       backgroundColor: ColorConfig.bgPinkColor,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(SizeConfig.mediumMargin),
-          child: Column(
-            children: [
-              _topBarSection(),
-              const SizedBox(height: SizeConfig.smallMargin),
-              _questionTitleCard(),
-              const SizedBox(height: SizeConfig.smallMargin),
-              _questionAnswerCard(),
-              const SizedBox(height: SizeConfig.smallMargin),
-              _randomKeyboard(),
-              // _actionButton(type: WordStatusType.notRemembered),
-            ],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(SizeConfig.mediumMargin),
+            child: Column(
+              children: [
+                _topBarSection(),
+                const SizedBox(height: SizeConfig.smallMargin),
+                _questionTitleCard(),
+                const SizedBox(height: SizeConfig.smallMargin),
+                _questionAnswerCard(),
+                const SizedBox(height: SizeConfig.smallMargin),
+                _randomKeyboard(),
+                // _actionButton(type: WordStatusType.notRemembered),
+              ],
+            ),
           ),
         ),
       ),
@@ -295,7 +297,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
 
   Widget _separater() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: SizeConfig.mediumMargin),
+      padding: const EdgeInsets.symmetric(vertical: SizeConfig.smallMargin),
       child: Container(
         height: 1,
         width: double.infinity,
@@ -612,9 +614,13 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   }
 
   Widget _randomKeyboard() {
+    const crossAxisCount = 16;
+    final basicSideLength =
+        (MediaQuery.of(context).size.width - (SizeConfig.mediumMargin * 2))
+            / crossAxisCount;
 
     return StaggeredGrid.count(
-      crossAxisCount: 7,
+      crossAxisCount: crossAxisCount,
       mainAxisSpacing: 4,
       crossAxisSpacing: 4,
       children: randomText.map<int, Widget>((i,e) {
@@ -622,10 +628,10 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         final randomMainAxisCellCount = randomAxisSize[i].$2;
         final isNotUsed = inputtedTextList
             .firstWhereOrNull((e) => e.$1 == i) == null;
-        final isLargeButton = randomCrossAxisCellCount == 2
-            && randomMainAxisCellCount == 2;
+        final isLargeButton = math.min(randomMainAxisCellCount, randomCrossAxisCellCount) >= 3;
         final needFixedPosition =
-            randomCrossAxisCellCount == randomMainAxisCellCount;
+          (randomMainAxisCellCount == 2 && randomCrossAxisCellCount == 1)
+          || (randomMainAxisCellCount == 1 && randomCrossAxisCellCount == 1);
         logger.d('$e, main: $randomMainAxisCellCount, cross: $randomCrossAxisCellCount');
         return MapEntry(
           i,
@@ -634,28 +640,34 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
             child: StaggeredGridTile.count(
               crossAxisCellCount: randomCrossAxisCellCount,
               mainAxisCellCount: randomMainAxisCellCount,
-              child: WaitableElevatedButton(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: isLargeButton
-                      ? TextWidget
-                        .titleGrayLargestBold(e == ' ' ? '␣' : e)
-                      : TextWidget
-                        .titleGrayMediumBold(e == ' ' ? '␣' : e),
+              child: SizedBox(
+                width: basicSideLength * math.min(
+                    randomCrossAxisCellCount, randomMainAxisCellCount),
+                height: basicSideLength * math.min(
+                    randomCrossAxisCellCount, randomMainAxisCellCount),
+                child: WaitableElevatedButton(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: isLargeButton
+                        ? TextWidget
+                          .titleGrayLargestBold(e == ' ' ? '␣' : e)
+                        : TextWidget
+                          .titleGrayMediumBold(e == ' ' ? '␣' : e),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: ColorConfig.fontGrey,
+                    backgroundColor: Colors.white,
+                    elevation: 8,
+                    shape: const CircleBorder(),
+                  ),
+                  onPressed: isNotUsed ? () async {
+                    setState(() {
+                      pinCodeTextFieldController?.text += e;
+                      currentText += e;
+                      inputtedTextList.add((i, e));
+                    });
+                  } : null,
                 ),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: ColorConfig.fontGrey,
-                  backgroundColor: Colors.white,
-                  elevation: 8,
-                  shape: const CircleBorder(),
-                ),
-                onPressed: isNotUsed ? () async {
-                  setState(() {
-                    pinCodeTextFieldController?.text += e;
-                    currentText += e;
-                    inputtedTextList.add((i, e));
-                  });
-                } : null,
               ),
             ),
           ),
@@ -670,8 +682,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     final shuffledTextList = entity.indonesian!.shuffled.split('');
     final rand = math.Random();
     final randomAxisList = shuffledTextList.map((_) {
-      final randomCrossAxisCellCount = rand.nextInt(2) + 1;
-      final randomMainAxisCellCount = rand.nextInt(2) + 1;
+      final randomCrossAxisCellCount = rand.nextInt(3) + 2;
+      final randomMainAxisCellCount = rand.nextInt(3) + 2;
       return (randomCrossAxisCellCount, randomMainAxisCellCount);
     }).toList();
     setState(() {
