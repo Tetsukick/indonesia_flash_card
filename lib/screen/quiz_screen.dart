@@ -22,10 +22,12 @@ import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/screen/completion_screen.dart';
 import 'package:indonesia_flash_card/screen/completion_today_test_screen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
+import 'package:indonesia_flash_card/utils/disable_focus_node.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
 import 'package:indonesia_flash_card/utils/shuffle_string.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
+import 'package:indonesia_flash_card/utils/waitable_button.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -70,6 +72,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   String currentText = '';
   List<String> randomText = [];
   PinCodeTextField? pinCodeTextField;
+  TextEditingController? pinCodeTextFieldController;
   CountdownTimerController? countDownController;
   final baseQuestionTime = 1000 * 15;
   late int endTime = DateTime.now().millisecondsSinceEpoch + baseQuestionTime;
@@ -354,6 +357,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       errorController?.close();
       errorController = null;
       countDownController = null;
+      pinCodeTextFieldController = null;
     });
 
     await Future<void>.delayed(const Duration(milliseconds: 1200));
@@ -366,10 +370,11 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     final fontSize = getFontSize(entity.indonesian?.length ?? 0);
     setState(() {
       errorController = StreamController<ErrorAnimationType>();
+      pinCodeTextFieldController = TextEditingController();
       pinCodeTextField = PinCodeTextField(
         length: entity.indonesian?.length ?? 0,
         animationType: AnimationType.fade,
-        autoFocus: true,
+        autoFocus: false,
         pinTheme: PinTheme(
           shape: PinCodeFieldShape.box,
           borderRadius: BorderRadius.circular(5),
@@ -386,7 +391,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         animationDuration: const Duration(milliseconds: 300),
         enableActiveFill: true,
         errorAnimationController: errorController,
-        controller: TextEditingController(),
+        focusNode: AlwaysDisabledFocusNode(),
+        controller: pinCodeTextFieldController,
         onCompleted: (v) {
           logger.d(v);
           _answer(v, entity: entity);
@@ -564,11 +570,22 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         return StaggeredGridTile.count(
             crossAxisCellCount: randomCrossAxisCellCount,
             mainAxisCellCount: randomMainAxisCellCount,
-            child: CircleAvatar(
-              radius: 32,
-              backgroundColor: Colors.pink,
+            child: WaitableElevatedButton(
               child: Text(e),
-            )
+              style: ElevatedButton.styleFrom(
+                foregroundColor: ColorConfig.fontGrey,
+                backgroundColor: Colors.white,
+                elevation: 16,
+                shape: const CircleBorder(),
+              ),
+              onPressed: () async {
+                setState(() {
+                  pinCodeTextFieldController?.text += e;
+                  currentText += e;
+                });
+              },
+            ),
+
         );
       }).toList(),
     );
