@@ -68,6 +68,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   AppDatabase? database;
   StreamController<ErrorAnimationType>? errorController;
   String currentText = '';
+  List<String> randomText = [];
   PinCodeTextField? pinCodeTextField;
   CountdownTimerController? countDownController;
   final baseQuestionTime = 1000 * 15;
@@ -79,7 +80,10 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     FirebaseAnalyticsUtils.screenTrack(AnalyticsScreen.quiz);
     initializeDB();
     super.initState();
-    initializePinCodeTextField();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      initializePinCodeTextField();
+      setRandomText();
+    });
   }
 
   Future<void> initializeDB() async {
@@ -91,7 +95,6 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   }
 
   Future<void> initializePinCodeTextField() async {
-    await Future<void>.delayed(const Duration(milliseconds: 500));
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final entity = questionAnswerList.lesson.tangos[currentIndex];
     await setPinCodeTextField(entity);
@@ -328,6 +331,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     });
     final entity = questionAnswerList.lesson.tangos[currentIndex];
     await setPinCodeTextField(entity);
+    setRandomText();
   }
 
   void analytics(FlushCardItem item, {String? others = ''}) {
@@ -546,19 +550,17 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   }
 
   Widget _randomKeyboard() {
-    final questionAnswerList = ref.watch(tangoListControllerProvider);
-    final entity = questionAnswerList.lesson.tangos[currentIndex];
-    final answerWord = entity.indonesian!.shuffled.split('');
     final rand = math.Random();
 
     return StaggeredGrid.count(
       crossAxisCount: 7,
       mainAxisSpacing: 4,
       crossAxisSpacing: 4,
-      children: answerWord.map((e) {
+      children: randomText.map((e) {
         final randomCrossAxisCellCount = rand.nextInt(2) + 1;
         final randomMainAxisCellCount = rand.nextInt(2) + 1;
-        logger.d('cross: $randomCrossAxisCellCount, main: $randomMainAxisCellCount');
+        logger.d(
+            'cross: $randomCrossAxisCellCount, main: $randomMainAxisCellCount');
         return StaggeredGridTile.count(
             crossAxisCellCount: randomCrossAxisCellCount,
             mainAxisCellCount: randomMainAxisCellCount,
@@ -570,5 +572,14 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         );
       }).toList(),
     );
+  }
+
+  void setRandomText() {
+    final questionAnswerList = ref.watch(tangoListControllerProvider);
+    final entity = questionAnswerList.lesson.tangos[currentIndex];
+    final shuffledTextList = entity.indonesian!.shuffled.split('');
+    setState(() {
+      randomText = shuffledTextList;
+    });
   }
 }
