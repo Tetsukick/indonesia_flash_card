@@ -27,6 +27,7 @@ import 'package:indonesia_flash_card/utils/disable_focus_node.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
 import 'package:indonesia_flash_card/utils/shuffle_string.dart';
+import 'package:indonesia_flash_card/utils/string_ext.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
 import 'package:indonesia_flash_card/utils/waitable_button.dart';
 import 'package:lottie/lottie.dart';
@@ -190,6 +191,57 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                 hintText(entity.indonesian!), maxLines: 2),
             _separater(),
             if (pinCodeTextField != null) pinCodeTextField!,
+            const SizedBox(height: SizeConfig.smallestMargin),
+            _actionItems(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _actionItems() {
+    final questionAnswerList = ref.watch(tangoListControllerProvider);
+    final entity = questionAnswerList.lesson.tangos[currentIndex];
+    return Visibility(
+      visible: pinCodeTextField != null,
+      child: SizedBox(
+        width: double.infinity,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            _actionButton(
+                image: Assets.png.skipNext,
+                title: 'skip',
+                onTap: () async {
+                  countDownController?.disposeTimer();
+                  await wrongAnswerAction(entity);
+                }
+            ),
+            const SizedBox(width: SizeConfig.smallMargin,),
+            _actionButton(
+                image: Assets.png.backOne,
+                title: 'back',
+                onTap: () {
+                  logger.d('back button currentText: $currentText');
+                  final removedLastText = currentText.removeLast();
+                  logger.d('back button tapped: $removedLastText');
+                  setState(() {
+                    currentText = removedLastText;
+                    pinCodeTextFieldController?.text = removedLastText;
+                  });
+                }
+            ),
+            const SizedBox(width: SizeConfig.smallMargin,),
+            _actionButton(
+                image: Assets.png.delete,
+                title: 'delete',
+                onTap: () {
+                  setState(() {
+                    currentText = '';
+                    pinCodeTextFieldController?.text = '';
+                  });
+                }
+            )
           ],
         ),
       ),
@@ -399,11 +451,6 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
           logger.d(v);
           _answer(v, entity: entity);
         },
-        onChanged: (value) {
-          setState(() {
-            currentText = value;
-          });
-        },
         appContext: context,
       );
     });
@@ -512,7 +559,11 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     Navigator.of(context).pop();
   }
 
-  Widget _actionButton({required WordStatusType type}) {
+  Widget _actionButton({
+    required AssetGenImage image,
+    required String title,
+    GestureTapCallback? onTap,
+  }) {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final entity = questionAnswerList.lesson.tangos[currentIndex];
 
@@ -522,21 +573,18 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         shape: const CircleBorder(),
         child: InkWell(
           child: SizedBox(
-              height: 120,
-              width: 120,
+              height: 56,
+              width: 56,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  type.iconLarge,
-                  const SizedBox(height: SizeConfig.smallMargin),
-                  TextWidget.titleGraySmallBold('パス'),
+                  image.image(height: 20),
+                  const SizedBox(height: SizeConfig.smallestMargin),
+                  TextWidget.titleGraySmallest(title),
                 ],
               ),
           ),
-          onTap: () async {
-            countDownController?.disposeTimer();
-            await wrongAnswerAction(entity);
-          },
+          onTap: onTap,
         ),
       ),
     );
@@ -566,27 +614,28 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       children: randomText.mapIndexed((i,e) {
         final randomCrossAxisCellCount = randomAxisSize[i].$1;
         final randomMainAxisCellCount = randomAxisSize[i].$2;
-        logger.d(
-            'cross: $randomCrossAxisCellCount, main: $randomMainAxisCellCount');
-        return StaggeredGridTile.count(
-            crossAxisCellCount: randomCrossAxisCellCount,
-            mainAxisCellCount: randomMainAxisCellCount,
-            child: WaitableElevatedButton(
-              child: Text(e),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: ColorConfig.fontGrey,
-                backgroundColor: Colors.white,
-                elevation: 16,
-                shape: const CircleBorder(),
+        return Visibility(
+          visible: pinCodeTextField != null,
+          child: StaggeredGridTile.count(
+              crossAxisCellCount: randomCrossAxisCellCount,
+              mainAxisCellCount: randomMainAxisCellCount,
+              child: WaitableElevatedButton(
+                child: Text(e),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: ColorConfig.fontGrey,
+                  backgroundColor: Colors.white,
+                  elevation: 16,
+                  shape: const CircleBorder(),
+                ),
+                onPressed: () async {
+                  setState(() {
+                    pinCodeTextFieldController?.text += e;
+                    currentText += e;
+                  });
+                },
               ),
-              onPressed: () async {
-                setState(() {
-                  pinCodeTextFieldController?.text += e;
-                  currentText += e;
-                });
-              },
-            ),
 
+          ),
         );
       }).toList(),
     );
