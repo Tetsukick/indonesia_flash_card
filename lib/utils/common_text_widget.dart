@@ -1,6 +1,11 @@
-import 'package:auto_size_text/auto_size_text.dart';
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:auto_size_text/auto_size_text.dart';
+
+// Project imports:
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 
@@ -125,12 +130,26 @@ class TextWidget {
     return AutoSizeText(
       data,
       maxLines: maxLines,
-      minFontSize: 16,
-      maxFontSize: 24,
+      minFontSize: 24,
+      maxFontSize: 32,
       style: const TextStyle(
           fontWeight: FontWeight.bold,
           color: ColorConfig.fontGrey,
-          fontSize: 24,
+          fontSize: 32,
+      ),
+    );
+  }
+
+  static Widget titleGrayLargestBold(String data, {int maxLines = 1}) {
+    return AutoSizeText(
+      data,
+      maxLines: maxLines,
+      minFontSize: 16,
+      maxFontSize: 24,
+      style: const TextStyle(
+        fontWeight: FontWeight.bold,
+        color: ColorConfig.fontGrey,
+        fontSize: 24,
       ),
     );
   }

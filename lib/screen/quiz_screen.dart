@@ -1,9 +1,17 @@
+// Dart imports:
 import 'dart:async';
+import 'dart:math' as math;
 
+// Flutter imports:
+import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+// Package imports:
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+// Project imports:
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 import 'package:indonesia_flash_card/domain/tango_list_service.dart';
@@ -16,9 +24,13 @@ import 'package:indonesia_flash_card/model/word_status_type.dart';
 import 'package:indonesia_flash_card/screen/completion_screen.dart';
 import 'package:indonesia_flash_card/screen/completion_today_test_screen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
+import 'package:indonesia_flash_card/utils/disable_focus_node.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
+import 'package:indonesia_flash_card/utils/shuffle_string.dart';
+import 'package:indonesia_flash_card/utils/string_ext.dart';
 import 'package:indonesia_flash_card/utils/utils.dart';
+import 'package:indonesia_flash_card/utils/waitable_button.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -61,18 +73,28 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   AppDatabase? database;
   StreamController<ErrorAnimationType>? errorController;
   String currentText = '';
+  Map<int, String> randomText = {};
+  List<(int, String)> inputtedTextList = [];
+  List<(int, int)> randomAxisSize = [];
   PinCodeTextField? pinCodeTextField;
+  TextEditingController? pinCodeTextFieldController;
   CountdownTimerController? countDownController;
   final baseQuestionTime = 1000 * 15;
   late int endTime = DateTime.now().millisecondsSinceEpoch + baseQuestionTime;
   final questionExplanation = '日本語に適するインドネシア語を入力してください';
+  String hintText = '';
+  bool isAlreadyOpenHint = false;
 
   @override
   void initState() {
-    FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: AnalyticsScreen.quiz.name);
+    FirebaseAnalyticsUtils.screenTrack(AnalyticsScreen.quiz);
     initializeDB();
     super.initState();
-    initializePinCodeTextField();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      initializePinCodeTextField();
+      setRandomText();
+      setHintText();
+    });
   }
 
   Future<void> initializeDB() async {
@@ -84,7 +106,6 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   }
 
   Future<void> initializePinCodeTextField() async {
-    await Future<void>.delayed(const Duration(milliseconds: 500));
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final entity = questionAnswerList.lesson.tangos[currentIndex];
     await setPinCodeTextField(entity);
@@ -113,7 +134,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                 const SizedBox(height: SizeConfig.smallMargin),
                 _questionAnswerCard(),
                 const SizedBox(height: SizeConfig.smallMargin),
-                _actionButton(type: WordStatusType.notRemembered),
+                _randomKeyboard(),
+                // _actionButton(type: WordStatusType.notRemembered),
               ],
             ),
           ),
@@ -170,10 +192,72 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
           children: [
             TextWidget.titleGrayMediumBold(questionExplanation, maxLines: 2),
             const SizedBox(height: SizeConfig.smallestMargin),
-            TextWidget.titleGraySmallest('ヒント (${entity.indonesian?.split(' ').length}語)', maxLines: 2),
-            TextWidget.titleGraySmallest(hintText(entity.indonesian!), maxLines: 2),
+            TextWidget.titleGraySmallest(
+                'ヒント (${entity.indonesian?.split(' ').length}語)', maxLines: 2),
+            TextWidget.titleGraySmallest(
+                hintText, maxLines: 2),
             _separater(),
             if (pinCodeTextField != null) pinCodeTextField!,
+            const SizedBox(height: SizeConfig.smallestMargin),
+            _actionItems(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _actionItems() {
+    final questionAnswerList = ref.watch(tangoListControllerProvider);
+    final entity = questionAnswerList.lesson.tangos[currentIndex];
+    return Visibility(
+      visible: pinCodeTextField != null,
+      child: SizedBox(
+        width: double.infinity,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            _actionButton(
+                image: Assets.png.lightBulb,
+                title: 'hint',
+                onTap: isAlreadyOpenHint || entity.indonesian!.length <= 3
+                    || questionAnswerList.lesson.isTest
+                    ? null : () async {
+                      openHintMore();
+                    }
+            ),
+            _actionButton(
+                image: Assets.png.skipNext,
+                title: 'skip',
+                onTap: () async {
+                  countDownController?.disposeTimer();
+                  await wrongAnswerAction(entity);
+                }
+            ),
+            _actionButton(
+                image: Assets.png.backOne,
+                title: 'back',
+                onTap: currentText.length == 0 ? null : () async {
+                  logger.d('back button currentText: $currentText');
+                  final removedLastText = currentText.removeLast();
+                  logger.d('back button tapped: $removedLastText');
+                  setState(() {
+                    currentText = removedLastText;
+                    pinCodeTextFieldController?.text = removedLastText;
+                    inputtedTextList.removeLast();
+                  });
+                }
+            ),
+            _actionButton(
+                image: Assets.png.delete,
+                title: 'delete',
+                onTap: currentText.length == 0 ? null : () async {
+                  setState(() {
+                    currentText = '';
+                    pinCodeTextFieldController?.text = '';
+                    inputtedTextList = [];
+                  });
+                }
+            )
           ],
         ),
       ),
@@ -192,14 +276,19 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         ..isCorrect = true
         ..answerTime = baseQuestionTime - remainTime;
       ref.read(tangoListControllerProvider.notifier).addQuizResult(result);
-      await showTrueFalseDialog(true, entity: entity, remainTime: remainTime);
+      await showTrueFalseDialog(
+          isTrue: true, entity: entity, remainTime: remainTime);
       await getNextCard();
     } else {
       errorController?.add(ErrorAnimationType.shake);
     }
   }
 
-  Widget _flashCard({required String title, required TangoEntity tango, bool isFront = true}) {
+  Widget _flashCard({
+    required String title,
+    required TangoEntity tango,
+    bool isFront = true,
+  }) {
     return Card(
       child: SizedBox(
           height: _cardHeight,
@@ -220,7 +309,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
 
   Widget _separater() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: SizeConfig.mediumMargin),
+      padding: const EdgeInsets.symmetric(vertical: SizeConfig.smallMargin),
       child: Container(
         height: 1,
         width: double.infinity,
@@ -256,22 +345,33 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     final currentTango = questionAnswerList.lesson.tangos[currentIndex];
 
     final wordStatusDao = database?.wordStatusDao;
-    final wordStatus = await wordStatusDao?.findWordStatusById(currentTango.id!);
+    final wordStatus =
+      await wordStatusDao?.findWordStatusById(currentTango.id!);
     if (wordStatus != null) {
       if (isCorrect) {
-        if (wordStatus.status == WordStatusType.remembered.id || wordStatus.status == WordStatusType.perfectRemembered.id) {
-          await wordStatusDao?.updateWordStatus(wordStatus..status = WordStatusType.perfectRemembered.id);
+        if (wordStatus.status == WordStatusType.remembered.id
+            || wordStatus.status == WordStatusType.perfectRemembered.id) {
+          await wordStatusDao?.updateWordStatus(
+              wordStatus..status = WordStatusType.perfectRemembered.id);
         } else {
-          await wordStatusDao?.updateWordStatus(wordStatus..status = WordStatusType.remembered.id);
+          await wordStatusDao?.updateWordStatus(
+              wordStatus..status = WordStatusType.remembered.id);
         }
       } else {
-        await wordStatusDao?.updateWordStatus(wordStatus..status = WordStatusType.notRemembered.id);
+        await wordStatusDao?.updateWordStatus(
+            wordStatus..status = WordStatusType.notRemembered.id);
       }
     } else {
       if (isCorrect) {
-        await wordStatusDao?.insertWordStatus(WordStatus(wordId: currentTango.id!, status: WordStatusType.remembered.id));
+        await wordStatusDao?.insertWordStatus(
+            WordStatus(
+                wordId: currentTango.id!,
+                status: WordStatusType.remembered.id));
       } else {
-        await wordStatusDao?.insertWordStatus(WordStatus(wordId: currentTango.id!, status: WordStatusType.notRemembered.id));
+        await wordStatusDao?.insertWordStatus(
+            WordStatus(
+                wordId: currentTango.id!,
+                status: WordStatusType.notRemembered.id));
       }
     }
   }
@@ -282,7 +382,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
 
     final activityDao = database?.activityDao;
     final now = Utils.dateTimeToString(DateTime.now());
-    await activityDao?.insertActivity(Activity(date: now, wordId: currentTango.id!));
+    await activityDao?.insertActivity(
+        Activity(date: now, wordId: currentTango.id!));
   }
 
   Future<void> getNextCard() async {
@@ -299,10 +400,16 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     }
     setState(() {
       currentText = '';
+      randomText = {};
+      inputtedTextList = [];
+      randomAxisSize = [];
+      hintText = '';
       currentIndex++;
     });
     final entity = questionAnswerList.lesson.tangos[currentIndex];
     await setPinCodeTextField(entity);
+    setRandomText();
+    setHintText();
   }
 
   void analytics(FlushCardItem item, {String? others = ''}) {
@@ -325,6 +432,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       errorController?.close();
       errorController = null;
       countDownController = null;
+      pinCodeTextFieldController = null;
     });
 
     await Future<void>.delayed(const Duration(milliseconds: 1200));
@@ -337,10 +445,11 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     final fontSize = getFontSize(entity.indonesian?.length ?? 0);
     setState(() {
       errorController = StreamController<ErrorAnimationType>();
+      pinCodeTextFieldController = TextEditingController();
       pinCodeTextField = PinCodeTextField(
         length: entity.indonesian?.length ?? 0,
         animationType: AnimationType.fade,
-        autoFocus: true,
+        autoFocus: false,
         pinTheme: PinTheme(
           shape: PinCodeFieldShape.box,
           borderRadius: BorderRadius.circular(5),
@@ -357,15 +466,11 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         animationDuration: const Duration(milliseconds: 300),
         enableActiveFill: true,
         errorAnimationController: errorController,
-        controller: TextEditingController(),
+        focusNode: AlwaysDisabledFocusNode(),
+        controller: pinCodeTextFieldController,
         onCompleted: (v) {
           logger.d(v);
           _answer(v, entity: entity);
-        },
-        onChanged: (value) {
-          setState(() {
-            currentText = value;
-          });
         },
         appContext: context,
       );
@@ -426,13 +531,22 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     });
   }
 
-  Future<void> showTrueFalseDialog(bool isTrue, {required TangoEntity entity, int? remainTime}) async {
+  Future<void> showTrueFalseDialog({
+    required bool isTrue,
+    required TangoEntity entity,
+    int? remainTime,
+  }) async {
+    final questionAnswerList = ref.watch(tangoListControllerProvider);
     unawaited(showGeneralDialog(
         context: context,
         barrierDismissible: false,
         transitionDuration: const Duration(milliseconds: 300),
         barrierColor: Colors.black.withOpacity(0.5),
-        pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
+        pageBuilder: (
+            BuildContext context,
+            Animation animation,
+            Animation secondaryAnimation
+            ) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -444,8 +558,13 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                 Visibility(
                   visible: remainTime != null,
                     child: Padding(
-                      padding: const EdgeInsets.all(SizeConfig.mediumSmallMargin),
-                      child: TextWidget.titleWhiteLargeBold('回答時間: ${baseQuestionTime - (remainTime ?? 0)} ms'),
+                      padding: const EdgeInsets.all(
+                          SizeConfig.mediumSmallMargin),
+                      child: Visibility(
+                        visible: questionAnswerList.lesson.isTest,
+                        child: TextWidget.titleWhiteLargeBold(
+                            '回答時間: ${baseQuestionTime - (remainTime ?? 0)} ms'),
+                      ),
                     ),
                 ),
                 Visibility(
@@ -465,32 +584,34 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     Navigator.of(context).pop();
   }
 
-  Widget _actionButton({required WordStatusType type}) {
+  Widget _actionButton({
+    required AssetGenImage image,
+    required String title,
+    AsyncCallback? onTap,
+  }) {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final entity = questionAnswerList.lesson.tangos[currentIndex];
 
     return Visibility(
       visible: pinCodeTextField != null,
-      child: Card(
-        shape: const CircleBorder(),
-        child: InkWell(
-          child: SizedBox(
-              height: 120,
-              width: 120,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  type.iconLarge,
-                  const SizedBox(height: SizeConfig.smallMargin),
-                  TextWidget.titleGraySmallBold('パス'),
-                ],
-              ),
-          ),
-          onTap: () async {
-            countDownController?.disposeTimer();
-            await wrongAnswerAction(entity);
-          },
+      child: WaitableElevatedButton(
+        child: SizedBox(
+            height: 56,
+            width: 56,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                image.image(height: 24),
+                TextWidget.titleGraySmallest(title),
+              ],
+            ),
         ),
+        style: ElevatedButton.styleFrom(
+          elevation: 2,
+          padding: EdgeInsets.zero,
+          shape: const CircleBorder(),
+        ),
+        onPressed: onTap,
       ),
     );
   }
@@ -498,7 +619,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   Future<void> wrongAnswerAction(TangoEntity entity) async {
     await registerWordStatus(isCorrect: false);
     await registerActivity();
-    await showTrueFalseDialog(false, entity: entity);
+    await showTrueFalseDialog(isTrue: false, entity: entity);
     final result = QuizResult()
       ..entity = entity
       ..isCorrect = false;
@@ -506,7 +627,117 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     await getNextCard();
   }
 
-  String hintText(String value) {
-    return value.replaceAll(RegExp(r'[a-zA-Z]'), '*');
+  Widget _randomKeyboard() {
+    const crossAxisCount = 16;
+    final basicSideLength =
+        (MediaQuery.of(context).size.width - (SizeConfig.mediumMargin * 2))
+            / crossAxisCount;
+
+    return StaggeredGrid.count(
+      crossAxisCount: crossAxisCount,
+      mainAxisSpacing: 4,
+      crossAxisSpacing: 4,
+      children: randomText.map<int, Widget>((i,e) {
+        final randomCrossAxisCellCount = randomAxisSize[i].$1;
+        final randomMainAxisCellCount = randomAxisSize[i].$2;
+        final isNotUsed = inputtedTextList
+            .firstWhereOrNull((e) => e.$1 == i) == null;
+        final isLargeButton = math.min(randomMainAxisCellCount, randomCrossAxisCellCount) >= 3;
+        final needFixedPosition =
+          (randomMainAxisCellCount == 2 && randomCrossAxisCellCount == 1)
+          || (randomMainAxisCellCount == 1 && randomCrossAxisCellCount == 1);
+        logger.d('$e, main: $randomMainAxisCellCount, cross: $randomCrossAxisCellCount');
+        return MapEntry(
+          i,
+          Visibility(
+            visible: pinCodeTextField != null,
+            child: StaggeredGridTile.count(
+              crossAxisCellCount: randomCrossAxisCellCount,
+              mainAxisCellCount: randomMainAxisCellCount,
+              child: SizedBox(
+                width: basicSideLength * math.min(
+                    randomCrossAxisCellCount, randomMainAxisCellCount),
+                height: basicSideLength * math.min(
+                    randomCrossAxisCellCount, randomMainAxisCellCount),
+                child: WaitableElevatedButton(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: isLargeButton
+                        ? TextWidget
+                          .titleGrayLargestBold(e == ' ' ? '␣' : e)
+                        : TextWidget
+                          .titleGrayMediumBold(e == ' ' ? '␣' : e),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: ColorConfig.fontGrey,
+                    backgroundColor: Colors.white,
+                    elevation: 8,
+                    shape: const CircleBorder(),
+                  ),
+                  onPressed: isNotUsed ? () async {
+                    setState(() {
+                      pinCodeTextFieldController?.text += e;
+                      currentText += e;
+                      inputtedTextList.add((i, e));
+                    });
+                  } : null,
+                ),
+              ),
+            ),
+          ),
+        );
+      }).values.toList(),
+    );
+  }
+
+  void setRandomText() {
+    final questionAnswerList = ref.watch(tangoListControllerProvider);
+    final entity = questionAnswerList.lesson.tangos[currentIndex];
+    final shuffledTextList = entity.indonesian!.shuffled.split('');
+    final rand = math.Random();
+    final randomAxisList = shuffledTextList.map((_) {
+      final randomCrossAxisCellCount = rand.nextInt(2) + 3;
+      final randomMainAxisCellCount = rand.nextInt(3) + 2;
+      return (randomCrossAxisCellCount, randomMainAxisCellCount);
+    }).toList();
+    setState(() {
+      randomText = shuffledTextList.asMap();
+      randomAxisSize = randomAxisList;
+    });
+  }
+
+  void setHintText() {
+    final questionAnswerList = ref.watch(tangoListControllerProvider);
+    final entity = questionAnswerList.lesson.tangos[currentIndex];
+    setState(() {
+      isAlreadyOpenHint = false;
+      hintText = entity.indonesian!.replaceAll(RegExp(r'[a-zA-Z]'), '*');
+    });
+  }
+
+  void openHintMore() {
+    if (isAlreadyOpenHint) {
+      return;
+    }
+    final questionAnswerList = ref.watch(tangoListControllerProvider);
+    final entity = questionAnswerList.lesson.tangos[currentIndex];
+    final textLength = entity.indonesian!.length;
+    const openHintPercentage = 0.3;
+    if (textLength <= 3) {
+      return;
+    } else {
+      final rand = math.Random();
+      final openTextCount = (textLength * openHintPercentage).ceil();
+      final randomList =
+        List.generate(textLength, (i)=> i)..shuffle();
+      var currentHintText = hintText.split('');
+      for (var i = 0; i < openTextCount; i++) {
+        currentHintText[randomList[i]] = entity.indonesian![randomList[i]];
+      }
+      setState(() {
+        hintText = currentHintText.join();
+        isAlreadyOpenHint = true;
+      });
+    }
   }
 }

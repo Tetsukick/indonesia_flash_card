@@ -1,3 +1,4 @@
+// Package imports:
 import 'package:floor/floor.dart';
 
 final migration2to3 = Migration(2, 3, (database) async {

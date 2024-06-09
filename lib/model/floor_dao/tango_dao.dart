@@ -1,4 +1,7 @@
+// Package imports:
 import 'package:floor/floor.dart';
+
+// Project imports:
 import 'package:indonesia_flash_card/model/tango_entity.dart';
 
 @dao

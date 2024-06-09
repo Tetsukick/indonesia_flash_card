@@ -1,8 +1,11 @@
+// Package imports:
 import 'package:dio/dio.dart';
+import 'package:logger/logger.dart';
+
+// Project imports:
 import 'package:indonesia_flash_card/api/api_error.dart';
 import 'package:indonesia_flash_card/api/response/response_object.dart';
 import 'package:indonesia_flash_card/config/config.dart';
-import 'package:logger/logger.dart';
 import 'api_exception.dart';
 import 'api_response.dart';
 import 'custom_exception.dart';

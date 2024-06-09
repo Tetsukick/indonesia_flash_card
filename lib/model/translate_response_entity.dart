@@ -1,4 +1,7 @@
+// Dart imports:
 import 'dart:convert';
+
+// Project imports:
 import 'package:indonesia_flash_card/generated/json/base/json_field.dart';
 import 'package:indonesia_flash_card/generated/json/translate_response_entity.g.dart';
 

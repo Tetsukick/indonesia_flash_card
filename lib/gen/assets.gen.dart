@@ -195,6 +195,9 @@ class $AssetsPngGen {
   AssetGenImage get askingQuestion128 =>
       const AssetGenImage('assets/png/asking_question_128.png');
 
+  /// File path: assets/png/back-one.png
+  AssetGenImage get backOne => const AssetGenImage('assets/png/back-one.png');
+
   /// File path: assets/png/best-answer_128.png
   AssetGenImage get bestAnswer128 =>
       const AssetGenImage('assets/png/best-answer_128.png');
@@ -234,6 +237,9 @@ class $AssetsPngGen {
   /// File path: assets/png/continue_128.png
   AssetGenImage get continue128 =>
       const AssetGenImage('assets/png/continue_128.png');
+
+  /// File path: assets/png/delete.png
+  AssetGenImage get delete => const AssetGenImage('assets/png/delete.png');
 
   /// File path: assets/png/developer_128.png
   AssetGenImage get developer128 =>
@@ -308,6 +314,10 @@ class $AssetsPngGen {
   AssetGenImage get licence128 =>
       const AssetGenImage('assets/png/licence_128.png');
 
+  /// File path: assets/png/light-bulb.png
+  AssetGenImage get lightBulb =>
+      const AssetGenImage('assets/png/light-bulb.png');
+
   /// File path: assets/png/menu_color.png
   AssetGenImage get menuColor =>
       const AssetGenImage('assets/png/menu_color.png');
@@ -338,6 +348,9 @@ class $AssetsPngGen {
   /// File path: assets/png/settings_color_2.png
   AssetGenImage get settingsColor2 =>
       const AssetGenImage('assets/png/settings_color_2.png');
+
+  /// File path: assets/png/skip-next.png
+  AssetGenImage get skipNext => const AssetGenImage('assets/png/skip-next.png');
 
   /// File path: assets/png/sns_share_128.png
   AssetGenImage get snsShare128 =>
@@ -370,6 +383,7 @@ class $AssetsPngGen {
         addQuestion128,
         answerRaiseHand128,
         askingQuestion128,
+        backOne,
         bestAnswer128,
         bookmarkOff64,
         bookmarkOn64,
@@ -380,6 +394,7 @@ class $AssetsPngGen {
         checkedGreen128,
         checkedGreen512,
         continue128,
+        delete,
         developer128,
         dictionaryBlack,
         dictionaryBlack2,
@@ -399,6 +414,7 @@ class $AssetsPngGen {
         japan64,
         japanFuji64,
         licence128,
+        lightBulb,
         menuColor,
         minus128,
         privacypolicy128,
@@ -407,6 +423,7 @@ class $AssetsPngGen {
         search128,
         settingsColor,
         settingsColor2,
+        skipNext,
         snsShare128,
         sort128,
         sort64,

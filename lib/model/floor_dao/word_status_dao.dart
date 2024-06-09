@@ -1,4 +1,7 @@
+// Package imports:
 import 'package:floor/floor.dart';
+
+// Project imports:
 import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
 
 @dao

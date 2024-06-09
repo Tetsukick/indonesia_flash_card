@@ -1,9 +1,15 @@
+// Dart imports:
 import 'dart:math' as math;
+
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// Project imports:
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/part_of_speech.dart';
-
 import '../../../config/size_config.dart';
 import '../../../domain/file_service.dart';
 import '../../../domain/tango_list_service.dart';

@@ -1,12 +1,17 @@
+// Dart imports:
 import 'dart:async';
 import 'dart:math' as math;
 
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
+// Project imports:
 import '../config/color_config.dart';
 import '../gen/assets.gen.dart';
 
