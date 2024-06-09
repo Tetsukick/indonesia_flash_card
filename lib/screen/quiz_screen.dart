@@ -622,6 +622,11 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         final randomMainAxisCellCount = randomAxisSize[i].$2;
         final isNotUsed = inputtedTextList
             .firstWhereOrNull((e) => e.$1 == i) == null;
+        final isLargeButton = randomCrossAxisCellCount == 2
+            && randomMainAxisCellCount == 2;
+        final needFixedPosition =
+            randomCrossAxisCellCount == randomMainAxisCellCount;
+        logger.d('$e, main: $randomMainAxisCellCount, cross: $randomCrossAxisCellCount');
         return MapEntry(
           i,
           Visibility(
@@ -630,11 +635,13 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
               crossAxisCellCount: randomCrossAxisCellCount,
               mainAxisCellCount: randomMainAxisCellCount,
               child: WaitableElevatedButton(
-                child: Center(
-                  child: randomCrossAxisCellCount == 2
-                      && randomMainAxisCellCount == 2
-                      ? Flexible(child: TextWidget.titleGrayLargestBold(e))
-                      : Flexible(child: TextWidget.titleGrayMediumBold(e)),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: isLargeButton
+                      ? TextWidget
+                        .titleGrayLargestBold(e == ' ' ? '␣' : e)
+                      : TextWidget
+                        .titleGrayMediumBold(e == ' ' ? '␣' : e),
                 ),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: ColorConfig.fontGrey,
