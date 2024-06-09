@@ -3,7 +3,7 @@ description: Flash card application of Indonesian language for Japanese
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 3.3.7+88
+version: 3.3.8+89
 
 environment:
   sdk: '>=3.1.0 <4.0.0'
