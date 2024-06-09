@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 // Flutter imports:
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
@@ -71,6 +72,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   StreamController<ErrorAnimationType>? errorController;
   String currentText = '';
   List<String> randomText = [];
+  List<(int, int)> randomAxisSize = [];
   PinCodeTextField? pinCodeTextField;
   TextEditingController? pinCodeTextFieldController;
   CountdownTimerController? countDownController;
@@ -556,15 +558,14 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   }
 
   Widget _randomKeyboard() {
-    final rand = math.Random();
 
     return StaggeredGrid.count(
       crossAxisCount: 7,
       mainAxisSpacing: 4,
       crossAxisSpacing: 4,
-      children: randomText.map((e) {
-        final randomCrossAxisCellCount = rand.nextInt(2) + 1;
-        final randomMainAxisCellCount = rand.nextInt(2) + 1;
+      children: randomText.mapIndexed((i,e) {
+        final randomCrossAxisCellCount = randomAxisSize[i].$1;
+        final randomMainAxisCellCount = randomAxisSize[i].$2;
         logger.d(
             'cross: $randomCrossAxisCellCount, main: $randomMainAxisCellCount');
         return StaggeredGridTile.count(
@@ -595,8 +596,15 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final entity = questionAnswerList.lesson.tangos[currentIndex];
     final shuffledTextList = entity.indonesian!.shuffled.split('');
+    final rand = math.Random();
+    final randomAxisList = shuffledTextList.map((_) {
+      final randomCrossAxisCellCount = rand.nextInt(2) + 1;
+      final randomMainAxisCellCount = rand.nextInt(2) + 1;
+      return (randomCrossAxisCellCount, randomMainAxisCellCount);
+    }).toList();
     setState(() {
       randomText = shuffledTextList;
+      randomAxisSize = randomAxisList;
     });
   }
 }
