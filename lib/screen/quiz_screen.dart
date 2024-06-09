@@ -82,6 +82,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   final baseQuestionTime = 1000 * 15;
   late int endTime = DateTime.now().millisecondsSinceEpoch + baseQuestionTime;
   final questionExplanation = '日本語に適するインドネシア語を入力してください';
+  String hintText = '';
+  bool isAlreadyOpenHint = false;
 
   @override
   void initState() {
@@ -91,6 +93,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       initializePinCodeTextField();
       setRandomText();
+      setHintText();
     });
   }
 
@@ -192,7 +195,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
             TextWidget.titleGraySmallest(
                 'ヒント (${entity.indonesian?.split(' ').length}語)', maxLines: 2),
             TextWidget.titleGraySmallest(
-                hintText(entity.indonesian!), maxLines: 2),
+                hintText, maxLines: 2),
             _separater(),
             if (pinCodeTextField != null) pinCodeTextField!,
             const SizedBox(height: SizeConfig.smallestMargin),
@@ -213,6 +216,15 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
+            _actionButton(
+                image: Assets.png.lightBulb,
+                title: 'hint',
+                onTap: isAlreadyOpenHint || entity.indonesian!.length <= 3
+                    || questionAnswerList.lesson.isTest
+                    ? null : () async {
+                      openHintMore();
+                    }
+            ),
             _actionButton(
                 image: Assets.png.skipNext,
                 title: 'skip',
@@ -391,11 +403,13 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       randomText = {};
       inputtedTextList = [];
       randomAxisSize = [];
+      hintText = '';
       currentIndex++;
     });
     final entity = questionAnswerList.lesson.tangos[currentIndex];
     await setPinCodeTextField(entity);
     setRandomText();
+    setHintText();
   }
 
   void analytics(FlushCardItem item, {String? others = ''}) {
@@ -522,6 +536,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     required TangoEntity entity,
     int? remainTime,
   }) async {
+    final questionAnswerList = ref.watch(tangoListControllerProvider);
     unawaited(showGeneralDialog(
         context: context,
         barrierDismissible: false,
@@ -545,8 +560,11 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(
                           SizeConfig.mediumSmallMargin),
-                      child: TextWidget.titleWhiteLargeBold(
-                          '回答時間: ${baseQuestionTime - (remainTime ?? 0)} ms'),
+                      child: Visibility(
+                        visible: questionAnswerList.lesson.isTest,
+                        child: TextWidget.titleWhiteLargeBold(
+                            '回答時間: ${baseQuestionTime - (remainTime ?? 0)} ms'),
+                      ),
                     ),
                 ),
                 Visibility(
@@ -607,10 +625,6 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       ..isCorrect = false;
     ref.read(tangoListControllerProvider.notifier).addQuizResult(result);
     await getNextCard();
-  }
-
-  String hintText(String value) {
-    return value.replaceAll(RegExp(r'[a-zA-Z]'), '*');
   }
 
   Widget _randomKeyboard() {
@@ -682,7 +696,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     final shuffledTextList = entity.indonesian!.shuffled.split('');
     final rand = math.Random();
     final randomAxisList = shuffledTextList.map((_) {
-      final randomCrossAxisCellCount = rand.nextInt(3) + 2;
+      final randomCrossAxisCellCount = rand.nextInt(2) + 3;
       final randomMainAxisCellCount = rand.nextInt(3) + 2;
       return (randomCrossAxisCellCount, randomMainAxisCellCount);
     }).toList();
@@ -690,5 +704,40 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       randomText = shuffledTextList.asMap();
       randomAxisSize = randomAxisList;
     });
+  }
+
+  void setHintText() {
+    final questionAnswerList = ref.watch(tangoListControllerProvider);
+    final entity = questionAnswerList.lesson.tangos[currentIndex];
+    setState(() {
+      isAlreadyOpenHint = false;
+      hintText = entity.indonesian!.replaceAll(RegExp(r'[a-zA-Z]'), '*');
+    });
+  }
+
+  void openHintMore() {
+    if (isAlreadyOpenHint) {
+      return;
+    }
+    final questionAnswerList = ref.watch(tangoListControllerProvider);
+    final entity = questionAnswerList.lesson.tangos[currentIndex];
+    final textLength = entity.indonesian!.length;
+    const openHintPercentage = 0.3;
+    if (textLength <= 3) {
+      return;
+    } else {
+      final rand = math.Random();
+      final openTextCount = (textLength * openHintPercentage).ceil();
+      final randomList =
+        List.generate(textLength, (i)=> i)..shuffle();
+      var currentHintText = hintText.split('');
+      for (var i = 0; i < openTextCount; i++) {
+        currentHintText[randomList[i]] = entity.indonesian![randomList[i]];
+      }
+      setState(() {
+        hintText = currentHintText.join();
+        isAlreadyOpenHint = true;
+      });
+    }
   }
 }

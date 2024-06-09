@@ -314,6 +314,10 @@ class $AssetsPngGen {
   AssetGenImage get licence128 =>
       const AssetGenImage('assets/png/licence_128.png');
 
+  /// File path: assets/png/light-bulb.png
+  AssetGenImage get lightBulb =>
+      const AssetGenImage('assets/png/light-bulb.png');
+
   /// File path: assets/png/menu_color.png
   AssetGenImage get menuColor =>
       const AssetGenImage('assets/png/menu_color.png');
@@ -410,6 +414,7 @@ class $AssetsPngGen {
         japan64,
         japanFuji64,
         licence128,
+        lightBulb,
         menuColor,
         minus128,
         privacypolicy128,
