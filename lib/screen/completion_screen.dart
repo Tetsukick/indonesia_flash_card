@@ -48,7 +48,7 @@ class CompletionScreen extends ConsumerStatefulWidget {
 
 class _CompletionScreenState extends ConsumerState<CompletionScreen> {
   final itemCardHeight = 88.0;
-  final baseQuestionTime = 1000 * 15;
+  final baseQuestionTime = 1000 * 20;
   final _baseScore = 10.0;
   AppDatabase? database;
 

@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
+import 'package:flutter_countdown_timer/current_remaining_time.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -79,11 +80,13 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   PinCodeTextField? pinCodeTextField;
   TextEditingController? pinCodeTextFieldController;
   CountdownTimerController? countDownController;
-  final baseQuestionTime = 1000 * 15;
+  final baseQuestionTime = 1000 * 20;
   late int endTime = DateTime.now().millisecondsSinceEpoch + baseQuestionTime;
   final questionExplanation = '日本語に適するインドネシア語を入力してください';
   String hintText = '';
   bool isAlreadyOpenHint = false;
+  bool isCheckingAnswer = false;
+  bool isTimeOver = false;
 
   @override
   void initState() {
@@ -220,7 +223,6 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                 image: Assets.png.lightBulb,
                 title: 'hint',
                 onTap: isAlreadyOpenHint || entity.indonesian!.length <= 3
-                    || questionAnswerList.lesson.isTest
                     ? null : () async {
                       openHintMore();
                     }
@@ -265,6 +267,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   }
 
   Future<void> _answer(String input, {required TangoEntity entity}) async {
+    setState(() => isCheckingAnswer = true);
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final entity = questionAnswerList.lesson.tangos[currentIndex];
     if (entity.indonesian!.toLowerCase() == input.toLowerCase()) {
@@ -274,6 +277,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       final result = QuizResult()
         ..entity = entity
         ..isCorrect = true
+        ..isUsedHint = isAlreadyOpenHint
         ..answerTime = baseQuestionTime - remainTime;
       ref.read(tangoListControllerProvider.notifier).addQuizResult(result);
       await showTrueFalseDialog(
@@ -281,7 +285,11 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       await getNextCard();
     } else {
       errorController?.add(ErrorAnimationType.shake);
+      if (isTimeOver) {
+        wrongAnswerAction(entity);
+      }
     }
+    setState(() => isCheckingAnswer = false);
   }
 
   Widget _flashCard({
@@ -349,13 +357,18 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       await wordStatusDao?.findWordStatusById(currentTango.id!);
     if (wordStatus != null) {
       if (isCorrect) {
-        if (wordStatus.status == WordStatusType.remembered.id
-            || wordStatus.status == WordStatusType.perfectRemembered.id) {
-          await wordStatusDao?.updateWordStatus(
-              wordStatus..status = WordStatusType.perfectRemembered.id);
-        } else {
+        if (isAlreadyOpenHint) {
           await wordStatusDao?.updateWordStatus(
               wordStatus..status = WordStatusType.remembered.id);
+        } else {
+          if (wordStatus.status == WordStatusType.remembered.id
+              || wordStatus.status == WordStatusType.perfectRemembered.id) {
+            await wordStatusDao?.updateWordStatus(
+                wordStatus..status = WordStatusType.perfectRemembered.id);
+          } else {
+            await wordStatusDao?.updateWordStatus(
+                wordStatus..status = WordStatusType.remembered.id);
+          }
         }
       } else {
         await wordStatusDao?.updateWordStatus(
@@ -438,7 +451,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     await Future<void>.delayed(const Duration(milliseconds: 1200));
 
     if (questionAnswerList.lesson.isTest) {
-      setCountDownController(entity);
+      setCountDownController(entity: entity);
     }
     final pinHeight = getPinHeight(entity.indonesian?.length ?? 0);
     final pinWidth = getPinWidth(entity.indonesian?.length ?? 0);
@@ -519,9 +532,9 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     }
   }
 
-  void setCountDownController(TangoEntity entity) {
+  void setCountDownController({required TangoEntity entity}) {
     setState(() {
-      endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 15 + 500;
+      endTime = DateTime.now().millisecondsSinceEpoch + baseQuestionTime + 500;
       countDownController = CountdownTimerController(
         endTime: endTime,
         onEnd: () async {
@@ -617,14 +630,19 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   }
 
   Future<void> wrongAnswerAction(TangoEntity entity) async {
-    await registerWordStatus(isCorrect: false);
-    await registerActivity();
-    await showTrueFalseDialog(isTrue: false, entity: entity);
-    final result = QuizResult()
-      ..entity = entity
-      ..isCorrect = false;
-    ref.read(tangoListControllerProvider.notifier).addQuizResult(result);
-    await getNextCard();
+    if (isCheckingAnswer) {
+      setState(() => isTimeOver = true);
+    } else {
+      await registerWordStatus(isCorrect: false);
+      await registerActivity();
+      await showTrueFalseDialog(isTrue: false, entity: entity);
+      final result = QuizResult()
+        ..entity = entity
+        ..isCorrect = false;
+      ref.read(tangoListControllerProvider.notifier).addQuizResult(result);
+      await getNextCard();
+      setState(() => isTimeOver = false);
+    }
   }
 
   Widget _randomKeyboard() {
@@ -646,7 +664,6 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         final needFixedPosition =
           (randomMainAxisCellCount == 2 && randomCrossAxisCellCount == 1)
           || (randomMainAxisCellCount == 1 && randomCrossAxisCellCount == 1);
-        logger.d('$e, main: $randomMainAxisCellCount, cross: $randomCrossAxisCellCount');
         return MapEntry(
           i,
           Visibility(
@@ -722,7 +739,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final entity = questionAnswerList.lesson.tangos[currentIndex];
     final textLength = entity.indonesian!.length;
-    const openHintPercentage = 0.3;
+    final openHintPercentage = textLength <= 8
+        ? 0.3 : textLength <= 12 ? 0.4 : 0.5;
     if (textLength <= 3) {
       return;
     } else {
