@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:indonesia_flash_card/utils/admob.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:social_share/social_share.dart';
@@ -57,7 +58,6 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
   final _baseScore = 10.0;
   AppDatabase? database;
   ScreenshotController screenshotController = ScreenshotController();
-  InterstitialAd? _interstitialAd;
 
   @override
   void initState() {
@@ -65,7 +65,6 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
     initializeDB();
     super.initState();
     PreferenceKey.lastTestDate.setString(Utils.dateTimeToString(DateTime.now()));
-    loadInterstitialAd();
   }
 
   Future<void> initializeDB() async {
@@ -107,7 +106,8 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _button(
-                      onPressed: () {
+                      onPressed: () async {
+                        await Admob().showInterstitialAd();
                         analytics(LessonCompItem.backTop);
                         Navigator.of(context).popUntil((route) => route.isFirst);
                       },
@@ -310,7 +310,6 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
     return Card(
         child: InkWell(
           onTap: () async {
-            await showInterstitialAd();
             await shareSNS();
           },
           child: SizedBox(
@@ -349,28 +348,5 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
           '本日のインドネシア単語検定\nスコア: ${calculateTotalScore(tangoList.lesson.quizResults).toStringAsFixed(3)} 点\nランク: ${RankExt.doubleToRank(score: calculateTotalScore(tangoList.lesson.quizResults)).title}\n#BINTANGO #インドネシア語学習'
           ,imagePath: file.path,);
     });
-  }
-
-
-  Future<void> loadInterstitialAd() async {
-    await InterstitialAd.load(
-        adUnitId: Platform.isIOS ?
-          Config.adUnitIdIosInterstitial : Config.adUnitIdAndroidInterstitial,
-        request: const AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (InterstitialAd ad) {
-            _interstitialAd = ad;
-            logger.d('Ad loaded.$ad');
-          },
-          onAdFailedToLoad: (LoadAdError error) {
-            logger.d('Ad failed to load: $error');
-          },
-        ),);
-  }
-
-  Future<void> showInterstitialAd() async {
-    if (_interstitialAd != null) {
-      await _interstitialAd?.show();
-    }
   }
 }
