@@ -53,7 +53,7 @@ class CompletionTodayTestScreen extends ConsumerStatefulWidget {
 
 class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestScreen> {
   final itemCardHeight = 88.0;
-  final baseQuestionTime = 1000 * 15;
+  final baseQuestionTime = 1000 * 20;
   final _baseScore = 10.0;
   AppDatabase? database;
   ScreenshotController screenshotController = ScreenshotController();
@@ -298,7 +298,7 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
     results.forEach((result) {
       if (result.isCorrect) {
         final _factor = LevelGroupExt.intToLevelGroup(value: result.entity!.level!).testFactor;
-        final _baseLevelScore = _baseScore * _factor;
+        final _baseLevelScore = _baseScore * _factor * (result.isUsedHint ? 0.9 : 1);
         score += _baseLevelScore;
         score += _baseLevelScore * ((baseQuestionTime - result.answerTime) / baseQuestionTime);
       }

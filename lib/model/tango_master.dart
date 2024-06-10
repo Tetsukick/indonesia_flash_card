@@ -36,5 +36,6 @@ class Lesson {
 class QuizResult {
   TangoEntity? entity;
   bool isCorrect = false;
-  int answerTime = 15 * 1000;
+  bool isUsedHint = false;
+  int answerTime = 20 * 1000;
 }
