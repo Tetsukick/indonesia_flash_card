@@ -19,6 +19,7 @@ import 'package:indonesia_flash_card/domain/tango_list_service.dart';
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/floor_entity/activity.dart';
 import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
+import 'package:indonesia_flash_card/model/part_of_speech.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
 import 'package:indonesia_flash_card/model/tango_master.dart';
 import 'package:indonesia_flash_card/model/word_status_type.dart';
@@ -87,6 +88,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   bool isAlreadyOpenHint = false;
   bool isCheckingAnswer = false;
   bool isTimeOver = false;
+  final _iconHeight = 20.0;
+  final _iconWidth = 20.0;
 
   @override
   void initState() {
@@ -592,34 +595,18 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
               children: [
                 Lottie.asset(
                   isTrue ? Assets.lottie.checkGreen : Assets.lottie.crossRed,
-                  height: _cardHeight * 2,
+                  height: _cardHeight,
                 ),
-                Visibility(
-                  visible: remainTime != null,
-                    child: Padding(
-                      padding: const EdgeInsets.all(
-                          SizeConfig.mediumSmallMargin),
-                      child: Visibility(
-                        visible: questionAnswerList.lesson.isTest,
-                        child: TextWidget.titleWhiteLargeBold(
-                            '回答時間: ${baseQuestionTime - (remainTime ?? 0)} ms'),
-                      ),
-                    ),
-                ),
-                Visibility(
-                  visible: !isTrue,
-                  child: _flashCard(
-                    title: 'インドネシア語',
-                    tango: entity,
-                    isFront: false,
-                  ),
+                Padding(
+                  padding: const EdgeInsets.all(SizeConfig.mediumMargin),
+                  child: _wordDetailCard(entity),
                 ),
               ],
             ),
           );
         },
     ),);
-    await Future<void>.delayed(const Duration(seconds: 2));
+    await Future<void>.delayed(const Duration(seconds: 3));
     Navigator.of(context).pop();
   }
 
@@ -783,5 +770,172 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         isAlreadyOpenHint = true;
       });
     }
+  }
+
+  Widget _wordDetailCard(TangoEntity entity) {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(SizeConfig.mediumSmallMargin),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _partOfSpeech(entity),
+              const SizedBox(height: SizeConfig.smallMargin),
+              _indonesian(entity),
+              const SizedBox(height: SizeConfig.smallestMargin),
+              _separater(),
+              _japanese(entity),
+              const SizedBox(height: SizeConfig.smallMargin),
+              _english(entity),
+              const SizedBox(height: SizeConfig.smallMargin),
+              _exampleHeader(entity),
+              const SizedBox(height: SizeConfig.smallestMargin),
+              _example(entity),
+              const SizedBox(height: SizeConfig.smallestMargin),
+              _exampleJp(entity),
+              const SizedBox(height: SizeConfig.smallestMargin),
+              _descriptionHeader(entity),
+              const SizedBox(height: SizeConfig.smallestMargin),
+              _description(entity),
+              const SizedBox(height: SizeConfig.smallestMargin),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _partOfSpeech(TangoEntity entity) {
+    return Row(
+      children: [
+        TextWidget.titleWhiteSmallBoldWithBackGround(PartOfSpeechExt.intToPartOfSpeech(value: entity.partOfSpeech!).title),
+      ],
+    );
+  }
+
+  Widget _indonesian(TangoEntity entity) {
+    return Row(
+      children: [
+        Assets.png.indonesia64.image(height: _iconHeight, width: _iconWidth),
+        const SizedBox(width: SizeConfig.mediumSmallMargin),
+        Flexible(
+          child: TextWidget.titleBlackMediumBold(
+            entity.indonesian!,
+            maxLines: 2,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _japanese(TangoEntity entity) {
+    return Row(
+      children: [
+        Assets.png.japanFuji64.image(height: _iconHeight, width: _iconWidth),
+        const SizedBox(width: SizeConfig.mediumSmallMargin),
+        Flexible(
+          child: TextWidget.titleGrayMediumBold(
+            entity.japanese!,
+            maxLines: 2,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _english(TangoEntity entity) {
+    return Row(
+      children: [
+        Assets.png.english64.image(height: _iconHeight, width: _iconWidth),
+        const SizedBox(width: SizeConfig.mediumSmallMargin),
+        Flexible(
+          child: TextWidget.titleGrayMediumSmallBold(
+            entity.english!,
+            maxLines: 2,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _exampleHeader(TangoEntity entity) {
+    return Visibility(
+      visible: entity.description == null || entity.description == '',
+      child: Row(
+        children: [
+          TextWidget.titleRedMedium('例文'),
+          const SizedBox(width: SizeConfig.mediumSmallMargin),
+          Flexible(child: _separater()),
+        ],
+      ),
+    );
+  }
+
+  Widget _descriptionHeader(TangoEntity entity) {
+    return Visibility(
+      visible: entity.description != null && entity.description != '',
+      child: Row(
+        children: [
+          TextWidget.titleRedMedium('豆知識'),
+          const SizedBox(width: SizeConfig.mediumSmallMargin),
+          Flexible(child: _separater()),
+        ],
+      ),
+    );
+  }
+
+  Widget _example(TangoEntity entity) {
+    return Visibility(
+      visible: entity.description == null || entity.description == '',
+      child: Row(
+        children: [
+          Assets.png.example64.image(height: _iconHeight, width: _iconWidth),
+          const SizedBox(width: SizeConfig.mediumSmallMargin),
+          Flexible(
+            child: TextWidget.titleBlackMediumBold(
+              entity.example!,
+              maxLines: 5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _exampleJp(TangoEntity entity) {
+    return Visibility(
+      visible: entity.description == null || entity.description == '',
+      child: Row(
+        children: [
+          Assets.png.japan64.image(height: _iconHeight, width: _iconWidth),
+          const SizedBox(width: SizeConfig.mediumSmallMargin),
+          Flexible(
+            child: TextWidget.titleGrayMediumSmallBold(
+              entity.exampleJp!,
+              maxLines: 5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _description(TangoEntity entity) {
+    return Visibility(
+      visible: entity.description != null && entity.description != '',
+      child: Row(
+        children: [
+          Assets.png.infoNotes.image(height: _iconHeight, width: _iconWidth),
+          const SizedBox(width: SizeConfig.mediumSmallMargin),
+          Flexible(
+            child: TextWidget.titleGrayMediumSmallBold(
+              entity.description ?? '',
+              maxLines: 10,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
