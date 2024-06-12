@@ -115,6 +115,9 @@ class $AssetsIconGen {
 class $AssetsLottieGen {
   const $AssetsLottieGen();
 
+  /// File path: assets/lottie/analyze-data.json
+  String get analyzeData => 'assets/lottie/analyze-data.json';
+
   /// File path: assets/lottie/bicycle_indonesia.json
   String get bicycleIndonesia => 'assets/lottie/bicycle_indonesia.json';
 
@@ -159,6 +162,7 @@ class $AssetsLottieGen {
 
   /// List of all assets
   List<String> get values => [
+        analyzeData,
         bicycleIndonesia,
         checkGreen,
         complete,
