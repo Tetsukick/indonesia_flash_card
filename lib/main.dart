@@ -58,6 +58,7 @@ class FlushCardApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Utils.createMaterialColor(ColorConfig.primaryRed700),
+        primaryColor: Utils.createMaterialColor(ColorConfig.primaryRed700),
       ),
       home: const HomeNavigation(),
     );
