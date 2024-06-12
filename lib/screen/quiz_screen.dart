@@ -125,24 +125,50 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConfig.bgPinkColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(SizeConfig.mediumMargin),
-            child: Column(
-              children: [
-                _topBarSection(),
-                const SizedBox(height: SizeConfig.smallMargin),
-                _questionTitleCard(),
-                const SizedBox(height: SizeConfig.smallMargin),
-                _questionAnswerCard(),
-                const SizedBox(height: SizeConfig.smallMargin),
-                _randomKeyboard(),
-                // _actionButton(type: WordStatusType.notRemembered),
-              ],
+      body: Stack(
+        children: [
+          SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(SizeConfig.mediumMargin),
+                child: Column(
+                  children: [
+                    _topBarSection(),
+                    const SizedBox(height: SizeConfig.smallMargin),
+                    _questionTitleCard(),
+                    const SizedBox(height: SizeConfig.smallMargin),
+                    _questionAnswerCard(),
+                    const SizedBox(height: SizeConfig.smallMargin),
+                    _randomKeyboard(),
+                    // _actionButton(type: WordStatusType.notRemembered),
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
+          Visibility(
+            visible: allCardsFinished,
+            child: Container(
+              color: Colors.black.withOpacity(0.5),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Lottie.asset(
+                      Assets.lottie.analyzeData,
+                      height: _cardHeight * 2,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: SizeConfig.mediumSmallMargin),
+                      child: TextWidget.titleWhiteLargeBold('解答を解析中...'),
+                    )
+                  ],
+                )
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -403,7 +429,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     if (questionAnswerList.lesson.tangos.length <= currentIndex + 1) {
       setState(() => allCardsFinished = true);
-      await Future<void>.delayed(const Duration(milliseconds: 2500));
+      await Future<void>.delayed(const Duration(seconds: 1));
       if (questionAnswerList.lesson.isTest) {
         CompletionTodayTestScreen.navigateTo(context);
       } else {
