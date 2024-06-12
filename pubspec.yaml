@@ -33,12 +33,12 @@ dependencies:
   shared_preferences: ^2.2.3
 
   ## Firebase packages
-  firebase_core: ^3.0.0
-  firebase_crashlytics: ^4.0.0
-  firebase_messaging: ^15.0.0
-  firebase_analytics: ^11.0.0
-  cloud_firestore: ^5.0.0
-  firebase_remote_config: ^5.0.0
+  firebase_core: ^3.1.0
+  firebase_crashlytics: ^4.0.1
+  firebase_messaging: ^15.0.1
+  firebase_analytics: ^11.0.1
+  cloud_firestore: ^5.0.1
+  firebase_remote_config: ^5.0.1
 
   lottie: ^3.1.2
   carousel_slider: ^4.2.1
@@ -95,7 +95,6 @@ flutter:
     - assets/prefecture_indonesia/
     - assets/svg/
     - assets/png/
-    - assets/gif/
     - assets/dot/
 
 flutter_icons:

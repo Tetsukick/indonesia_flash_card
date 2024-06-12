@@ -954,7 +954,7 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.32):
     - BoringSSL-GRPC/Interface (= 0.0.32)
   - BoringSSL-GRPC/Interface (0.0.32)
-  - cloud_firestore (5.0.0):
+  - cloud_firestore (5.0.1):
     - Firebase/Firestore (= 10.27.0)
     - firebase_core
     - Flutter
@@ -977,22 +977,22 @@ PODS:
   - Firebase/RemoteConfig (10.27.0):
     - Firebase/CoreOnly
     - FirebaseRemoteConfig (~> 10.27.0)
-  - firebase_analytics (11.0.0):
+  - firebase_analytics (11.0.1):
     - Firebase/Analytics (= 10.27.0)
     - firebase_core
     - Flutter
-  - firebase_core (3.0.0):
+  - firebase_core (3.1.0):
     - Firebase/CoreOnly (= 10.27.0)
     - Flutter
-  - firebase_crashlytics (4.0.0):
+  - firebase_crashlytics (4.0.1):
     - Firebase/Crashlytics (= 10.27.0)
     - firebase_core
     - Flutter
-  - firebase_messaging (15.0.0):
+  - firebase_messaging (15.0.1):
     - Firebase/Messaging (= 10.27.0)
     - firebase_core
     - Flutter
-  - firebase_remote_config (5.0.0):
+  - firebase_remote_config (5.0.1):
     - Firebase/RemoteConfig (= 10.27.0)
     - firebase_core
     - Flutter
@@ -1383,13 +1383,13 @@ SPEC CHECKSUMS:
   abseil: d121da9ef7e2ff4cab7666e76c5a3e0915ae08c3
   app_tracking_transparency: e169b653478da7bb15a6c61209015378ca73e375
   BoringSSL-GRPC: 1e2348957acdbcad360b80a264a90799984b2ba6
-  cloud_firestore: 8cbdffc6eec66f2c2e67f19e4c6f9a872c222d19
+  cloud_firestore: 33319d8646cb250b3385e5fea751bd36232561b5
   Firebase: 26b040b20866a55f55eb3611b9fcf3ae64816b86
-  firebase_analytics: 921262f343360193f8376eb89c01fb5f15571ca2
-  firebase_core: 5926464bbb028fef87d2443369b73ada2a8a3608
-  firebase_crashlytics: fd7d916778823b47ca742a7cbd552c9520da1f1c
-  firebase_messaging: 17bc029302b3342daa1c5905a1ee4258bcf47572
-  firebase_remote_config: 57d29f82e7e4666349c1634a32568c877e3a079d
+  firebase_analytics: 0627e95b73eb9e04f59167687ed5bc3f6fb50f23
+  firebase_core: 483cfad66d24d8f3c233f31db4263830c625c909
+  firebase_crashlytics: 8f04c663c8734f97c4ccbe81b8511ce7060e3b28
+  firebase_messaging: e60c0694699d8a2e56a319e043709583f6544123
+  firebase_remote_config: 3c103e81a3fba5f50c0a522d65a49e5695d57fbc
   FirebaseABTesting: 038a7d5f1e36ba7208cf34f6f596946d8f70d6c3
   FirebaseAnalytics: f9211b719db260cc91aebee8bb539cb367d0dfd1
   FirebaseAppCheckInterop: 0dd062c9926a76332ca5711dbed6f1a9ac540b54
