@@ -5,11 +5,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'package:infinite_carousel/infinite_carousel.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -60,13 +60,9 @@ class LessonSelectorScreen extends ConsumerStatefulWidget {
 class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   late Future<List<LectureFolder>> getPossibleLectures;
   final int _currentFrequencyIndex = 0;
-  final CarouselController _frequencyCarouselController = CarouselController();
   final int _currentLevelIndex = 0;
-  final CarouselController _levelCarouselController = CarouselController();
   final int _currentCategoryIndex = 0;
-  final CarouselController _categoryCarouselController = CarouselController();
   final int _currentPartOfSpeechIndex = 0;
-  final CarouselController _partOfSpeechCarouselController = CarouselController();
   List<WordStatus> wordStatusList = [];
   List<WordStatus> bookmarkList = [];
   List<Activity> activityList = [];
@@ -471,7 +467,6 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   Widget _carouselFrequencyLectures() {
     return _carouselLectures(
       items: _frequencyWidgets(),
-      controller: _frequencyCarouselController,
       index: _currentFrequencyIndex,
       autoPlay: Platform.isIOS,
     );
@@ -480,7 +475,6 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   Widget _carouselLevelLectures() {
     return _carouselLectures(
       items: _levelWidgets(),
-      controller: _levelCarouselController,
       index: _currentLevelIndex,
       autoPlay: Platform.isIOS,
     );
@@ -489,7 +483,6 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   Widget _carouselCategoryLectures() {
     return _carouselLectures(
       items: _categoryWidgets(),
-      controller: _categoryCarouselController,
       index: _currentCategoryIndex,
       autoPlay: Platform.isIOS,
     );
@@ -498,7 +491,6 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   Widget _carouselPartOfSpeechLectures() {
     return _carouselLectures(
       items: _partOfSpeechWidgets(),
-      controller: _partOfSpeechCarouselController,
       index: _currentPartOfSpeechIndex,
       autoPlay: Platform.isIOS,
     );
@@ -506,47 +498,20 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
 
   Widget _carouselLectures({
     required List<Widget> items,
-    required CarouselController controller,
     required int index,
     bool autoPlay = false,
     bool visibleIndicator = false,
     bool enlargeCenterPage = false,}) {
-    return Column(
-      children: [
-        CarouselSlider(
-          items: items,
-          carouselController: controller,
-          options: CarouselOptions(
-              autoPlay: autoPlay,
-              enlargeCenterPage: enlargeCenterPage,
-              viewportFraction: 0.3,
-              aspectRatio: 2,
-              onPageChanged: (index, reason) {
-                setState(() => index = index);
-              },
-          ),
-        ),
-        Visibility(
-          visible: visibleIndicator,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: _categoryWidgets().asMap().entries.map((entry) {
-              return GestureDetector(
-                onTap: () => controller.animateToPage(entry.key),
-                child: Container(
-                  width: 8,
-                  height: 8,
-                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: ColorConfig.primaryRed900
-                          .withOpacity(index == entry.key ? 0.9 : 0.2),),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      ],
+    return SizedBox(
+      height: 200,
+      child: InfiniteCarousel.builder(
+          itemCount: items.length,
+          itemExtent: 120,
+          velocityFactor: 0.5,
+          itemBuilder: (context, itemIndex, realIndex) {
+            return items[itemIndex];
+          }
+      ),
     );
   }
 
