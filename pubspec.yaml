@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
 
   ## Google API package
-  googleapis: ^13.1.0
+  googleapis: ^13.2.0
   googleapis_auth: ^1.6.0
   google_mobile_ads: ^5.1.0
   google_fonts: ^6.2.1
