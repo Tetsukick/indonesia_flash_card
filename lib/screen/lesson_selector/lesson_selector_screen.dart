@@ -7,7 +7,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:in_app_review/in_app_review.dart';
 // Project imports:
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
@@ -17,7 +16,6 @@ import 'package:indonesia_flash_card/gen/assets.gen.dart';
 import 'package:indonesia_flash_card/model/category.dart';
 import 'package:indonesia_flash_card/model/floor_entity/activity.dart';
 import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
-import 'package:indonesia_flash_card/model/frequency.dart';
 import 'package:indonesia_flash_card/model/lecture.dart';
 import 'package:indonesia_flash_card/model/level.dart';
 import 'package:indonesia_flash_card/model/part_of_speech.dart';
@@ -45,7 +43,8 @@ class LessonSelectorScreen extends ConsumerStatefulWidget {
   const LessonSelectorScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<LessonSelectorScreen> createState() => _LessonSelectorScreenState();
+  ConsumerState<LessonSelectorScreen> createState() =>
+      _LessonSelectorScreenState();
 
   static void navigateTo(BuildContext context) {
     Navigator.push<void>(context, MaterialPageRoute(
@@ -58,7 +57,6 @@ class LessonSelectorScreen extends ConsumerStatefulWidget {
 
 class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   late Future<List<LectureFolder>> getPossibleLectures;
-  final int _currentFrequencyIndex = 0;
   final int _currentLevelIndex = 0;
   final int _currentCategoryIndex = 0;
   final int _currentPartOfSpeechIndex = 0;
@@ -145,8 +143,6 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                   _sectionTitle('レベル別'),
                   _carouselLevelLectures(),
                   _adWidget(),
-                  // _sectionTitle('頻出度別'),
-                  // _carouselFrequencyLectures(),
                   _sectionTitle('カテゴリー別'),
                   _carouselCategoryLectures(),
                   _sectionTitle('品詞別'),
@@ -159,7 +155,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
         Visibility(
           visible: !_isLoadTangoList,
           child: ColoredBox(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withAlpha(50),
             child: Center(
               child: Column(
                 children: [
@@ -242,7 +238,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                   animationDuration: 2500,
                   percent: tangoMaster.totalAchievement,
                   center: Text('${(tangoMaster.totalAchievement*100).toStringAsFixed(2)} %'),
-                  linearStrokeCap: LinearStrokeCap.roundAll,
+                  barRadius: const Radius.circular(8),
                   progressColor: ColorConfig.green,
                 ),
               ],
@@ -463,14 +459,6 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     );
   }
 
-  Widget _carouselFrequencyLectures() {
-    return _carouselLectures(
-      items: _frequencyWidgets(),
-      index: _currentFrequencyIndex,
-      autoPlay: Platform.isIOS,
-    );
-  }
-
   Widget _carouselLevelLectures() {
     return _carouselLectures(
       items: _levelWidgets(),
@@ -499,8 +487,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     required List<Widget> items,
     required int index,
     bool autoPlay = false,
-    bool visibleIndicator = false,
-    bool enlargeCenterPage = false,}) {
+  }) {
     return SizedBox(
       height: 200,
       child: InfiniteCarousel.builder(
@@ -512,14 +499,6 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
           }
       ),
     );
-  }
-
-  List<Widget> _frequencyWidgets() {
-    final frequency = <Widget>[];
-    for (final element in FrequencyGroup.values) {
-      frequency.add(LessonCard(frequencyGroup: element));
-    }
-    return frequency;
   }
 
   List<Widget> _levelWidgets() {
@@ -556,16 +535,6 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     final activityDao = database.activityDao;
     final _activityList = await activityDao.findAllActivity();
     setState(() => activityList = _activityList);
-  }
-
-  Future<void> _requestAppReview() async {
-    if (activityList.map((e) => e.date).toList().toSet().toList().length >= 10) {
-      final inAppReview = InAppReview.instance;
-
-      if (await inAppReview.isAvailable()) {
-        await inAppReview.requestReview();
-      }
-    }
   }
 
   Future<void> getBookmark() async {
