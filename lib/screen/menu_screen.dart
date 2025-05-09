@@ -150,7 +150,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
   Future<void> setBrowserPage(String url) async {
     final browser = MyInAppBrowser();
     await browser.openUrlRequest(
-      urlRequest: URLRequest(url: Uri.parse(url)),
+      urlRequest: URLRequest(url: WebUri.uri(Uri.parse(url))),
       options: InAppBrowserClassOptions(
         crossPlatform: InAppBrowserOptions(
           toolbarTopBackgroundColor: const Color(0xff2b374d),

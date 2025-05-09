@@ -127,7 +127,7 @@ class _QuestionListChildViewWidgetState
     );
     questionsRef.doc(widget.questionEntity.id).collection('answers')
         .count().get().then((value) {
-      if (value.count != null) {
+      if (value.count != null && mounted) {
         setState(() {
           answerCount = value.count!;
         });
