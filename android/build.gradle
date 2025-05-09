@@ -1,22 +1,20 @@
-buildscript {
-    ext.kotlin_version = '1.9.21'
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.gms:google-services:4.3.0'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
-    }
-}
-
 allprojects {
     repositories {
         google()
         mavenCentral()
+    }
+
+    subprojects {
+        afterEvaluate { project ->
+            if (project.hasProperty('android')) {
+                project.android {
+                    def agpVersion = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0].toInteger()
+                    if (namespace == null && agpVersion >= 7) {
+                        namespace project.group
+                    }
+                }
+            }
+        }
     }
 }
 

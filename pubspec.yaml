@@ -26,7 +26,7 @@ dependencies:
   flutter_riverpod: ^2.6.1
   dio:
   logger:
-  flutter_secure_storage:
+  flutter_secure_storage: ^9.2.4
   intl:
   shimmer:
   package_info_plus: ^8.3.0
@@ -42,7 +42,7 @@ dependencies:
 
   lottie: ^3.3.1
   curved_navigation_bar: ^1.0.6
-  flutter_inappwebview:
+  flutter_inappwebview: ^6.1.5
   floor: ^1.5.0
   collection:
   flutter_tts: ^4.2.2
@@ -54,7 +54,10 @@ dependencies:
   flutter_countdown_timer: ^4.1.0
   in_app_review: ^2.0.10
   flutter_dialogs: ^3.0.0
-  social_share: ^2.3.1
+  social_share:
+    git:
+      url: https://github.com/midoandev/social_share.git
+      ref: 789c3c9a85feb3bd299c5227f66c80eec7734d39
   screenshot: ^3.0.0
   percent_indicator: ^4.2.5
   font_awesome_flutter:
@@ -69,7 +72,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^2.4.11
+  build_runner: ^2.4.15
 
   flutter_lints: ^5.0.0
   flutter_launcher_icons: ^0.14.3

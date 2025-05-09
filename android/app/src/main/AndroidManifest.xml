@@ -2,8 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.tetsukick.indonesia.flash.card">
    <application
-        android:label="BINTANGO"
-        android:name="${applicationName}"
+       android:label="BINTANGO"
         android:usesCleartextTraffic="false"
         android:icon="@mipmap/launcher_icon">
        <meta-data
