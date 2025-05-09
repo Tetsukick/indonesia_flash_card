@@ -213,7 +213,7 @@ extension MenuItemExt on MenuItem {
       case MenuItem.addNewTango:
         return 'https://docs.google.com/forms/d/e/1FAIpQLSezIwLEoiKf_sQU99ioxjKCOhXI6o_ZVDulwwuTug2rRSxmew/viewform';
       case MenuItem.privacyPolicy:
-        return 'https://qiita.com/tetsukick/items/a3c844940064e15f0dac';
+        return 'https://github.com/Tetsukick/application_privacy_policy';
       case MenuItem.feedback:
         return 'https://docs.google.com/forms/d/e/1FAIpQLSddXsg9zlzk0Zd-Y_0n0pEfsK3U246OJoI0cQCOCVL7XyRWOw/viewform';
       case MenuItem.developerInfo:
