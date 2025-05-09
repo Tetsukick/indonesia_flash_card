@@ -4,22 +4,27 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 // Project imports:
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
 
 class TextWidget {
+
+  static TextStyle baseFont = GoogleFonts.notoSans();
+  static TextStyle titleFont = GoogleFonts.kaiseiOpti();
+  static TextStyle numberFont = GoogleFonts.quicksand();
   static Widget titleRedMedium(String data, {int maxLines = 1}) {
     return AutoSizeText(
       data,
       maxLines: maxLines,
       minFontSize: 11,
       maxFontSize: 16,
-      style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          color: ColorConfig.primaryRed900,
-          fontSize: 14,
+      style: baseFont.copyWith(
+        fontWeight: FontWeight.bold,
+        color: ColorConfig.primaryRed900,
+        fontSize: 14,
       ),
     );
   }
@@ -30,7 +35,7 @@ class TextWidget {
       maxLines: maxLines,
       minFontSize: 24,
       maxFontSize: 32,
-      style: const TextStyle(
+      style: baseFont.copyWith(
           fontWeight: FontWeight.bold,
           color: ColorConfig.primaryRed900,
           fontSize: 32,
@@ -44,10 +49,24 @@ class TextWidget {
       maxLines: maxLines,
       minFontSize: 16,
       maxFontSize: 28,
-      style: const TextStyle(
+      style: titleFont.copyWith(
           fontWeight: FontWeight.bold,
           color: ColorConfig.fontBlack,
           fontSize: 24,
+      ),
+    );
+  }
+
+  static Widget titleNumberBlackLargeBold(String data, {int maxLines = 1}) {
+    return AutoSizeText(
+      data,
+      maxLines: maxLines,
+      minFontSize: 16,
+      maxFontSize: 28,
+      style: numberFont.copyWith(
+        fontWeight: FontWeight.bold,
+        color: ColorConfig.fontBlack,
+        fontSize: 24,
       ),
     );
   }
@@ -59,7 +78,7 @@ class TextWidget {
         maxLines: maxLines,
         minFontSize: 16,
         maxFontSize: 28,
-        style: const TextStyle(
+        style: baseFont.copyWith(
           fontWeight: FontWeight.bold,
           color: ColorConfig.fontBlack,
           fontSize: 24,
@@ -74,7 +93,7 @@ class TextWidget {
       maxLines: maxLines,
       minFontSize: 24,
       maxFontSize: 32,
-      style: const TextStyle(
+      style: baseFont.copyWith(
           fontWeight: FontWeight.bold,
           color: ColorConfig.fontBlack,
           fontSize: 32,
@@ -89,7 +108,7 @@ class TextWidget {
         maxLines: maxLines,
         minFontSize: 24,
         maxFontSize: 32,
-        style: const TextStyle(
+        style: baseFont.copyWith(
           fontWeight: FontWeight.bold,
           color: ColorConfig.fontBlack,
           fontSize: 32,
@@ -104,7 +123,7 @@ class TextWidget {
       maxLines: maxLines,
       minFontSize: 14,
       maxFontSize: 18,
-      style: const TextStyle(
+      style: baseFont.copyWith(
           fontWeight: FontWeight.bold,
           color: ColorConfig.fontBlack,
           fontSize: 18,
@@ -118,7 +137,7 @@ class TextWidget {
       maxLines: maxLines,
       minFontSize: 9,
       maxFontSize: 14,
-      style: const TextStyle(
+      style: baseFont.copyWith(
           fontWeight: FontWeight.bold,
           color: ColorConfig.fontBlack,
           fontSize: 12,
@@ -132,7 +151,7 @@ class TextWidget {
       maxLines: maxLines,
       minFontSize: 24,
       maxFontSize: 32,
-      style: const TextStyle(
+      style: baseFont.copyWith(
           fontWeight: FontWeight.bold,
           color: ColorConfig.fontGrey,
           fontSize: 32,
@@ -146,7 +165,7 @@ class TextWidget {
       maxLines: maxLines,
       minFontSize: 16,
       maxFontSize: 24,
-      style: const TextStyle(
+      style: baseFont.copyWith(
         fontWeight: FontWeight.bold,
         color: ColorConfig.fontGrey,
         fontSize: 24,
@@ -161,7 +180,7 @@ class TextWidget {
         maxLines: maxLines,
         minFontSize: 16,
         maxFontSize: 24,
-        style: const TextStyle(
+        style: baseFont.copyWith(
           fontWeight: FontWeight.bold,
           color: ColorConfig.fontGrey,
           fontSize: 24,
@@ -176,7 +195,7 @@ class TextWidget {
       maxLines: maxLines,
       minFontSize: 14,
       maxFontSize: 20,
-      style: const TextStyle(
+      style: baseFont.copyWith(
           fontWeight: FontWeight.bold,
           color: ColorConfig.fontGrey,
           fontSize: 20,
@@ -191,7 +210,7 @@ class TextWidget {
         maxLines: maxLines,
         minFontSize: 14,
         maxFontSize: 20,
-        style: const TextStyle(
+        style: baseFont.copyWith(
           fontWeight: FontWeight.bold,
           color: ColorConfig.fontGrey,
           fontSize: 20,
@@ -206,7 +225,7 @@ class TextWidget {
       maxLines: maxLines,
       minFontSize: 14,
       maxFontSize: 20,
-      style: const TextStyle(
+      style: baseFont.copyWith(
           fontWeight: FontWeight.normal,
           color: ColorConfig.fontGrey,
           fontSize: 20,
@@ -220,7 +239,7 @@ class TextWidget {
       maxLines: maxLines,
       minFontSize: 14,
       maxFontSize: 20,
-      style: const TextStyle(
+      style: baseFont.copyWith(
           fontWeight: FontWeight.bold,
           color: ColorConfig.fontGrey,
           fontSize: 18,
@@ -234,7 +253,7 @@ class TextWidget {
       maxLines: maxLines,
       minFontSize: 11,
       maxFontSize: 16,
-      style: const TextStyle(
+      style: baseFont.copyWith(
           fontWeight: FontWeight.bold,
           color: ColorConfig.fontGrey,
           fontSize: 14,
@@ -248,7 +267,7 @@ class TextWidget {
       maxLines: maxLines,
       minFontSize: 9,
       maxFontSize: 12,
-      style: const TextStyle(
+      style: baseFont.copyWith(
           color: ColorConfig.fontGrey,
           fontSize: 12,
       ),
@@ -261,9 +280,22 @@ class TextWidget {
       maxLines: maxLines,
       minFontSize: 9,
       maxFontSize: 16,
-      style: const TextStyle(
+      style: baseFont.copyWith(
           color: ColorConfig.fontGrey,
           fontSize: 14,
+      ),
+    );
+  }
+
+  static Widget titleNumberGraySmall(String data, {int maxLines = 1}) {
+    return AutoSizeText(
+      data,
+      maxLines: maxLines,
+      minFontSize: 9,
+      maxFontSize: 16,
+      style: numberFont.copyWith(
+        color: ColorConfig.fontGrey,
+        fontSize: 14,
       ),
     );
   }
@@ -274,7 +306,7 @@ class TextWidget {
       maxLines: maxLines,
       minFontSize: 16,
       maxFontSize: 28,
-      style: const TextStyle(
+      style: titleFont.copyWith(
           fontWeight: FontWeight.bold,
           color: ColorConfig.fontWhite,
           fontSize: 24,
@@ -294,7 +326,7 @@ class TextWidget {
           data,
           maxLines: maxLines,
           maxFontSize: 16,
-          style: const TextStyle(
+          style: baseFont.copyWith(
               fontWeight: FontWeight.bold,
               color: ColorConfig.fontWhite,
               fontSize: 14,

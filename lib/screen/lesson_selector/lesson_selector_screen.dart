@@ -174,7 +174,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                           color: ColorConfig.primaryRed700,
                         ),
                         const SizedBox(height: SizeConfig.mediumMargin,),
-                        TextWidget.titleGraySmall('${(progressReloadData*100).toStringAsFixed(2)} %'),
+                        TextWidget.titleNumberGraySmall('${(progressReloadData*100).toStringAsFixed(2)} %'),
                         TextWidget.titleGraySmall('データを更新中です。'),
                         TextWidget.titleGraySmall('しばらくお待ちください。'),
                       ],
@@ -237,7 +237,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
                   lineHeight: 20,
                   animationDuration: 2500,
                   percent: tangoMaster.totalAchievement,
-                  center: Text('${(tangoMaster.totalAchievement*100).toStringAsFixed(2)} %'),
+                  center: TextWidget.titleNumberGraySmall('${(tangoMaster.totalAchievement*100).toStringAsFixed(2)} %'),
                   barRadius: const Radius.circular(8),
                   progressColor: ColorConfig.green,
                 ),
@@ -389,7 +389,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
             padding: const EdgeInsets.fromLTRB(SizeConfig.smallMargin, 0, SizeConfig.smallMargin, SizeConfig.smallMargin,),
             child: Row(
               children: [
-                TextWidget.titleBlackLargeBold(data.toString()),
+                TextWidget.titleNumberBlackLargeBold(data.toString()),
                 TextWidget.titleGraySmallBold(unitTitle),
               ],
             ),
