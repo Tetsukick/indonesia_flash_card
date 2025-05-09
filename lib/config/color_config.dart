@@ -9,6 +9,7 @@ class ColorConfig {
   static const fontWhite = Color(0xffffffff);
   static const fontBlack = Color(0xaa000000);
   static const fontGrey = Color(0x99000000);
+  static const fontGreySecond = Color(0xFF95A1AC);
 
   // Primary
   static const primaryRed900 = Color(0xffB71C1C);

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:lottie/lottie.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -66,14 +67,8 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
         automaticallyImplyLeading: false,
         title: Padding(
           padding: const EdgeInsets.only(left: 8),
-          child: Text(
+          child: TextWidget.titleBlackLargeBold(
             '質問を新規作成',
-            style: FlutterFlowTheme.of(context).title2.override(
-              fontFamily: 'Lexend Deca',
-              color: const Color(0xFF090F13),
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
           ),
         ),
         actions: [
@@ -85,7 +80,7 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
               buttonSize: 48,
               icon: const Icon(
                 Icons.close_rounded,
-                color: Color(0xFF95A1AC),
+                color: ColorConfig.fontGreySecond,
                 size: 30,
               ),
               onPressed: () async {
@@ -126,11 +121,8 @@ class _SendQuestionWidgetState extends State<SendQuestionWidget> {
                                             decoration: InputDecoration(
                                               hintText:
                                               '質問を入力 ※20字以上\n(質問例: \n頻度を表す単語(sering, selalu, kadang-kadang)のそれぞれの違いがいまいちよく分かっていません。どのように使い分けたら良いでしょうか？)',
-                                              hintStyle: FlutterFlowTheme.of(context)
-                                                  .bodyText2
-                                                  .override(
-                                                fontFamily: 'Lexend Deca',
-                                                color: const Color(0xFF95A1AC),
+                                              hintStyle: TextWidget.baseFont.copyWith(
+                                                color: ColorConfig.fontGreySecond,
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.normal,
                                               ),

@@ -2,10 +2,13 @@
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:indonesia_flash_card/config/color_config.dart';
 // Project imports:
 import 'package:indonesia_flash_card/model/question_answer_entity.dart';
 import 'package:indonesia_flash_card/model/question_entity.dart';
 import 'package:indonesia_flash_card/screen/question/components/question_title.dart';
+import 'package:indonesia_flash_card/utils/common_text_widget.dart';
+import 'package:indonesia_flash_card/utils/date_util.dart';
 import 'package:social_share/social_share.dart';
 
 import '../../../utils/logger.dart';
@@ -67,6 +70,10 @@ class _QuestionListChildViewWidgetState
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
+                          TextWidget.titleNumberGraySmallest(
+                            widget.questionEntity.createdAt?.yMMddHHmm() ?? '',
+                            textAlign: TextAlign.end,
+                          ),
                           Padding(
                             padding: const EdgeInsetsDirectional
                                 .fromSTEB(8, 0, 8, 0),
@@ -74,7 +81,7 @@ class _QuestionListChildViewWidgetState
                               children: [
                                 const Icon(
                                   Icons.mode_comment_outlined,
-                                  color: Color(0xFF95A1AC),
+                                  color: ColorConfig.fontGreySecond,
                                   size: 24,
                                 ),
                                 Padding(
@@ -94,7 +101,7 @@ class _QuestionListChildViewWidgetState
                                   .fromSTEB(0, 0, 8, 0),
                               child: Icon(
                                 Icons.ios_share,
-                                color: Color(0xFF95A1AC),
+                                color: ColorConfig.fontGreySecond,
                                 size: 24,
                               ),
                             ),

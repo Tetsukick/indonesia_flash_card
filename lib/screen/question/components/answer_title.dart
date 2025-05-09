@@ -1,8 +1,10 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 // Package imports:
-import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:indonesia_flash_card/utils/my_inapp_browser.dart';
 
 // Project imports:
 import '../../../flutter_flow/flutter_flow_theme.dart';
@@ -26,19 +28,36 @@ class AnswerTitle extends StatelessWidget {
         Expanded(
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
-            child: AutoSizeText(
-              answer ?? '',
-              maxLines: maxLines,
-              style:
-                maxLines != null ? FlutterFlowTheme.of(context).bodyText2.override(
-                  fontFamily: 'Poppins',
-                  fontStyle: FontStyle.italic,
-                )
-                : FlutterFlowTheme.of(context).bodyText1,
+            child: MarkdownBody(
+              data: answer ?? '',
+              onTapLink: (text, href, title) {
+                setBrowserPage(text);
+              },
             ),
           ),
         ),
       ],
+    );
+  }
+
+  Future<void> setBrowserPage(String url) async {
+    final browser = MyInAppBrowser();
+    await browser.openUrlRequest(
+      urlRequest: URLRequest(url: WebUri.uri(Uri.parse(url))),
+      options: InAppBrowserClassOptions(
+        crossPlatform: InAppBrowserOptions(
+          toolbarTopBackgroundColor: const Color(0xff2b374d),
+        ),
+        android: AndroidInAppBrowserOptions(
+          // Android用オプション
+        ),
+        ios: IOSInAppBrowserOptions(
+          // iOS用オプション
+          toolbarTopTintColor: const Color(0xff2b374d),
+          closeButtonCaption: '閉じる',
+          closeButtonColor: Colors.white,
+        ),
+      ),
     );
   }
 }

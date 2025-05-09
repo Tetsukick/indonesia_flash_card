@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:indonesia_flash_card/utils/date_util.dart';
 import 'package:lottie/lottie.dart';
 
 // Project imports:
@@ -77,7 +78,7 @@ class _QuestionAnswerListWidgetState extends State<QuestionAnswerListWidget> {
           buttonSize: 46,
           icon: const Icon(
             Icons.arrow_back_rounded,
-            color: Color(0xFF95A1AC),
+            color: ColorConfig.fontGreySecond,
             size: 24,
           ),
           onPressed: () async {
@@ -133,13 +134,13 @@ class _QuestionAnswerListWidgetState extends State<QuestionAnswerListWidget> {
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        widget.questionEntity.createdAt.toString() ?? '',
+                                        widget.questionEntity.createdAt?.yMMddHHmm() ?? '',
                                         textAlign: TextAlign.end,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyText2
                                             .override(
                                           fontFamily: 'Lexend Deca',
-                                          color: const Color(0xFF95A1AC),
+                                          color: ColorConfig.fontGreySecond,
                                           fontSize: 14,
                                           fontWeight: FontWeight.normal,
                                         ),

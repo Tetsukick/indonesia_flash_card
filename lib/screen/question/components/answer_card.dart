@@ -1,5 +1,8 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:indonesia_flash_card/config/color_config.dart';
+import 'package:indonesia_flash_card/utils/common_text_widget.dart';
+import 'package:indonesia_flash_card/utils/date_util.dart';
 
 // Project imports:
 import '../../../flutter_flow/flutter_flow_theme.dart';
@@ -36,17 +39,9 @@ class AnswerCard extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: Text(
-                      answerEntity.createdAt.toString(),
+                    child: TextWidget.titleNumberGraySmallest(
+                      answerEntity.createdAt?.yMMddHHmm() ?? '',
                       textAlign: TextAlign.end,
-                      style: FlutterFlowTheme.of(context)
-                          .bodyText2
-                          .override(
-                        fontFamily: 'Lexend Deca',
-                        color: const Color(0xFF95A1AC),
-                        fontSize: 14,
-                        fontWeight: FontWeight.normal,
-                      ),
                     ),
                   ),
                 ],

@@ -455,7 +455,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   Widget _sectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, SizeConfig.mediumMargin, SizeConfig.mediumSmallMargin, SizeConfig.smallMargin),
-      child: TextWidget.titleBlackLargeBold(title),
+      child: TextWidget.titleBlackLargeBoldKaisei(title),
     );
   }
 

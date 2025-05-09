@@ -43,7 +43,7 @@ class TextWidget {
     );
   }
 
-  static Widget titleBlackLargeBold(String data, {int maxLines = 1}) {
+  static Widget titleBlackLargeBoldKaisei(String data, {int maxLines = 1}) {
     return AutoSizeText(
       data,
       maxLines: maxLines,
@@ -53,6 +53,20 @@ class TextWidget {
           fontWeight: FontWeight.bold,
           color: ColorConfig.fontBlack,
           fontSize: 24,
+      ),
+    );
+  }
+
+  static Widget titleBlackLargeBold(String data, {int maxLines = 1}) {
+    return AutoSizeText(
+      data,
+      maxLines: maxLines,
+      minFontSize: 16,
+      maxFontSize: 28,
+      style: baseFont.copyWith(
+        fontWeight: FontWeight.bold,
+        color: ColorConfig.fontBlack,
+        fontSize: 24,
       ),
     );
   }
@@ -261,15 +275,30 @@ class TextWidget {
     );
   }
 
-  static Widget titleGraySmallest(String data, {int maxLines = 1}) {
+  static Widget titleGraySmallest(String data, {int maxLines = 1, TextAlign? textAlign}) {
     return AutoSizeText(
       data,
       maxLines: maxLines,
       minFontSize: 9,
       maxFontSize: 12,
+      textAlign: textAlign,
       style: baseFont.copyWith(
           color: ColorConfig.fontGrey,
           fontSize: 12,
+      ),
+    );
+  }
+
+  static Widget titleNumberGraySmallest(String data, {int maxLines = 1, TextAlign? textAlign}) {
+    return AutoSizeText(
+      data,
+      maxLines: maxLines,
+      minFontSize: 9,
+      maxFontSize: 12,
+      textAlign: textAlign,
+      style: numberFont.copyWith(
+        color: ColorConfig.fontGrey,
+        fontSize: 12,
       ),
     );
   }
