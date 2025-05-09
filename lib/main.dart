@@ -1,5 +1,7 @@
 // Dart imports:
 import 'dart:async';
+import 'dart:developer';
+import 'dart:ui';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -34,8 +36,15 @@ void main() async {
     ]);
     await CrashReporter.instance.initialize();
 
-    FlutterError.onError = (FlutterErrorDetails details) {
-      CrashReporter.instance.report(details.exceptionAsString(), details.stack);
+    FlutterError.onError = (errorDetails) {
+      log(errorDetails.exceptionAsString(), stackTrace: errorDetails.stack);
+      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    };
+
+    // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
     };
 
     runApp(

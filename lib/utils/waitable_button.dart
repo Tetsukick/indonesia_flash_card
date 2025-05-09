@@ -29,7 +29,9 @@ class _WaitableElevatedButtonState extends State<WaitableElevatedButton> {
           : () async {
         setState(() => _waiting = true);
         await widget.onPressed!();
-        setState(() => _waiting = false);
+        if (mounted) {
+          setState(() => _waiting = false);
+        }
       },
       child: widget.child,
     );

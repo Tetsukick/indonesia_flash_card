@@ -1,7 +1,9 @@
 // Dart imports:
+import 'dart:developer';
 import 'dart:io';
 
 // Flutter imports:
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -470,11 +472,17 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
             ),
         ),
         onTap: () async {
-          analytics(type.analyticsItem);
-          if (type == WordStatusType.notRemembered) {
-            await registerWordStatus(type: type);
+          try {
+            analytics(type.analyticsItem);
+            if (type == WordStatusType.notRemembered) {
+              await registerWordStatus(type: type);
+            }
+            getNextCard();
+          } catch (e, s) {
+            log('failed go next flush card', error: e);
+            await FirebaseCrashlytics.instance.recordError(e, s, fatal: true);
+            getNextCard();
           }
-          getNextCard();
         },
       ),
     );

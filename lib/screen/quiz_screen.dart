@@ -1,9 +1,11 @@
 // Dart imports:
 import 'dart:async';
+import 'dart:developer';
 import 'dart:math' as math;
 
 // Flutter imports:
 import 'package:collection/collection.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // Package imports:
@@ -300,18 +302,24 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final entity = questionAnswerList.lesson.tangos[currentIndex];
     if (entity.indonesian!.toLowerCase() == input.toLowerCase()) {
-      final remainTime = endTime - DateTime.now().millisecondsSinceEpoch;
-      await registerWordStatus(isCorrect: true);
-      await registerActivity();
-      final result = QuizResult()
-        ..entity = entity
-        ..isCorrect = true
-        ..isUsedHint = isAlreadyOpenHint
-        ..answerTime = baseQuestionTime - remainTime;
-      ref.read(tangoListControllerProvider.notifier).addQuizResult(result);
-      await showTrueFalseDialog(
-          isTrue: true, entity: entity, remainTime: remainTime);
-      await getNextCard();
+      try {
+        final remainTime = endTime - DateTime.now().millisecondsSinceEpoch;
+        await registerWordStatus(isCorrect: true);
+        await registerActivity();
+        final result = QuizResult()
+          ..entity = entity
+          ..isCorrect = true
+          ..isUsedHint = isAlreadyOpenHint
+          ..answerTime = baseQuestionTime - remainTime;
+        ref.read(tangoListControllerProvider.notifier).addQuizResult(result);
+        await showTrueFalseDialog(
+            isTrue: true, entity: entity, remainTime: remainTime);
+        await getNextCard();
+      } catch (e, s) {
+        log('failed to go next question', error: e);
+        await FirebaseCrashlytics.instance.recordError(e, s, fatal: true);
+        await getNextCard();
+      }
     } else {
       errorController?.add(ErrorAnimationType.shake);
       if (isTimeOver) {
@@ -646,15 +654,26 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     if (isCheckingAnswer) {
       setState(() => isTimeOver = true);
     } else {
-      await registerWordStatus(isCorrect: false);
-      await registerActivity();
-      await showTrueFalseDialog(isTrue: false, entity: entity);
-      final result = QuizResult()
-        ..entity = entity
-        ..isCorrect = false;
-      ref.read(tangoListControllerProvider.notifier).addQuizResult(result);
-      await getNextCard();
-      setState(() => isTimeOver = false);
+      try {
+        await registerWordStatus(isCorrect: false);
+        await registerActivity();
+        await showTrueFalseDialog(isTrue: false, entity: entity);
+        final result = QuizResult()
+          ..entity = entity
+          ..isCorrect = false;
+        ref.read(tangoListControllerProvider.notifier).addQuizResult(result);
+        await getNextCard();
+        setState(() => isTimeOver = false);
+      } catch (e, s) {
+        log('failed to go next question', error: e);
+        await FirebaseCrashlytics.instance.recordError(e, s, fatal: true);
+        final result = QuizResult()
+          ..entity = entity
+          ..isCorrect = false;
+        ref.read(tangoListControllerProvider.notifier).addQuizResult(result);
+        await getNextCard();
+        setState(() => isTimeOver = false);
+      }
     }
   }
 
