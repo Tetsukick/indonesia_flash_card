@@ -23,7 +23,7 @@ class FirebaseAnalyticsUtils {
 
   static void screenTrack(AnalyticsScreen screen) {
     if (FirebaseAnalyticsUtils._canTrack()) {
-      FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: screen.name);
+      FirebaseAnalyticsUtils.analytics.logScreenView(screenName: screen.name);
     }
   }
 

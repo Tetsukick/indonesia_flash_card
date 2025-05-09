@@ -54,7 +54,7 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
 
   @override
   void initState() {
-    FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: AnalyticsScreen.lessonComp.name);
+    FirebaseAnalyticsUtils.analytics.logScreenView(screenName: AnalyticsScreen.lessonComp.name);
     initializeDB();
     super.initState();
   }

@@ -57,7 +57,7 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
   @override
   void initState() {
     FirebaseAnalyticsUtils.analytics
-        .setCurrentScreen(screenName: AnalyticsScreen.translation.name);
+        .logScreenView(screenName: AnalyticsScreen.translation.name);
     initializeDB();
     // initializeBannerAd();
     super.initState();

@@ -62,7 +62,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
 
   @override
   void initState() {
-    FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: AnalyticsScreen.dictionary.name);
+    FirebaseAnalyticsUtils.analytics.logScreenView(screenName: AnalyticsScreen.dictionary.name);
     initializeDB();
     super.initState();
   }

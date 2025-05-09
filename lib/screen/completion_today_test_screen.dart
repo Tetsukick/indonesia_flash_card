@@ -61,7 +61,7 @@ class _CompletionTodayTestScreenState extends ConsumerState<CompletionTodayTestS
 
   @override
   void initState() {
-    FirebaseAnalyticsUtils.analytics.setCurrentScreen(screenName: AnalyticsScreen.lessonComp.name);
+    FirebaseAnalyticsUtils.analytics.logScreenView(screenName: AnalyticsScreen.lessonComp.name);
     initializeDB();
     super.initState();
     PreferenceKey.lastTestDate.setString(Utils.dateTimeToString(DateTime.now()));

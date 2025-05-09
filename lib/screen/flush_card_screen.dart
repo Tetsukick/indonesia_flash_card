@@ -68,7 +68,7 @@ class _FlushScreenState extends ConsumerState<FlashCardScreen> {
   
   @override
   void initState() {
-    FirebaseAnalyticsUtils.analytics.setCurrentScreen(
+    FirebaseAnalyticsUtils.analytics.logScreenView(
         screenName: AnalyticsScreen.flushCard.name,);
     initializeDB();
     setTTSandLoadSoundSetting();

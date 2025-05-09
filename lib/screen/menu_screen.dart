@@ -35,7 +35,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
 
   @override
   void initState() {
-    FirebaseAnalyticsUtils.analytics.setCurrentScreen(
+    FirebaseAnalyticsUtils.analytics.logScreenView(
         screenName: AnalyticsScreen.menu.name,);
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
