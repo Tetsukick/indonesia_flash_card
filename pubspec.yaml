@@ -3,7 +3,7 @@ description: Flash card application of Indonesian language for Japanese
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 3.3.9+97
+version: 3.5.0+98
 
 environment:
   sdk: '>=3.1.0 <4.0.0'
@@ -68,6 +68,7 @@ dependencies:
   flutter_staggered_grid_view: ^0.7.0
   infinite_carousel: ^1.1.1
   flutter_markdown: ^0.7.7+1
+  audioplayers: ^6.4.0
 
 dev_dependencies:
   flutter_test:
@@ -100,6 +101,7 @@ flutter:
     - assets/svg/
     - assets/png/
     - assets/dot/
+    - assets/sounds/
 
 flutter_icons:
   android: "launcher_icon"

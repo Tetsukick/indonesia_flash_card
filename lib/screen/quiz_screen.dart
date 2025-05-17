@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'dart:math' as math;
 
 // Flutter imports:
+import 'package:audioplayers/audioplayers.dart';
 import 'package:collection/collection.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -30,6 +31,7 @@ import 'package:indonesia_flash_card/screen/completion_today_test_screen.dart';
 import 'package:indonesia_flash_card/utils/common_text_widget.dart';
 import 'package:indonesia_flash_card/utils/disable_focus_node.dart';
 import 'package:indonesia_flash_card/utils/logger.dart';
+import 'package:indonesia_flash_card/utils/shared_preference.dart';
 import 'package:indonesia_flash_card/utils/shimmer.dart';
 import 'package:indonesia_flash_card/utils/shuffle_string.dart';
 import 'package:indonesia_flash_card/utils/string_ext.dart';
@@ -92,16 +94,25 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   bool isTimeOver = false;
   final _iconHeight = 20.0;
   final _iconWidth = 20.0;
+  bool _isSoundOn = false;
 
   @override
   void initState() {
     FirebaseAnalyticsUtils.screenTrack(AnalyticsScreen.quiz);
     initializeDB();
+    initializeSoundSetting();
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       initializePinCodeTextField();
       setRandomText();
       setHintText();
+    });
+  }
+
+  Future<void> initializeSoundSetting() async {
+    final isSoundOn = await PreferenceKey.isSoundOn.getBool();
+    setState(() {
+      _isSoundOn = isSoundOn;
     });
   }
 
@@ -322,6 +333,9 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       }
     } else {
       errorController?.add(ErrorAnimationType.shake);
+      if (_isSoundOn) {
+        unawaited(AudioPlayer().play(AssetSource('sounds/Quiz-ng-mid.mp3')));
+      }
       if (isTimeOver) {
         wrongAnswerAction(entity);
       }
@@ -587,6 +601,13 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     int? remainTime,
   }) async {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
+    if (_isSoundOn) {
+      if (isTrue) {
+        unawaited(AudioPlayer().play(AssetSource('sounds/Quiz-ok-mid.mp3')));
+      } else {
+        unawaited(AudioPlayer().play(AssetSource('sounds/Quiz-ng-mid.mp3')));
+      }
+    }
     unawaited(showGeneralDialog(
         context: context,
         barrierDismissible: false,
