@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:indonesia_flash_card/config/color_config.dart';
+import 'package:indonesia_flash_card/model/floor_entity/achievement_rate.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 // Project imports:
 import 'package:indonesia_flash_card/gen/assets.gen.dart';
@@ -26,7 +29,7 @@ import '../../flush_card_screen.dart';
 
 class LessonCard extends ConsumerWidget {
 
-  const LessonCard({Key? key, this.category, this.partOfSpeech, this.levelGroup, this.frequencyGroup}) : super(key: key);
+  const LessonCard({Key? key, this.category, this.partOfSpeech, this.levelGroup, this.frequencyGroup, this.achievementRate}) : super(key: key);
   final itemCardWidth = 200.0;
   final itemCardHeight = 160.0;
 
@@ -34,14 +37,10 @@ class LessonCard extends ConsumerWidget {
   final PartOfSpeechEnum? partOfSpeech;
   final LevelGroup? levelGroup;
   final FrequencyGroup? frequencyGroup;
+  final AchievementRate? achievementRate;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final tangoMaster = ref.watch(tangoListControllerProvider);
-    // if ((tangoMaster.dictionary.allTangos.isNotEmpty) && !isLoadAchievementRate) {
-    //   // getAchievementRate();
-    // }
-
     return _lectureCard(
       context,
       ref,
@@ -71,9 +70,6 @@ class LessonCard extends ConsumerWidget {
 
     final lectures = ref.watch(fileControllerProvider);
     final isLoadingLecture = lectures.isEmpty;
-    // if (_isLoadingLecture) {
-    //   return shimmerLessonCard();
-    // }
 
     return Card(
       child: InkWell(
@@ -129,32 +125,37 @@ class LessonCard extends ConsumerWidget {
               ),
               SizedBox.expand(
                 child: Padding(
-                  padding: const EdgeInsets.all(SizeConfig.smallMargin),
+                  padding: const EdgeInsets.only(
+                    left: SizeConfig.smallMargin,
+                    right: SizeConfig.smallMargin,
+                    top: SizeConfig.smallMargin,
+                    bottom: SizeConfig.mediumLargestMargin,
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextWidget.titleWhiteLargeBold(title, maxLines: 2),
-                      // SizedBox(height: SizeConfig.mediumMargin,)
                     ],
                   ),
                 ),
               ),
-              // Align(
-              //   alignment: Alignment.bottomCenter,
-              //   child: Padding(
-              //     padding: const EdgeInsets.symmetric(vertical: SizeConfig.smallestMargin),
-              //     child: LinearPercentIndicator(
-              //       width: 88,
-              //       lineHeight: 14.0,
-              //       percent: achievementRate,
-              //       center: Text('${(achievementRate * 100).toStringAsFixed(2)} %'),
-              //       backgroundColor: Colors.grey,
-              //       progressColor: ColorConfig.green,
-              //       linearStrokeCap: LinearStrokeCap.roundAll,
-              //     ),
-              //   ),
-              // )
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      bottom: SizeConfig.smallMargin),
+                  child: LinearPercentIndicator(
+                    width: itemCardWidth * 0.55,
+                    lineHeight: 14.0,
+                    percent: achievementRate?.rate ?? 0,
+                    center: TextWidget.titleNumberGraySmall('${((achievementRate?.rate ?? 0) * 100).toStringAsFixed(2)} %'),
+                    backgroundColor: Colors.grey,
+                    progressColor: ColorConfig.green,
+                    barRadius: const Radius.circular(10),
+                  ),
+                ),
+              )
             ],
           ),
         ),
@@ -217,20 +218,4 @@ class LessonCard extends ConsumerWidget {
       ..name = item.name
       ..analyticsEventDetail = eventDetail,);
   }
-
-  // void getAchievementRate() async {
-  //   if (this.category == null && this.frequencyGroup == null && this.levelGroup == null && this.partOfSpeech == null) {
-  //     return;
-  //   }
-  //   setState(() => isLoadAchievementRate = true);
-  //   final _achievementRate = await ref.read(tangoListControllerProvider.notifier)
-  //       .achievementRate(
-  //         category: this.category,
-  //         partOfSpeech: this.partOfSpeech,
-  //         levelGroup: this.levelGroup,
-  //         frequencyGroup: this.frequencyGroup,
-  //       );
-  //
-  //   setState(() => achievementRate = _achievementRate);
-  // }
 }

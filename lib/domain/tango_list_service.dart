@@ -4,11 +4,12 @@ import 'dart:math';
 // Package imports:
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:indonesia_flash_card/model/floor_entity/achievement_rate.dart';
+import 'package:indonesia_flash_card/model/floor_migrations/migration_v3_to_v4_add_achievement_rate_table.dart';
 
 // Project imports:
 import 'package:indonesia_flash_card/config/config.dart';
 import 'package:indonesia_flash_card/model/floor_entity/word_status.dart';
-import 'package:indonesia_flash_card/model/floor_migrations/migration_v2_to_v3_add_tango_table.dart';
 import 'package:indonesia_flash_card/model/frequency.dart';
 import 'package:indonesia_flash_card/model/lecture.dart';
 import 'package:indonesia_flash_card/model/tango_entity.dart';
@@ -23,22 +24,26 @@ import 'package:indonesia_flash_card/utils/utils.dart';
 import '../model/category.dart';
 import '../model/floor_database/database.dart';
 import '../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_word_status_table.dart';
+import '../model/floor_migrations/migration_v2_to_v3_add_tango_table.dart';
 import '../model/level.dart';
 import '../model/part_of_speech.dart';
 import '../model/sort_type.dart';
 import '../model/translate_response_entity.dart';
+import 'package:indonesia_flash_card/screen/lesson_selector/lesson_selector_screen.dart';
 
 final tangoListControllerProvider = StateNotifierProvider<TangoListController, TangoMaster>(
-      (ref) => TangoListController(initialTangoMaster: TangoMaster()),
+      (ref) => TangoListController(initialTangoMaster: TangoMaster(), ref: ref),
 );
 
 class TangoListController extends StateNotifier<TangoMaster> {
-  TangoListController({required TangoMaster initialTangoMaster}) : super(initialTangoMaster);
+  TangoListController({required TangoMaster initialTangoMaster, required this.ref}) : super(initialTangoMaster);
+
+  final Ref ref;
 
   Future<void> resetTangoData({required LectureFolder folder, void Function(double percent)? onProgress}) async {
     final database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
-        .addMigrations([migration1to2, migration2to3])
+        .addMigrations([migration1to2, migration2to3, migration3to4])
         .build();
 
     final tangoDao = database.tangoDao;
@@ -96,6 +101,60 @@ class TangoListController extends StateNotifier<TangoMaster> {
     }
   }
 
+  Future<void> updateAchievementRate(TangoEntity tango) async {
+    final database = await $FloorAppDatabase
+        .databaseBuilder(Config.dbName)
+        .addMigrations([migration1to2, migration2to3, migration3to4])
+        .build();
+    final achievementRateDao = database.achievementRateDao;
+
+    if (tango.category != null) {
+      final category = TangoCategory.values.firstWhere((element) => element.id == tango.category);
+      final categoryRate = await calculateAchievementRate(category: category);
+      final achievementRateObject = AchievementRate(
+        id: 'category_${tango.category}',
+        rate: categoryRate,
+        updatedAt: DateTime.now().millisecondsSinceEpoch,
+      );
+      await achievementRateDao.upsertAchievementRate(achievementRateObject);
+      logger.d('update achievement rate category_${tango.category}: $categoryRate');
+    }
+
+    if (tango.partOfSpeech != null) {
+      final partOfSpeech = PartOfSpeechEnum.values.firstWhere((element) => element.id == tango.partOfSpeech);
+      final partOfSpeechRate = await calculateAchievementRate(partOfSpeech: partOfSpeech);
+      final achievementRateObject = AchievementRate(
+        id: 'partOfSpeech_${tango.partOfSpeech}',
+        rate: partOfSpeechRate,
+        updatedAt: DateTime.now().millisecondsSinceEpoch,
+      );
+      await achievementRateDao.upsertAchievementRate(achievementRateObject);
+      logger.d('update achievement rate partOfSpeech_${tango.partOfSpeech}: $partOfSpeechRate');
+    }
+
+    if (tango.level != null) {
+      final levelGroup = LevelGroupExt.intToLevelGroup(value: tango.level!);
+      final levelGroupRate = await calculateAchievementRate(levelGroup: levelGroup);
+      final achievementRateObject = AchievementRate(
+        id: 'levelGroup_${levelGroup.id}',
+        rate: levelGroupRate,
+        updatedAt: DateTime.now().millisecondsSinceEpoch,
+      );
+      await achievementRateDao.upsertAchievementRate(achievementRateObject);
+      logger.d('update achievement rate levelGroup_${levelGroup.id}: $levelGroupRate');
+    }
+
+    // Update total achievement rate
+    final totalRate = await calculateAchievementRate();
+    final totalAchievementObject = AchievementRate(
+      id: 'total_achievement',
+      rate: totalRate,
+      updatedAt: DateTime.now().millisecondsSinceEpoch,
+    );
+    await achievementRateDao.upsertAchievementRate(totalAchievementObject);
+    ref.refresh(achievementRateProvider);
+  }
+
   Future<List<TangoEntity>> getAllTangoList({required LectureFolder folder, void Function(double percent)? onProgress}) async {
     final lastUpdateDate = await PreferenceKey.lastTangoUpdateDate.getString();
     if (lastUpdateDate == null ||
@@ -107,7 +166,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
 
     final database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
-        .addMigrations([migration1to2, migration2to3])
+        .addMigrations([migration1to2, migration2to3, migration3to4])
         .build();
 
     final tangoDao = database.tangoDao;
@@ -198,6 +257,9 @@ class TangoListController extends StateNotifier<TangoMaster> {
 
   void addQuizResult(QuizResult result) {
     state = state..lesson.quizResults.add(result);
+    if (result.entity != null) {
+      updateAchievementRate(result.entity!); 
+    }
   }
 
   Future<List<TangoEntity>> setBookmarkLessonsData() async {
@@ -234,7 +296,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
   Future<List<WordStatus>> getAllWordStatus() async {
     final database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
-        .addMigrations([migration1to2, migration2to3])
+        .addMigrations([migration1to2, migration2to3, migration3to4])
         .build();
 
     final wordStatusDao = database.wordStatusDao;
@@ -253,7 +315,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
   }) async {
     final database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
-        .addMigrations([migration1to2, migration2to3])
+        .addMigrations([migration1to2, migration2to3, migration3to4])
         .build();
 
     final tangoDao = database.tangoDao;
@@ -433,7 +495,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
   Future<List<TangoEntity>> search(String search) async {
     final database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
-        .addMigrations([migration1to2, migration2to3])
+        .addMigrations([migration1to2, migration2to3, migration3to4])
         .build();
 
     final tangoDao = database.tangoDao;
@@ -441,7 +503,7 @@ class TangoListController extends StateNotifier<TangoMaster> {
     return searchTangos;
   }
 
-  Future<double> achievementRate({
+  Future<double> calculateAchievementRate({
     TangoCategory? category,
     PartOfSpeechEnum? partOfSpeech,
     LevelGroup? levelGroup,
@@ -461,16 +523,33 @@ class TangoListController extends StateNotifier<TangoMaster> {
       return targetWordStatus != null && (targetWordStatus.status == WordStatusType.remembered.id || targetWordStatus.status == WordStatusType.perfectRemembered.id);
     }).toList();
 
-    final rate = filteredRememberedTango.length / filteredTangos.length;
-    logger.d('achieveMentRate: $rate');
+    final rate = filteredTangos.isEmpty ? 0.0 : filteredRememberedTango.length / filteredTangos.length;
+    logger.d('achievementRate: $rate');
     return rate;
   }
 
   Future<void> getTotalAchievement() async {
-    final rate = await achievementRate();
-    if (!rate.isNaN) {
+    final database = await $FloorAppDatabase
+        .databaseBuilder(Config.dbName)
+        .addMigrations([migration1to2, migration2to3, migration3to4])
+        .build();
+    final achievementRateDao = database.achievementRateDao;
+    final totalAchievement = await achievementRateDao.findAchievementRateById('total_achievement');
+    if (totalAchievement != null) {
       state = state
-        ..totalAchievement = rate;
+        ..totalAchievement = totalAchievement.rate;
+    } else {
+      final rate = await calculateAchievementRate();
+      if (!rate.isNaN) {
+        state = state
+          ..totalAchievement = rate;
+        final achievementRateObject = AchievementRate(
+          id: 'total_achievement',
+          rate: rate,
+          updatedAt: DateTime.now().millisecondsSinceEpoch,
+        );
+        await achievementRateDao.upsertAchievementRate(achievementRateObject);
+      }
     }
   }
 }

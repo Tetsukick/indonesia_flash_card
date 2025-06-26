@@ -6,6 +6,7 @@ import 'dart:ui';
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 
 // Package imports:
 import 'package:firebase_core/firebase_core.dart';
@@ -57,6 +58,8 @@ void main() async {
   });
 }
 
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 class FlushCardApp extends StatelessWidget {
   const FlushCardApp({Key? key}) : super(key: key);
 
@@ -70,6 +73,7 @@ class FlushCardApp extends StatelessWidget {
         primaryColor: Utils.createMaterialColor(ColorConfig.primaryRed700),
       ),
       home: const HomeNavigation(),
+      navigatorObservers: [routeObserver],
     );
   }
 }

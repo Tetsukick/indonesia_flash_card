@@ -7,6 +7,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:indonesia_flash_card/main.dart';
+import 'package:indonesia_flash_card/model/floor_entity/achievement_rate.dart';
+import 'package:indonesia_flash_card/model/floor_migrations/migration_v3_to_v4_add_achievement_rate_table.dart';
 // Project imports:
 import 'package:indonesia_flash_card/config/color_config.dart';
 import 'package:indonesia_flash_card/config/size_config.dart';
@@ -39,6 +42,16 @@ import '../../model/floor_migrations/migration_v1_to_v2_add_bookmark_column_in_w
 import '../../model/floor_migrations/migration_v2_to_v3_add_tango_table.dart';
 import '../flush_card_screen.dart';
 
+final achievementRateProvider = FutureProvider<Map<String, AchievementRate>>((ref) async {
+  final database = await $FloorAppDatabase
+      .databaseBuilder(Config.dbName)
+      .addMigrations([migration1to2, migration2to3, migration3to4])
+      .build();
+  final achievementRateDao = database.achievementRateDao;
+  final achievementRates = await achievementRateDao.findAllAchievementRates();
+  return { for (var e in achievementRates) e.id : e };
+});
+
 class LessonSelectorScreen extends ConsumerStatefulWidget {
   const LessonSelectorScreen({Key? key}) : super(key: key);
 
@@ -55,7 +68,7 @@ class LessonSelectorScreen extends ConsumerStatefulWidget {
   }
 }
 
-class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
+class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> with RouteAware {
   late Future<List<LectureFolder>> getPossibleLectures;
   final int _currentLevelIndex = 0;
   final int _currentCategoryIndex = 0;
@@ -80,10 +93,30 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     initializeBannerAd();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route is PageRoute) {
+      routeObserver.subscribe(this, route);
+    }
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    _onRefresh();
+  }
+
   Future<void> initializeDB() async {
     final _database = await $FloorAppDatabase
         .databaseBuilder(Config.dbName)
-        .addMigrations([migration1to2, migration2to3])
+        .addMigrations([migration1to2, migration2to3, migration3to4])
         .build();
     setState(() => database = _database);
 
@@ -460,26 +493,47 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   }
 
   Widget _carouselLevelLectures() {
-    return _carouselLectures(
-      items: _levelWidgets(),
-      index: _currentLevelIndex,
-      autoPlay: Platform.isIOS,
+    final achievementRate = ref.watch(achievementRateProvider);
+    return achievementRate.when(
+      data: (data) {
+        return _carouselLectures(
+          items: _levelWidgets(data),
+          index: _currentLevelIndex,
+          autoPlay: Platform.isIOS,
+        );
+      },
+      loading: () => const CircularProgressIndicator(),
+      error: (err, stack) => Text('Error: $err'),
     );
   }
 
   Widget _carouselCategoryLectures() {
-    return _carouselLectures(
-      items: _categoryWidgets(),
-      index: _currentCategoryIndex,
-      autoPlay: Platform.isIOS,
+    final achievementRate = ref.watch(achievementRateProvider);
+    return achievementRate.when(
+      data: (data) {
+        return _carouselLectures(
+          items: _categoryWidgets(data),
+          index: _currentCategoryIndex,
+          autoPlay: Platform.isIOS,
+        );
+      },
+      loading: () => const CircularProgressIndicator(),
+      error: (err, stack) => Text('Error: $err'),
     );
   }
 
   Widget _carouselPartOfSpeechLectures() {
-    return _carouselLectures(
-      items: _partOfSpeechWidgets(),
-      index: _currentPartOfSpeechIndex,
-      autoPlay: Platform.isIOS,
+    final achievementRate = ref.watch(achievementRateProvider);
+    return achievementRate.when(
+      data: (data) {
+        return _carouselLectures(
+          items: _partOfSpeechWidgets(data),
+          index: _currentPartOfSpeechIndex,
+          autoPlay: Platform.isIOS,
+        );
+      },
+      loading: () => const CircularProgressIndicator(),
+      error: (err, stack) => Text('Error: $err'),
     );
   }
 
@@ -501,26 +555,30 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
     );
   }
 
-  List<Widget> _levelWidgets() {
+  List<Widget> _levelWidgets(Map<String, AchievementRate>? achievementRates) {
     final levels = <Widget>[];
     for (final element in LevelGroup.values) {
-      levels.add(LessonCard(levelGroup: element));
+      final achievementRate = achievementRates?['levelGroup_${element.id}'];
+      logger.d('levelGroup_${element.id} achievementRate: ${achievementRate?.rate.toString()}');
+      levels.add(LessonCard(levelGroup: element, achievementRate: achievementRate));
     }
     return levels;
   }
 
-  List<Widget> _categoryWidgets() {
+  List<Widget> _categoryWidgets(Map<String, AchievementRate>? achievementRates) {
     final categories = <Widget>[];
     for (final element in TangoCategory.values) {
-      categories.add(LessonCard(category: element));
+      final achievementRate = achievementRates?['category_${element.id}'];
+      categories.add(LessonCard(category: element, achievementRate: achievementRate));
     }
     return categories;
   }
 
-  List<Widget> _partOfSpeechWidgets() {
+  List<Widget> _partOfSpeechWidgets(Map<String, AchievementRate>? achievementRates) {
     final partOfSpeechs = <Widget>[];
     for (final element in PartOfSpeechEnum.values) {
-      partOfSpeechs.add(LessonCard(partOfSpeech: element));
+      final achievementRate = achievementRates?['partOfSpeech_${element.id}'];
+      partOfSpeechs.add(LessonCard(partOfSpeech: element, achievementRate: achievementRate));
     }
     return partOfSpeechs;
   }
@@ -580,6 +638,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> {
   }
 
   Future<void> _onRefresh() async{
+    ref.refresh(achievementRateProvider);
     await initializeDB();
     await initTangoList();
     await _confirmAlreadyTestedToday();

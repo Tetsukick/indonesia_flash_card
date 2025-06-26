@@ -10,6 +10,21 @@ enum LevelGroup {
 }
 
 extension LevelGroupExt on LevelGroup {
+  int get id {
+    switch (this) {
+      case LevelGroup.superEasy:
+        return 0;
+      case LevelGroup.easy:
+        return 1;
+      case LevelGroup.medium:
+        return 2;
+      case LevelGroup.hard:
+        return 3;
+      case LevelGroup.superHard:
+        return 4;
+    }
+  }
+
   List<int> get range {
     switch (this) {
       case LevelGroup.superEasy:

@@ -616,6 +616,19 @@ class $AssetsPrefectureIndonesiaGen {
       ];
 }
 
+class $AssetsSoundsGen {
+  const $AssetsSoundsGen();
+
+  /// File path: assets/sounds/Quiz-ng-mid.mp3
+  String get quizNgMid => 'assets/sounds/Quiz-ng-mid.mp3';
+
+  /// File path: assets/sounds/Quiz-ok-mid.mp3
+  String get quizOkMid => 'assets/sounds/Quiz-ok-mid.mp3';
+
+  /// List of all assets
+  List<String> get values => [quizNgMid, quizOkMid];
+}
+
 class $AssetsSvgGen {
   const $AssetsSvgGen();
 
@@ -861,6 +874,7 @@ class Assets {
   static const $AssetsPngGen png = $AssetsPngGen();
   static const $AssetsPrefectureIndonesiaGen prefectureIndonesia =
       $AssetsPrefectureIndonesiaGen();
+  static const $AssetsSoundsGen sounds = $AssetsSoundsGen();
   static const $AssetsSvgGen svg = $AssetsSvgGen();
 }
 

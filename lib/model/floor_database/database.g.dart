@@ -78,13 +78,15 @@ class _$AppDatabase extends AppDatabase {
 
   TangoDao? _tangoDaoInstance;
 
+  AchievementRateDao? _achievementRateDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 3,
+      version: 4,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -105,6 +107,8 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `Activity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `wordId` INTEGER NOT NULL, `date` TEXT NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `TangoEntity` (`id` INTEGER, `indonesian` TEXT, `japanese` TEXT, `english` TEXT, `description` TEXT, `example` TEXT, `exampleJp` TEXT, `level` INTEGER, `partOfSpeech` INTEGER, `category` INTEGER, `frequency` INTEGER, `rankFrequency` INTEGER, PRIMARY KEY (`id`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `AchievementRate` (`id` TEXT NOT NULL, `rate` REAL NOT NULL, `updatedAt` INTEGER NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -125,6 +129,12 @@ class _$AppDatabase extends AppDatabase {
   @override
   TangoDao get tangoDao {
     return _tangoDaoInstance ??= _$TangoDao(database, changeListener);
+  }
+
+  @override
+  AchievementRateDao get achievementRateDao {
+    return _achievementRateDaoInstance ??=
+        _$AchievementRateDao(database, changeListener);
   }
 }
 
@@ -431,5 +441,59 @@ class _$TangoDao extends TangoDao {
   @override
   Future<void> updateTangoEntity(TangoEntity tango) async {
     await _tangoEntityUpdateAdapter.update(tango, OnConflictStrategy.abort);
+  }
+}
+
+class _$AchievementRateDao extends AchievementRateDao {
+  _$AchievementRateDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _achievementRateInsertionAdapter = InsertionAdapter(
+            database,
+            'AchievementRate',
+            (AchievementRate item) => <String, Object?>{
+                  'id': item.id,
+                  'rate': item.rate,
+                  'updatedAt': item.updatedAt
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<AchievementRate> _achievementRateInsertionAdapter;
+
+  @override
+  Future<List<AchievementRate>> findAllAchievementRates() async {
+    return _queryAdapter.queryList('SELECT * FROM AchievementRate',
+        mapper: (Map<String, Object?> row) => AchievementRate(
+            id: row['id'] as String,
+            rate: row['rate'] as double,
+            updatedAt: row['updatedAt'] as int));
+  }
+
+  @override
+  Future<AchievementRate?> findAchievementRateById(String id) async {
+    return _queryAdapter.query('SELECT * FROM AchievementRate WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => AchievementRate(
+            id: row['id'] as String,
+            rate: row['rate'] as double,
+            updatedAt: row['updatedAt'] as int),
+        arguments: [id]);
+  }
+
+  @override
+  Future<void> insertAchievementRate(AchievementRate achievementRate) async {
+    await _achievementRateInsertionAdapter.insert(
+        achievementRate, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> upsertAchievementRate(AchievementRate achievementRate) async {
+    await _achievementRateInsertionAdapter.insert(
+        achievementRate, OnConflictStrategy.replace);
   }
 }
