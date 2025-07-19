@@ -1,0 +1,407 @@
+# Crashlytics - Stack trace
+# Application: com.tetsukick.indonesia.flash.card
+# Platform: apple
+# Version: 3.5.3 (101)
+# Issue: 4353707ea534c87a29e09f97ad522aec
+# Session: 80fdecd83ce34ffd9b8e65c76dfe2207_DNE_0_v2
+# Date: Sat Jul 19 2025 22:53:44 GMT+0700 (Western Indonesia Time)
+
+Fatal Exception: FlutterError
+0   ???                            0x0 _AdWidgetState.build + 693 (ad_containers.dart:693)
+1   ???                            0x0 StatefulElement.build + 5823 (framework.dart:5823)
+2   ???                            0x0 ComponentElement.performRebuild + 5715 (framework.dart:5715)
+3   ???                            0x0 StatefulElement.performRebuild + 5874 (framework.dart:5874)
+4   ???                            0x0 Element.rebuild + 5427 (framework.dart:5427)
+5   ???                            0x0 StatefulElement.update + 5899 (framework.dart:5899)
+6   ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+7   ???                            0x0 SingleChildRenderObjectElement.update + 7015 (framework.dart:7015)
+8   ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+9   ???                            0x0 Element.updateChildren + 4140 (framework.dart:4140)
+10  ???                            0x0 MultiChildRenderObjectElement.update + 7192 (framework.dart:7192)
+11  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+12  ???                            0x0 SingleChildRenderObjectElement.update + 7015 (framework.dart:7015)
+13  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+14  ???                            0x0 SingleChildRenderObjectElement.update + 7015 (framework.dart:7015)
+15  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+16  ???                            0x0 SingleChildRenderObjectElement.update + 7015 (framework.dart:7015)
+17  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+18  ???                            0x0 SingleChildRenderObjectElement.update + 7015 (framework.dart:7015)
+19  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+20  ???                            0x0 SingleChildRenderObjectElement.update + 7015 (framework.dart:7015)
+21  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+22  ???                            0x0 SingleChildRenderObjectElement.update + 7015 (framework.dart:7015)
+23  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+24  ???                            0x0 ComponentElement.performRebuild + 5738 (framework.dart:5738)
+25  ???                            0x0 StatefulElement.performRebuild + 5874 (framework.dart:5874)
+26  ???                            0x0 Element.rebuild + 5427 (framework.dart:5427)
+27  ???                            0x0 StatefulElement.update + 5899 (framework.dart:5899)
+28  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+29  ???                            0x0 SingleChildRenderObjectElement.update + 7015 (framework.dart:7015)
+30  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+31  ???                            0x0 ComponentElement.performRebuild + 5738 (framework.dart:5738)
+32  ???                            0x0 Element.rebuild + 5427 (framework.dart:5427)
+33  ???                            0x0 ProxyElement.update + 6041 (framework.dart:6041)
+34  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+35  ???                            0x0 SingleChildRenderObjectElement.update + 7015 (framework.dart:7015)
+36  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+37  ???                            0x0 ComponentElement.performRebuild + 5738 (framework.dart:5738)
+38  ???                            0x0 Element.rebuild + 5427 (framework.dart:5427)
+39  ???                            0x0 ProxyElement.update + 6041 (framework.dart:6041)
+40  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+41  ???                            0x0 ComponentElement.performRebuild + 5738 (framework.dart:5738)
+42  ???                            0x0 StatefulElement.performRebuild + 5874 (framework.dart:5874)
+43  ???                            0x0 Element.rebuild + 5427 (framework.dart:5427)
+44  ???                            0x0 StatefulElement.update + 5899 (framework.dart:5899)
+45  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+46  ???                            0x0 ComponentElement.performRebuild + 5738 (framework.dart:5738)
+47  ???                            0x0 Element.rebuild + 5427 (framework.dart:5427)
+48  ???                            0x0 StatelessElement.update + 5787 (framework.dart:5787)
+49  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+50  ???                            0x0 SingleChildRenderObjectElement.update + 7015 (framework.dart:7015)
+51  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+52  ???                            0x0 Element.updateChildren + 4140 (framework.dart:4140)
+53  ???                            0x0 MultiChildRenderObjectElement.update + 7192 (framework.dart:7192)
+54  ???                            0x0 _ViewportElement.update + 256 (viewport.dart:256)
+55  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+56  ???                            0x0 SingleChildRenderObjectElement.update + 7015 (framework.dart:7015)
+57  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+58  ???                            0x0 SingleChildRenderObjectElement.update + 7015 (framework.dart:7015)
+59  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+60  ???                            0x0 SingleChildRenderObjectElement.update + 7015 (framework.dart:7015)
+61  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+62  ???                            0x0 SingleChildRenderObjectElement.update + 7015 (framework.dart:7015)
+63  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+64  ???                            0x0 ComponentElement.performRebuild + 5738 (framework.dart:5738)
+65  ???                            0x0 StatefulElement.performRebuild + 5874 (framework.dart:5874)
+66  ???                            0x0 Element.rebuild + 5427 (framework.dart:5427)
+67  ???                            0x0 StatefulElement.update + 5899 (framework.dart:5899)
+68  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+69  ???                            0x0 SingleChildRenderObjectElement.update + 7015 (framework.dart:7015)
+70  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+71  ???                            0x0 ComponentElement.performRebuild + 5738 (framework.dart:5738)
+72  ???                            0x0 Element.rebuild + 5427 (framework.dart:5427)
+73  ???                            0x0 ProxyElement.update + 6041 (framework.dart:6041)
+74  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+75  ???                            0x0 SingleChildRenderObjectElement.update + 7015 (framework.dart:7015)
+76  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+77  ???                            0x0 ComponentElement.performRebuild + 5738 (framework.dart:5738)
+78  ???                            0x0 Element.rebuild + 5427 (framework.dart:5427)
+79  ???                            0x0 ProxyElement.update + 6041 (framework.dart:6041)
+80  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+81  ???                            0x0 ComponentElement.performRebuild + 5738 (framework.dart:5738)
+82  ???                            0x0 StatefulElement.performRebuild + 5874 (framework.dart:5874)
+83  ???                            0x0 Element.rebuild + 5427 (framework.dart:5427)
+84  ???                            0x0 StatefulElement.update + 5899 (framework.dart:5899)
+85  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+86  ???                            0x0 ComponentElement.performRebuild + 5738 (framework.dart:5738)
+87  ???                            0x0 Element.rebuild + 5427 (framework.dart:5427)
+88  ???                            0x0 ProxyElement.update + 6041 (framework.dart:6041)
+89  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+90  ???                            0x0 ComponentElement.performRebuild + 5738 (framework.dart:5738)
+91  ???                            0x0 Element.rebuild + 5427 (framework.dart:5427)
+92  ???                            0x0 StatelessElement.update + 5787 (framework.dart:5787)
+93  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+94  ???                            0x0 ComponentElement.performRebuild + 5738 (framework.dart:5738)
+95  ???                            0x0 Element.rebuild + 5427 (framework.dart:5427)
+96  ???                            0x0 ProxyElement.update + 6041 (framework.dart:6041)
+97  ???                            0x0 Element.updateChild + 3982 (framework.dart:3982)
+98  ???                            0x0 _LayoutBuilderElement._rebuildWithConstraints.updateChildCallback + 249 (layout_builder.dart:249)
+99  ???                            0x0 BuildOwner.buildScope + 3046 (framework.dart:3046)
+100 ???                            0x0 _LayoutBuilderElement._rebuildWithConstraints + 272 (layout_builder.dart:272)
+101 ???                            0x0 RenderAbstractLayoutBuilderMixin.layoutCallback + 335 (layout_builder.dart:335)
+102 ???                            0x0 RenderObjectWithLayoutCallbackMixin.runLayoutCallback.<fn> + 4209 (object.dart:4209)
+103 ???                            0x0 RenderObject.invokeLayoutCallback.<fn> + 2941 (object.dart:2941)
+104 ???                            0x0 PipelineOwner._enableMutationsToDirtySubtrees + 1209 (object.dart:1209)
+105 ???                            0x0 RenderObject.invokeLayoutCallback + 2940 (object.dart:2940)
+106 ???                            0x0 RenderObjectWithLayoutCallbackMixin.runLayoutCallback + 4209 (object.dart:4209)
+107 ???                            0x0 _RenderLayoutBuilder.performLayout + 449 (layout_builder.dart:449)
+108 ???                            0x0 RenderObject.layout + 2822 (object.dart:2822)
+109 ???                            0x0 ChildLayoutHelper.layoutChild + 62 (layout_helper.dart:62)
+110 ???                            0x0 RenderStack._computeSize + 646 (stack.dart:646)
+111 ???                            0x0 RenderStack.performLayout + 673 (stack.dart:673)
+112 ???                            0x0 RenderObject.layout + 2822 (object.dart:2822)
+113 ???                            0x0 RenderPadding.performLayout + 243 (shifted_box.dart:243)
+114 ???                            0x0 RenderObject.layout + 2822 (object.dart:2822)
+115 ???                            0x0 _RenderLayoutBuilder.performLayout + 451 (layout_builder.dart:451)
+116 ???                            0x0 RenderObject.layout + 2822 (object.dart:2822)
+117 ???                            0x0 MultiChildLayoutDelegate.layoutChild + 180 (custom_layout.dart:180)
+118 ???                            0x0 _ScaffoldLayout.performLayout + 1118 (scaffold.dart:1118)
+119 ???                            0x0 MultiChildLayoutDelegate._callPerformLayout + 249 (custom_layout.dart:249)
+120 ???                            0x0 RenderCustomMultiChildLayoutBox.performLayout + 419 (custom_layout.dart:419)
+121 ???                            0x0 RenderObject._layoutWithoutResize + 2655 (object.dart:2655)
+122 ???                            0x0 PipelineOwner.flushLayout + 1160 (object.dart:1160)
+123 ???                            0x0 PipelineOwner.flushLayout + 1173 (object.dart:1173)
+124 ???                            0x0 RendererBinding.drawFrame + 629 (binding.dart:629)
+125 ???                            0x0 WidgetsBinding.drawFrame + 1242 (binding.dart:1242)
+126 ???                            0x0 RendererBinding._handlePersistentFrameCallback + 495 (binding.dart:495)
+127 ???                            0x0 SchedulerBinding._invokeFrameCallback + 1438 (binding.dart:1438)
+128 ???                            0x0 SchedulerBinding.handleDrawFrame + 1351 (binding.dart:1351)
+129 ???                            0x0 SchedulerBinding._handleDrawFrame + 1204 (binding.dart:1204)
+
+Crashed: com.apple.main-thread
+0  FirebaseCrashlytics            0x21110 FIRCLSProcessRecordAllThreads + 184
+1  FirebaseCrashlytics            0x214f4 FIRCLSProcessRecordAllThreads + 1180
+2  FirebaseCrashlytics            0x18d70 FIRCLSHandler + 56
+3  FirebaseCrashlytics            0x130c0 FIRCLSExceptionRecordOnDemand + 1332
+4  FirebaseCrashlytics            0x12afc FIRCLSExceptionRecordOnDemandModel + 236
+5  FirebaseCrashlytics            0x208dc -[FIRCLSOnDemandModel recordOnDemandExceptionWithModel:] + 108
+6  FirebaseCrashlytics            0x20314 -[FIRCLSOnDemandModel recordOnDemandExceptionIfQuota:withDataCollectionEnabled:usingExistingReportManager:] + 164
+7  FirebaseCrashlytics            0x2efb8 -[FIRCrashlytics recordOnDemandExceptionModel:] + 140
+8  Runner                         0x2f4e60 -[FLTFirebaseCrashlyticsPlugin recordError:withMethodCallResult:] + 154 (FLTFirebaseCrashlyticsPlugin.m:154)
+9  Runner                         0x2f471c -[FLTFirebaseCrashlyticsPlugin handleMethodCall:result:] + 78 (FLTFirebaseCrashlyticsPlugin.m:78)
+10 Flutter                        0x4d7d04 InternalFlutterGpu_Texture_AsImage + 20976
+11 Flutter                        0x6a808 (Missing UUID 4c4c441e55553144a17c628d000b1236)
+12 libdispatch.dylib              0x213c _dispatch_call_block_and_release + 32
+13 libdispatch.dylib              0x3dd4 _dispatch_client_callout + 20
+14 libdispatch.dylib              0x125a4 _dispatch_main_queue_drain + 988
+15 libdispatch.dylib              0x121b8 _dispatch_main_queue_callback_4CF + 44
+16 CoreFoundation                 0x56710 __CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__ + 16
+17 CoreFoundation                 0x53914 __CFRunLoopRun + 1996
+18 CoreFoundation                 0x52cd8 CFRunLoopRunSpecific + 608
+19 GraphicsServices               0x11a8 GSEventRunModal + 164
+20 UIKitCore                      0x40a90c -[UIApplication _run] + 888
+21 UIKitCore                      0x4be9d0 UIApplicationMain + 340
+22 UIKitCore                      0x638384 keypath_get_selector_hoverStyle + 11024
+23 Runner                         0x4728 main + 4362241832 (AppDelegate.swift:4362241832)
+24 ???                            0x1bbe6de4c (Missing)
+
+Thread
+0  libsystem_kernel.dylib         0x1590 __workq_kernreturn + 8
+1  libsystem_pthread.dylib        0x4980 _pthread_wqthread + 364
+2  libsystem_pthread.dylib        0x10cc start_wqthread + 8
+
+com.apple.uikit.eventfetch-thread
+0  libsystem_kernel.dylib         0x1808 mach_msg2_trap + 8
+1  libsystem_kernel.dylib         0x5008 mach_msg2_internal + 80
+2  libsystem_kernel.dylib         0x4f20 mach_msg_overwrite + 436
+3  libsystem_kernel.dylib         0x4d60 mach_msg + 24
+4  CoreFoundation                 0x53f5c __CFRunLoopServiceMachPort + 160
+5  CoreFoundation                 0x53600 __CFRunLoopRun + 1208
+6  CoreFoundation                 0x52cd8 CFRunLoopRunSpecific + 608
+7  Foundation                     0xc7e4c -[NSRunLoop(NSRunLoop) runMode:beforeDate:] + 212
+8  Foundation                     0xc7c9c -[NSRunLoop(NSRunLoop) runUntilDate:] + 64
+9  UIKitCore                      0x41e640 -[UIEventFetcher threadMain] + 420
+10 Foundation                     0xde718 __NSThread__start__ + 732
+11 libsystem_pthread.dylib        0x606c _pthread_start + 136
+12 libsystem_pthread.dylib        0x10d8 thread_start + 8
+
+io.flutter.1.raster
+0  libsystem_kernel.dylib         0x1808 mach_msg2_trap + 8
+1  libsystem_kernel.dylib         0x5008 mach_msg2_internal + 80
+2  libsystem_kernel.dylib         0x4f20 mach_msg_overwrite + 436
+3  libsystem_kernel.dylib         0x4d60 mach_msg + 24
+4  CoreFoundation                 0x53f5c __CFRunLoopServiceMachPort + 160
+5  CoreFoundation                 0x53600 __CFRunLoopRun + 1208
+6  CoreFoundation                 0x52cd8 CFRunLoopRunSpecific + 608
+7  Flutter                        0x94104 (Missing UUID 4c4c441e55553144a17c628d000b1236)
+8  Flutter                        0x93dec (Missing UUID 4c4c441e55553144a17c628d000b1236)
+9  Flutter                        0x93afc (Missing UUID 4c4c441e55553144a17c628d000b1236)
+10 libsystem_pthread.dylib        0x606c _pthread_start + 136
+11 libsystem_pthread.dylib        0x10d8 thread_start + 8
+
+io.flutter.1.io
+0  libsystem_kernel.dylib         0x1808 mach_msg2_trap + 8
+1  libsystem_kernel.dylib         0x5008 mach_msg2_internal + 80
+2  libsystem_kernel.dylib         0x4f20 mach_msg_overwrite + 436
+3  libsystem_kernel.dylib         0x4d60 mach_msg + 24
+4  CoreFoundation                 0x53f5c __CFRunLoopServiceMachPort + 160
+5  CoreFoundation                 0x53600 __CFRunLoopRun + 1208
+6  CoreFoundation                 0x52cd8 CFRunLoopRunSpecific + 608
+7  Flutter                        0x94104 (Missing UUID 4c4c441e55553144a17c628d000b1236)
+8  Flutter                        0x93dec (Missing UUID 4c4c441e55553144a17c628d000b1236)
+9  Flutter                        0x93afc (Missing UUID 4c4c441e55553144a17c628d000b1236)
+10 libsystem_pthread.dylib        0x606c _pthread_start + 136
+11 libsystem_pthread.dylib        0x10d8 thread_start + 8
+
+io.worker.1
+0  libsystem_kernel.dylib         0x71cc __psynch_cvwait + 8
+1  libsystem_pthread.dylib        0x36e4 _pthread_cond_wait + 1228
+2  Flutter                        0x6f3b4 (Missing UUID 4c4c441e55553144a17c628d000b1236)
+3  Flutter                        0x8d488 (Missing UUID 4c4c441e55553144a17c628d000b1236)
+4  libsystem_pthread.dylib        0x606c _pthread_start + 136
+5  libsystem_pthread.dylib        0x10d8 thread_start + 8
+
+io.worker.2
+0  libsystem_kernel.dylib         0x71cc __psynch_cvwait + 8
+1  libsystem_pthread.dylib        0x36e4 _pthread_cond_wait + 1228
+2  Flutter                        0x6f3b4 (Missing UUID 4c4c441e55553144a17c628d000b1236)
+3  Flutter                        0x8d488 (Missing UUID 4c4c441e55553144a17c628d000b1236)
+4  libsystem_pthread.dylib        0x606c _pthread_start + 136
+5  libsystem_pthread.dylib        0x10d8 thread_start + 8
+
+io.worker.3
+0  libsystem_kernel.dylib         0x71cc __psynch_cvwait + 8
+1  libsystem_pthread.dylib        0x36e4 _pthread_cond_wait + 1228
+2  Flutter                        0x6f3b4 (Missing UUID 4c4c441e55553144a17c628d000b1236)
+3  Flutter                        0x8d488 (Missing UUID 4c4c441e55553144a17c628d000b1236)
+4  libsystem_pthread.dylib        0x606c _pthread_start + 136
+5  libsystem_pthread.dylib        0x10d8 thread_start + 8
+
+dart:io EventHandler
+0  libsystem_kernel.dylib         0x8608 kevent + 8
+1  Flutter                        0x486c7c (Missing UUID 4c4c441e55553144a17c628d000b1236)
+2  Flutter                        0x4b2fcc (Missing UUID 4c4c441e55553144a17c628d000b1236)
+3  libsystem_pthread.dylib        0x606c _pthread_start + 136
+4  libsystem_pthread.dylib        0x10d8 thread_start + 8
+
+com.google.firebase.crashlytics.MachExceptionServer
+0  libsystem_kernel.dylib         0x1808 mach_msg2_trap + 8
+1  libsystem_kernel.dylib         0x5008 mach_msg2_internal + 80
+2  libsystem_kernel.dylib         0x4f20 mach_msg_overwrite + 436
+3  libsystem_kernel.dylib         0x4d60 mach_msg + 24
+4  FirebaseCrashlytics            0x1b584 FIRCLSMachExceptionServer + 104
+5  libsystem_pthread.dylib        0x606c _pthread_start + 136
+6  libsystem_pthread.dylib        0x10d8 thread_start + 8
+
+com.apple.NSURLConnectionLoader
+0  libsystem_kernel.dylib         0x1808 mach_msg2_trap + 8
+1  libsystem_kernel.dylib         0x5008 mach_msg2_internal + 80
+2  libsystem_kernel.dylib         0x4f20 mach_msg_overwrite + 436
+3  libsystem_kernel.dylib         0x4d60 mach_msg + 24
+4  CoreFoundation                 0x53f5c __CFRunLoopServiceMachPort + 160
+5  CoreFoundation                 0x53600 __CFRunLoopRun + 1208
+6  CoreFoundation                 0x52cd8 CFRunLoopRunSpecific + 608
+7  CFNetwork                      0xfdc90 _CFHostIsDomainTopLevel + 108176
+8  Foundation                     0xde718 __NSThread__start__ + 732
+9  libsystem_pthread.dylib        0x606c _pthread_start + 136
+10 libsystem_pthread.dylib        0x10d8 thread_start + 8
+
+JavaScriptCore libpas scavenger
+0  libsystem_kernel.dylib         0x71cc __psynch_cvwait + 8
+1  libsystem_pthread.dylib        0x36e4 _pthread_cond_wait + 1228
+2  JavaScriptCore                 0x155afe0 scavenger_thread_main + 1316
+3  libsystem_pthread.dylib        0x606c _pthread_start + 136
+4  libsystem_pthread.dylib        0x10d8 thread_start + 8
+
+AXSpeech
+0  libsystem_kernel.dylib         0x1808 mach_msg2_trap + 8
+1  libsystem_kernel.dylib         0x5008 mach_msg2_internal + 80
+2  libsystem_kernel.dylib         0x4f20 mach_msg_overwrite + 436
+3  libsystem_kernel.dylib         0x4d60 mach_msg + 24
+4  CoreFoundation                 0x53f5c __CFRunLoopServiceMachPort + 160
+5  CoreFoundation                 0x53600 __CFRunLoopRun + 1208
+6  CoreFoundation                 0x52cd8 CFRunLoopRunSpecific + 608
+7  Foundation                     0xc7e4c -[NSRunLoop(NSRunLoop) runMode:beforeDate:] + 212
+8  TextToSpeech                   0x27718 TTSCFAttributedStringCreateStringByBracketingAttributeWithString + 776
+9  Foundation                     0xde718 __NSThread__start__ + 732
+10 libsystem_pthread.dylib        0x606c _pthread_start + 136
+11 libsystem_pthread.dylib        0x10d8 thread_start + 8
+
+caulk::deferred_logger
+0  libsystem_kernel.dylib         0x1784 semaphore_wait_trap + 8
+1  caulk                          0x8724 caulk::semaphore::timed_wait(double) + 212
+2  caulk                          0x85e4 caulk::concurrent::details::worker_thread::run() + 36
+3  caulk                          0x852c void* caulk::thread_proxy<std::__1::tuple<caulk::thread::attributes, void (caulk::concurrent::details::worker_thread::*)(), std::__1::tuple<caulk::concurrent::details::worker_thread*> > >(void*) + 96
+4  libsystem_pthread.dylib        0x606c _pthread_start + 136
+5  libsystem_pthread.dylib        0x10d8 thread_start + 8
+
+caulk.messenger.shared:high
+0  libsystem_kernel.dylib         0x1784 semaphore_wait_trap + 8
+1  caulk                          0x8724 caulk::semaphore::timed_wait(double) + 212
+2  caulk                          0x85e4 caulk::concurrent::details::worker_thread::run() + 36
+3  caulk                          0x852c void* caulk::thread_proxy<std::__1::tuple<caulk::thread::attributes, void (caulk::concurrent::details::worker_thread::*)(), std::__1::tuple<caulk::concurrent::details::worker_thread*> > >(void*) + 96
+4  libsystem_pthread.dylib        0x606c _pthread_start + 136
+5  libsystem_pthread.dylib        0x10d8 thread_start + 8
+
+com.apple.audio.toolbox.AUScheduledParameterRefresher
+0  libsystem_kernel.dylib         0x1784 semaphore_wait_trap + 8
+1  caulk                          0x8724 caulk::semaphore::timed_wait(double) + 212
+2  caulk                          0x85e4 caulk::concurrent::details::worker_thread::run() + 36
+3  caulk                          0x852c void* caulk::thread_proxy<std::__1::tuple<caulk::thread::attributes, void (caulk::concurrent::details::worker_thread::*)(), std::__1::tuple<caulk::concurrent::details::worker_thread*> > >(void*) + 96
+4  libsystem_pthread.dylib        0x606c _pthread_start + 136
+5  libsystem_pthread.dylib        0x10d8 thread_start + 8
+
+Thread
+0  libsystem_kernel.dylib         0x1590 __workq_kernreturn + 8
+1  libsystem_pthread.dylib        0x4980 _pthread_wqthread + 364
+2  libsystem_pthread.dylib        0x10cc start_wqthread + 8
+
+Thread
+0  libsystem_kernel.dylib         0x1590 __workq_kernreturn + 8
+1  libsystem_pthread.dylib        0x4980 _pthread_wqthread + 364
+2  libsystem_pthread.dylib        0x10cc start_wqthread + 8
+
+Thread
+0  libsystem_kernel.dylib         0x1590 __workq_kernreturn + 8
+1  libsystem_pthread.dylib        0x4980 _pthread_wqthread + 364
+2  libsystem_pthread.dylib        0x10cc start_wqthread + 8
+
+Thread
+0  libsystem_kernel.dylib         0x1590 __workq_kernreturn + 8
+1  libsystem_pthread.dylib        0x4980 _pthread_wqthread + 364
+2  libsystem_pthread.dylib        0x10cc start_wqthread + 8
+
+com.google.firebase.crashlytics.on.demand
+0  libsystem_kernel.dylib         0x73ec __semwait_signal + 8
+1  libsystem_c.dylib              0x165f0 nanosleep + 220
+2  libsystem_c.dylib              0x7372c sleep + 52
+3  FirebaseCrashlytics            0x205ac __107-[FIRCLSOnDemandModel recordOnDemandExceptionIfQuota:withDataCollectionEnabled:usingExistingReportManager:]_block_invoke + 340
+4  Foundation                     0x1cbe0 __NSBLOCKOPERATION_IS_CALLING_OUT_TO_A_BLOCK__ + 24
+5  Foundation                     0x1caa0 -[NSBlockOperation main] + 104
+6  Foundation                     0x1c8a0 __NSOPERATION_IS_INVOKING_MAIN__ + 16
+7  Foundation                     0x1ab40 -[NSOperation start] + 648
+8  Foundation                     0x9f558 __NSOPERATIONQUEUE_IS_STARTING_AN_OPERATION__ + 16
+9  Foundation                     0x9f1a4 __NSOQSchedule_f + 172
+10 libdispatch.dylib              0x12e5c _dispatch_block_async_invoke2 + 148
+11 libdispatch.dylib              0x3dd4 _dispatch_client_callout + 20
+12 libdispatch.dylib              0xb400 _dispatch_lane_serial_drain + 748
+13 libdispatch.dylib              0xbf30 _dispatch_lane_invoke + 380
+14 libdispatch.dylib              0x16cb4 _dispatch_root_queue_drain_deferred_wlh + 288
+15 libdispatch.dylib              0x16528 _dispatch_workloop_worker_thread + 404
+16 libsystem_pthread.dylib        0x4934 _pthread_wqthread + 288
+17 libsystem_pthread.dylib        0x10cc start_wqthread + 8
+
+Thread
+0  libsystem_kernel.dylib         0x1590 __workq_kernreturn + 8
+1  libsystem_pthread.dylib        0x4980 _pthread_wqthread + 364
+2  libsystem_pthread.dylib        0x10cc start_wqthread + 8
+
+DartWorker
+0  libsystem_kernel.dylib         0x71cc __psynch_cvwait + 8
+1  libsystem_pthread.dylib        0x3710 _pthread_cond_wait + 1272
+2  Flutter                        0x4fa284 InternalFlutterGpu_Texture_AsImage + 161648
+3  Flutter                        0x5bb7e0 InternalFlutterGpu_Texture_AsImage + 953548
+4  Flutter                        0x59c934 InternalFlutterGpu_Texture_AsImage + 826912
+5  libsystem_pthread.dylib        0x606c _pthread_start + 136
+6  libsystem_pthread.dylib        0x10d8 thread_start + 8
+
+DartWorker
+0  libsystem_kernel.dylib         0x71cc __psynch_cvwait + 8
+1  libsystem_pthread.dylib        0x3710 _pthread_cond_wait + 1272
+2  Flutter                        0x4fa284 InternalFlutterGpu_Texture_AsImage + 161648
+3  Flutter                        0x5bb7e0 InternalFlutterGpu_Texture_AsImage + 953548
+4  Flutter                        0x59c934 InternalFlutterGpu_Texture_AsImage + 826912
+5  libsystem_pthread.dylib        0x606c _pthread_start + 136
+6  libsystem_pthread.dylib        0x10d8 thread_start + 8
+
+Thread
+0  libsystem_kernel.dylib         0x1590 __workq_kernreturn + 8
+1  libsystem_pthread.dylib        0x4980 _pthread_wqthread + 364
+2  libsystem_pthread.dylib        0x10cc start_wqthread + 8
+
+DartWorker
+0  libsystem_kernel.dylib         0x71cc __psynch_cvwait + 8
+1  libsystem_pthread.dylib        0x3710 _pthread_cond_wait + 1272
+2  Flutter                        0x4fa284 InternalFlutterGpu_Texture_AsImage + 161648
+3  Flutter                        0x5bb7e0 InternalFlutterGpu_Texture_AsImage + 953548
+4  Flutter                        0x59c934 InternalFlutterGpu_Texture_AsImage + 826912
+5  libsystem_pthread.dylib        0x606c _pthread_start + 136
+6  libsystem_pthread.dylib        0x10d8 thread_start + 8
+
+DartWorker
+0  libsystem_kernel.dylib         0x71cc __psynch_cvwait + 8
+1  libsystem_pthread.dylib        0x3710 _pthread_cond_wait + 1272
+2  Flutter                        0x4fa284 InternalFlutterGpu_Texture_AsImage + 161648
+3  Flutter                        0x5bb7e0 InternalFlutterGpu_Texture_AsImage + 953548
+4  Flutter                        0x59c934 InternalFlutterGpu_Texture_AsImage + 826912
+5  libsystem_pthread.dylib        0x606c _pthread_start + 136
+6  libsystem_pthread.dylib        0x10d8 thread_start + 8
+
+DartWorker
+0  libsystem_kernel.dylib         0x71cc __psynch_cvwait + 8
+1  libsystem_pthread.dylib        0x3710 _pthread_cond_wait + 1272
+2  Flutter                        0x4fa284 InternalFlutterGpu_Texture_AsImage + 161648
+3  Flutter                        0x5bb7e0 InternalFlutterGpu_Texture_AsImage + 953548
+4  Flutter                        0x59c934 InternalFlutterGpu_Texture_AsImage + 826912
+5  libsystem_pthread.dylib        0x606c _pthread_start + 136
+6  libsystem_pthread.dylib        0x10d8 thread_start + 8
