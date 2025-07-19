@@ -49,3 +49,4 @@ GoogleService-Info.plist
 credentials.dart
 private_keys
 android/app/.cxx
+gemini.sh

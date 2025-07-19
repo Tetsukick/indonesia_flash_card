@@ -33,6 +33,7 @@ target 'Runner' do
 
   pod 'lottie-ios'
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  pod 'Firebase/Crashlytics'
 end
 
 post_install do |installer|
@@ -40,6 +41,13 @@ post_install do |installer|
     flutter_additional_ios_build_settings(target)
     target.build_configurations.each do |config|
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+    end
+    if target.name == 'Runner'
+      target.build_phases.each do |build_phase|
+        if build_phase.name == '[CP] Embed Pods Frameworks'
+          build_phase.shell_script = "\"${PODS_ROOT}/FirebaseCrashlytics/upload-symbols\" -gsp \"${SRCROOT}/Runner/GoogleService-Info.plist\" -p ios \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"\n" + build_phase.shell_script
+        end
+      end
     end
   end
 end

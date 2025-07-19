@@ -111,6 +111,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
 
   Future<void> initializeSoundSetting() async {
     final isSoundOn = await PreferenceKey.isSoundOn.getBool();
+    if (!mounted) return;
     setState(() {
       _isSoundOn = isSoundOn;
     });
@@ -121,6 +122,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         .databaseBuilder(Config.dbName)
         .addMigrations([migration1to2, migration2to3])
         .build();
+    if (!mounted) return;
     setState(() => database = _database);
   }
 
@@ -284,6 +286,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                   logger.d('back button currentText: $currentText');
                   final removedLastText = currentText.removeLast();
                   logger.d('back button tapped: $removedLastText');
+                  if (!mounted) return;
                   setState(() {
                     currentText = removedLastText;
                     pinCodeTextFieldController?.text = removedLastText;
@@ -295,6 +298,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                 image: Assets.png.delete,
                 title: 'delete',
                 onTap: currentText.length == 0 ? null : () async {
+                  if (!mounted) return;
                   setState(() {
                     currentText = '';
                     pinCodeTextFieldController?.text = '';
@@ -309,6 +313,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   }
 
   Future<void> _answer(String input, {required TangoEntity entity}) async {
+    if (!mounted) return;
     setState(() => isCheckingAnswer = true);
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     final entity = questionAnswerList.lesson.tangos[currentIndex];
@@ -340,6 +345,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         wrongAnswerAction(entity);
       }
     }
+    if (!mounted) return;
     setState(() => isCheckingAnswer = false);
   }
 
@@ -453,8 +459,10 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   Future<void> getNextCard() async {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     if (questionAnswerList.lesson.tangos.length <= currentIndex + 1) {
+      if (!mounted) return;
       setState(() => allCardsFinished = true);
       await Future<void>.delayed(const Duration(seconds: 1));
+      if (!mounted) return;
       if (questionAnswerList.lesson.isTest) {
         CompletionTodayTestScreen.navigateTo(context);
       } else {
@@ -462,6 +470,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       }
       return;
     }
+    if (!mounted) return;
     setState(() {
       currentText = '';
       randomText = {};
@@ -491,6 +500,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   Future<void> setPinCodeTextField(TangoEntity entity) async {
     final questionAnswerList = ref.watch(tangoListControllerProvider);
     countDownController?.disposeTimer();
+    if (!mounted) return;
     setState(() {
       pinCodeTextField = null;
       errorController?.close();
@@ -501,12 +511,14 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
 
     await Future<void>.delayed(const Duration(milliseconds: 1200));
 
+    if (!mounted) return;
     if (questionAnswerList.lesson.isTest) {
       setCountDownController(entity: entity);
     }
     final pinHeight = getPinHeight(entity.indonesian?.length ?? 0);
     final pinWidth = getPinWidth(entity.indonesian?.length ?? 0);
     final fontSize = getFontSize(entity.indonesian?.length ?? 0);
+    if (!mounted) return;
     setState(() {
       errorController = StreamController<ErrorAnimationType>();
       pinCodeTextFieldController = TextEditingController();
@@ -584,6 +596,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   }
 
   void setCountDownController({required TangoEntity entity}) {
+    if (!mounted) return;
     setState(() {
       endTime = DateTime.now().millisecondsSinceEpoch + baseQuestionTime + 500;
       countDownController = CountdownTimerController(
@@ -673,6 +686,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
 
   Future<void> wrongAnswerAction(TangoEntity entity) async {
     if (isCheckingAnswer) {
+      if (!mounted) return;
       setState(() => isTimeOver = true);
     } else {
       try {
@@ -684,6 +698,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
           ..isCorrect = false;
         ref.read(tangoListControllerProvider.notifier).addQuizResult(result);
         await getNextCard();
+        if (!mounted) return;
         setState(() => isTimeOver = false);
       } catch (e, s) {
         log('failed to go next question', error: e);
@@ -693,6 +708,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
           ..isCorrect = false;
         ref.read(tangoListControllerProvider.notifier).addQuizResult(result);
         await getNextCard();
+        if (!mounted) return;
         setState(() => isTimeOver = false);
       }
     }

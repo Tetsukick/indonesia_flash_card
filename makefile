@@ -105,6 +105,9 @@ fvm_generate_native_splash:
 	@dart run flutter_native_splash:create --flavor production
 	@dart run flutter_native_splash:create --flavor development
 
+gemini:
+	@sh gemini.sh
+
 purge: ## Purges the Flutter
 	@pod deintegrate
 	@flutter clean
