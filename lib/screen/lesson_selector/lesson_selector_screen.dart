@@ -78,6 +78,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> wit
   List<Activity> activityList = [];
   late AppDatabase database;
   late BannerAd bannerAd;
+  bool _isAdLoaded = false;
   final RefreshController _refreshController =
     RefreshController();
   bool _isAlreadyTestedToday = false;
@@ -105,6 +106,7 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> wit
   @override
   void dispose() {
     routeObserver.unsubscribe(this);
+    bannerAd.dispose();
     super.dispose();
   }
 
@@ -227,11 +229,12 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> wit
     if (Platform.isAndroid) {
       return Container();
     } else {
-      return SizedBox(
-        height: 50,
-        width: double.infinity,
-        child: AdWidget(ad: bannerAd),
-      );
+      return _isAdLoaded ?
+        SizedBox(
+          height: 50,
+          width: double.infinity,
+          child: AdWidget(ad: bannerAd),
+        ) : const SizedBox.shrink();
     }
   }
 
@@ -615,7 +618,13 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> wit
 
   void initializeBannerAd() {
     final listener = BannerAdListener(
-      onAdLoaded: (Ad ad) => logger.d('Ad loaded.$ad'),
+      onAdLoaded: (Ad ad) {
+        logger.d('Ad loaded.$ad');
+        if (!mounted) return;
+        setState(() {
+          _isAdLoaded = true;
+        });
+      },
       onAdFailedToLoad: (Ad ad, LoadAdError error) {
         ad.dispose();
         logger.d('Ad failed to load: $error');
@@ -625,14 +634,12 @@ class _LessonSelectorScreenState extends ConsumerState<LessonSelectorScreen> wit
       onAdImpression: (Ad ad) => logger.d('Ad impression.'),
     );
 
-    setState(() {
-      bannerAd = BannerAd(
-        adUnitId: Platform.isIOS ? Config.adUnitIdIosBanner : Config.adUnitIdAndroidBanner,
-        size: AdSize.banner,
-        request: const AdRequest(),
-        listener: listener,
-      );
-    });
+    bannerAd = BannerAd(
+      adUnitId: Platform.isIOS ? Config.adUnitIdIosBanner : Config.adUnitIdAndroidBanner,
+      size: AdSize.banner,
+      request: const AdRequest(),
+      listener: listener,
+    );
 
     bannerAd.load();
   }

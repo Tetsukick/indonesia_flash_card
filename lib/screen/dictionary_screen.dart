@@ -59,11 +59,13 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
   List<TangoEntity> _searchedTango = [];
   AppDatabase? database;
   late BannerAd bannerAd;
+  bool _isAdLoaded = false;
 
   @override
   void initState() {
     FirebaseAnalyticsUtils.analytics.logScreenView(screenName: AnalyticsScreen.dictionary.name);
     initializeDB();
+    initializeBannerAd();
     super.initState();
   }
 
@@ -88,12 +90,12 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
             padding: const EdgeInsets.fromLTRB(0, 64, 0, SizeConfig.bottomBarHeight),
             itemBuilder: (BuildContext context, int index){
               if (index == 0) {
-                return Container();
-                return SizedBox(
-                  height: 50,
-                  width: double.infinity,
-                  child: AdWidget(ad: bannerAd),
-                );
+                return _isAdLoaded ?
+                  SizedBox(
+                    height: 50,
+                    width: double.infinity,
+                    child: AdWidget(ad: bannerAd),
+                  ) : const SizedBox.shrink();
               }
               final tango = tangoList.dictionary.sortAndFilteredTangos[index - 1];
               return tangoListItem(tango);
@@ -555,7 +557,13 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
 
   void initializeBannerAd() {
     final listener = BannerAdListener(
-      onAdLoaded: (Ad ad) => logger.d('Ad loaded.$ad'),
+      onAdLoaded: (Ad ad) {
+        logger.d('Ad loaded.$ad');
+        if (!mounted) return;
+        setState(() {
+          _isAdLoaded = true;
+        });
+      },
       onAdFailedToLoad: (Ad ad, LoadAdError error) {
         ad.dispose();
         logger.d('Ad failed to load: $error');
@@ -565,16 +573,20 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
       onAdImpression: (Ad ad) => logger.d('Ad impression.'),
     );
 
-    setState(() {
-      bannerAd = BannerAd(
-        adUnitId: Platform.isIOS ? Config.adUnitIdIosBanner : Config.adUnitIdAndroidBanner,
-        size: AdSize.banner,
-        request: const AdRequest(),
-        listener: listener,
-      );
-    });
+    bannerAd = BannerAd(
+      adUnitId: Platform.isIOS ? Config.adUnitIdIosBanner : Config.adUnitIdAndroidBanner,
+      size: AdSize.banner,
+      request: const AdRequest(),
+      listener: listener,
+    );
 
     bannerAd.load();
+  }
+
+  @override
+  void dispose() {
+    bannerAd.dispose();
+    super.dispose();
   }
 
   Future<void> showInterstitialAd() async {

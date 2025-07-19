@@ -53,13 +53,14 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
   final TextEditingController _inputController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _inputFocusNode = FocusNode();
+  bool _isAdLoaded = false;
 
   @override
   void initState() {
     FirebaseAnalyticsUtils.analytics
         .logScreenView(screenName: AnalyticsScreen.translation.name);
     initializeDB();
-    // initializeBannerAd();
+    initializeBannerAd();
     super.initState();
   }
 
@@ -91,12 +92,12 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
                   padding: const EdgeInsets.fromLTRB(0, SizeConfig.mediumSmallMargin, 0, SizeConfig.bottomBarHeight),
                   itemBuilder: (BuildContext context, int index){
                     if (index == 0) {
-                      return Container();
-                      return SizedBox(
-                        height: 50,
-                        width: double.infinity,
-                        child: AdWidget(ad: bannerAd),
-                      );
+                      return _isAdLoaded ?
+                        SizedBox(
+                          height: 50,
+                          width: double.infinity,
+                          child: AdWidget(ad: bannerAd),
+                        ) : const SizedBox.shrink();
                     }
                     final tango = tangoList.translateMaster.includedTangos[index - 1];
                     return tangoListItem(tango);
@@ -319,7 +320,13 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
 
   void initializeBannerAd() {
     final listener = BannerAdListener(
-      onAdLoaded: (Ad ad) => logger.d('Ad loaded.$ad'),
+      onAdLoaded: (Ad ad) {
+        logger.d('Ad loaded.$ad');
+        if (!mounted) return;
+        setState(() {
+          _isAdLoaded = true;
+        });
+      },
       onAdFailedToLoad: (Ad ad, LoadAdError error) {
         ad.dispose();
         logger.d('Ad failed to load: $error');
@@ -329,15 +336,19 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
       onAdImpression: (Ad ad) => logger.d('Ad impression.'),
     );
 
-    setState(() {
-      bannerAd = BannerAd(
-        adUnitId: Platform.isIOS ? Config.adUnitIdIosBanner : Config.adUnitIdAndroidBanner,
-        size: AdSize.banner,
-        request: const AdRequest(),
-        listener: listener,
-      );
-    });
+    bannerAd = BannerAd(
+      adUnitId: Platform.isIOS ? Config.adUnitIdIosBanner : Config.adUnitIdAndroidBanner,
+      size: AdSize.banner,
+      request: const AdRequest(),
+      listener: listener,
+    );
 
     bannerAd.load();
+  }
+
+  @override
+  void dispose() {
+    bannerAd.dispose();
+    super.dispose();
   }
 }
