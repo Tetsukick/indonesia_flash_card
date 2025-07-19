@@ -1,0 +1,717 @@
+# Crashlytics - Stack trace
+# Application: com.tetsukick.indonesia.flash.card
+# Platform: android
+# Version: 3.5.2 (100)
+# Issue: 266cae90cc8ae49f1c88b74f951ad293
+# Session: 68798DA30050000102D6BD98B387A6E3_DNE_0_v2
+# Date: Fri Jul 18 2025 06:58:29 GMT+0700 (Western Indonesia Time)
+
+Fatal Exception: io.flutter.plugins.firebase.crashlytics.FlutterError: Null check operator used on a null value
+       at State.context(framework.dart:959)
+       at _QuizScreenState.setPinCodeTextField.<fn>(quiz_screen.dart:539)
+       at State.setState(framework.dart:1199)
+       at _QuizScreenState.setPinCodeTextField(quiz_screen.dart:510)
+       at _QuizScreenState.getNextCard(quiz_screen.dart:474)
+       at _QuizScreenState._answer(quiz_screen.dart:328)
+
+ExoPlayer:MediaCodecQueueingThread:Audio:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+DefaultDispatcher-worker-1:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:410)
+       at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.park(CoroutineScheduler.kt:284)
+       at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.tryPark(CoroutineScheduler.kt:284)
+       at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:284)
+       at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:284)
+
+Firebase Background Thread #2:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+       at java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3805)
+       at java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3746)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1707)
+       at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:435)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at com.google.firebase.concurrent.CustomThreadFactory.lambda$newThread$0(CustomThreadFactory.java:1173)
+       at java.lang.Thread.run(Thread.java:1119)
+
+CleanupReference:
+       at java.lang.Object.wait(Object.java)
+       at java.lang.Object.wait(Object.java:405)
+       at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:207)
+       at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:228)
+       at WV.bf.run(chromium-TrichromeWebViewGoogle6432.aab-stable-720406733:3)
+
+Firebase Background Thread #1:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+       at java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3805)
+       at java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3746)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1707)
+       at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:435)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at com.google.firebase.concurrent.CustomThreadFactory.lambda$newThread$0(CustomThreadFactory.java:1173)
+       at java.lang.Thread.run(Thread.java:1119)
+
+ConnectivityThread:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+AudioPortEventHandler:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+pool-6-thread-1:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+       at java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3805)
+       at java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3746)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1707)
+       at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:435)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+ExoPlayer:MediaCodecAsyncAdapter:Audio:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+AdWorker(Schedule) #3:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+       at java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3805)
+       at java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3746)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1707)
+       at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1231)
+       at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:953)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+ProcessStablePhenotypeFlag:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+       at java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3805)
+       at java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3746)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1707)
+       at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1224)
+       at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:953)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+Okio Watchdog:
+       at java.lang.Object.wait(Object.java)
+       at java.lang.Object.wait(Object.java:405)
+       at java.lang.Object.wait(Object.java:543)
+       at com.android.okhttp.okio.AsyncTimeout.awaitTimeout(AsyncTimeout.java:313)
+       at com.android.okhttp.okio.AsyncTimeout.access$000(AsyncTimeout.java:42)
+       at com.android.okhttp.okio.AsyncTimeout$Watchdog.run(AsyncTimeout.java:288)
+
+ConscryptStatsLog:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+       at java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3805)
+       at java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3746)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1707)
+       at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:435)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+Sqflite:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+com.it_nomads.fluttersecurestorage.worker:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+AdWorker(Schedule) #2:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+       at java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3805)
+       at java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3746)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1707)
+       at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1224)
+       at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:953)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+PrewarmService:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+FirebaseSessions_HandlerThread:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+JavaBridge:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+ExoPlayer:MediaCodecAsyncAdapter:Video:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+ExoPlayer:MediaCodecQueueingThread:Video:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+MessengerIpcClient:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+       at java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3805)
+       at java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3746)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1707)
+       at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1224)
+       at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:953)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at com.google.android.gms.common.util.concurrent.zza.run(zza.java:12)
+       at java.lang.Thread.run(Thread.java:1119)
+
+AdWorker(ClientDefault) #1:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.LinkedTransferQueue$DualNode.await(LinkedTransferQueue.java:458)
+       at java.util.concurrent.SynchronousQueue$Transferer.xferLifo(SynchronousQueue.java:194)
+       at java.util.concurrent.SynchronousQueue.xfer(SynchronousQueue.java:233)
+       at java.util.concurrent.SynchronousQueue.take(SynchronousQueue.java:316)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+LooperProvider:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+DefaultDispatcher-worker-2:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:410)
+       at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.park(CoroutineScheduler.kt:284)
+       at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.tryPark(CoroutineScheduler.kt:284)
+       at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:284)
+       at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:284)
+
+flutter-worker-2:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:410)
+       at java.util.concurrent.LinkedTransferQueue$DualNode.await(LinkedTransferQueue.java:452)
+       at java.util.concurrent.SynchronousQueue$Transferer.xferLifo(SynchronousQueue.java:194)
+       at java.util.concurrent.SynchronousQueue.xfer(SynchronousQueue.java:233)
+       at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:336)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1081)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+AdWorker(ClientSingle) #1:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+       at java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3805)
+       at java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3746)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1707)
+       at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:435)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+queued-work-looper:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+GoogleApiHandler:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+WM.task-1:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+       at java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3805)
+       at java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3746)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1707)
+       at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:435)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+AdWorker(ClientSingle) #1:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+       at java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3805)
+       at java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3746)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1707)
+       at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:435)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+SurfaceSyncGroupTimer:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+Firebase-Messaging-Init:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+       at java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3805)
+       at java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3746)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1707)
+       at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1224)
+       at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:953)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at com.google.android.gms.common.util.concurrent.zza.run(zza.java:12)
+       at java.lang.Thread.run(Thread.java:1119)
+
+ExoPlayer:MediaCodecQueueingThread:Audio:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+AdWorker(Default) #6:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+       at java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3805)
+       at java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3746)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1707)
+       at java.util.concurrent.ArrayBlockingQueue.take(ArrayBlockingQueue.java:420)
+       at com.google.android.gms.ads.internal.csi.a.run(:com.google.android.gms.policy_ads_fdr_dynamite@251815211@251815203017.772994240.772994240:7)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1156)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+ExoPlayer:FrameReleaseChoreographer:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+DefaultDispatcher-worker-2:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:410)
+       at WV.Li.run(chromium-TrichromeWebViewGoogle6432.aab-stable-720406733:223)
+
+pool-25-thread-1:
+       at android.os.MessageQueue.nativeWake(MessageQueue.java)
+       at android.os.MessageQueue.enqueueMessage(MessageQueue.java:693)
+       at android.os.Handler.enqueueMessage(Handler.java:787)
+       at android.os.Handler.sendMessageAtTime(Handler.java:736)
+       at android.os.Handler.sendMessageDelayed(Handler.java:706)
+       at android.os.Handler.sendMessage(Handler.java:644)
+       at android.os.Message.sendToTarget(Message.java:471)
+       at android.os.AsyncTask.postResult(AsyncTask.java:434)
+       at android.os.AsyncTask.-$$Nest$mpostResult()
+       at android.os.AsyncTask$3.call(AsyncTask.java:400)
+       at java.util.concurrent.FutureTask.run(FutureTask.java:317)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1156)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+OkHttp ConnectionPool:
+       at java.lang.Object.wait(Object.java)
+       at com.android.okhttp.ConnectionPool$1.run(ConnectionPool.java:106)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1156)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+ExoPlayer:MediaCodecAsyncAdapter:Audio:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+ExoPlayer:MediaCodecQueueingThread:Video:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+AdWorker(NG) #1:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1758)
+       at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1236)
+       at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:953)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+DefaultDispatcher-worker-1:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:410)
+       at WV.Li.run(chromium-TrichromeWebViewGoogle6432.aab-stable-720406733:223)
+
+ExoPlayer:Playback:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+FinalizerWatchdogDaemon:
+       at java.lang.Thread.sleep(Thread.java)
+       at java.lang.Thread.sleep(Thread.java:451)
+       at java.lang.Thread.sleep(Thread.java:356)
+       at java.lang.Daemons$FinalizerWatchdogDaemon.sleepForNanos(Daemons.java:534)
+       at java.lang.Daemons$FinalizerWatchdogDaemon.waitForProgress(Daemons.java:593)
+       at java.lang.Daemons$FinalizerWatchdogDaemon.runInternal(Daemons.java:465)
+       at java.lang.Daemons$Daemon.run(Daemons.java:132)
+       at java.lang.Thread.run(Thread.java:1119)
+
+SAFE_BROWSING_API_HANDLER_THREAD:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+ExoPlayer:MediaCodecAsyncAdapter:Video:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+ExoPlayer:Loader:ProgressiveMediaPeriod:
+       at java.lang.Object.wait(Object.java)
+       at java.lang.Object.wait(Object.java:405)
+       at java.lang.Object.wait(Object.java:543)
+       at m84.fm.a(:com.google.android.gms.policy_ads_fdr_dynamite@251815211@251815203017.772994240.772994240:6)
+       at m84.zk.run(:com.google.android.gms.policy_ads_fdr_dynamite@251815211@251815203017.772994240.772994240:454)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1156)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+Chrome_ProcessLauncherThread:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+PlatformServiceBridgeHandlerThread:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+ExoPlayer:Loader:ProgressiveMediaPeriod:
+       at java.lang.Object.wait(Object.java)
+       at java.lang.Object.wait(Object.java:405)
+       at java.lang.Object.wait(Object.java:543)
+       at m84.fm.a(:com.google.android.gms.policy_ads_fdr_dynamite@251815211@251815203017.772994240.772994240:6)
+       at m84.zk.run(:com.google.android.gms.policy_ads_fdr_dynamite@251815211@251815203017.772994240.772994240:454)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1156)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+ReferenceQueueDaemon:
+       at java.lang.Object.wait(Object.java)
+       at java.lang.Object.wait(Object.java:405)
+       at java.lang.Object.wait(Object.java:543)
+       at java.lang.Daemons$ReferenceQueueDaemon.runInternal(Daemons.java:260)
+       at java.lang.Daemons$Daemon.run(Daemons.java:132)
+       at java.lang.Thread.run(Thread.java:1119)
+
+Firebase-Messaging-Task:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+       at java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3805)
+       at java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3746)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1707)
+       at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:435)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at com.google.android.gms.common.util.concurrent.zza.run(zza.java:12)
+       at java.lang.Thread.run(Thread.java:1119)
+
+ProcessStablePhenotypeFlag:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+       at java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3805)
+       at java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3746)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1707)
+       at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1224)
+       at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:953)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+ExoPlayer:Loader:ProgressiveMediaPeriod:
+       at java.lang.Object.wait(Object.java)
+       at java.lang.Object.wait(Object.java:405)
+       at java.lang.Object.wait(Object.java:543)
+       at m84.fm.a(:com.google.android.gms.policy_ads_fdr_dynamite@251815211@251815203017.772994240.772994240:6)
+       at m84.zk.run(:com.google.android.gms.policy_ads_fdr_dynamite@251815211@251815203017.772994240.772994240:454)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1156)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+DefaultDispatcher-worker-4:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:410)
+       at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.park(CoroutineScheduler.kt:284)
+       at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.tryPark(CoroutineScheduler.kt:284)
+       at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:284)
+       at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:284)
+
+AdWorker(Schedule) #1:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+       at java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3805)
+       at java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3746)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1707)
+       at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1231)
+       at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:953)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+CameraAvailabilityObserver_ObservationThread:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+Firebase-Messaging-Topics-Io:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+       at java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3805)
+       at java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3746)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1707)
+       at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1224)
+       at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:953)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at com.google.android.gms.common.util.concurrent.zza.run(zza.java:12)
+       at java.lang.Thread.run(Thread.java:1119)
+
+GoogleApiHandler:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+pool-16-thread-5:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:410)
+       at java.util.concurrent.LinkedTransferQueue$DualNode.await(LinkedTransferQueue.java:452)
+       at java.util.concurrent.SynchronousQueue$Transferer.xferLifo(SynchronousQueue.java:194)
+       at java.util.concurrent.SynchronousQueue.xfer(SynchronousQueue.java:233)
+       at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:336)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1081)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+main:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.app.ActivityThread.main(ActivityThread.java:9638)
+       at java.lang.reflect.Method.invoke(Method.java)
+       at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:619)
+       at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:929)
+
+Firebase Background Thread #3:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+       at java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3805)
+       at java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3746)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1707)
+       at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:435)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at com.google.firebase.concurrent.CustomThreadFactory.lambda$newThread$0(CustomThreadFactory.java:1173)
+       at java.lang.Thread.run(Thread.java:1119)
+
+GmsDynamite:
+       at java.lang.Object.wait(Object.java)
+       at java.lang.Object.wait(Object.java:405)
+       at java.lang.Object.wait(Object.java:543)
+       at com.google.android.gms.dynamite.zza.run(com.google.android.gms:play-services-basement@@18.5.0:46)
+
+WM.task-2:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+       at java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3805)
+       at java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3746)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1707)
+       at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:435)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+TAG:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+       at java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3805)
+       at java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3746)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1707)
+       at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1224)
+       at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:953)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at com.google.android.gms.common.util.concurrent.zza.run(zza.java:12)
+       at java.lang.Thread.run(Thread.java:1119)
+
+AsyncTask #1:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.LinkedTransferQueue$DualNode.await(LinkedTransferQueue.java:458)
+       at java.util.concurrent.SynchronousQueue$Transferer.xferLifo(SynchronousQueue.java:194)
+       at java.util.concurrent.SynchronousQueue.xfer(SynchronousQueue.java:233)
+       at java.util.concurrent.SynchronousQueue.take(SynchronousQueue.java:316)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+FinalizerDaemon:
+       at java.lang.Object.wait(Object.java)
+       at java.lang.Object.wait(Object.java:405)
+       at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:207)
+       at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:228)
+       at java.lang.Daemons$FinalizerDaemon.runInternal(Daemons.java:348)
+       at java.lang.Daemons$Daemon.run(Daemons.java:132)
+       at java.lang.Thread.run(Thread.java:1119)
+
+ExoPlayer:Playback:
+       at android.os.MessageQueue.nativePollOnce(MessageQueue.java)
+       at android.os.MessageQueue.next(MessageQueue.java:346)
+       at android.os.Looper.loopOnce(Looper.java:214)
+       at android.os.Looper.loop(Looper.java:342)
+       at android.os.HandlerThread.run(HandlerThread.java:85)
+
+ExoPlayer:BackgroundExecutor:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+       at java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3805)
+       at java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3746)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1707)
+       at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:435)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+pool-19-thread-1:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+       at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1758)
+       at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1236)
+       at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:953)
+       at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1082)
+       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+       at java.lang.Thread.run(Thread.java:1119)
+
+DefaultDispatcher-worker-3:
+       at jdk.internal.misc.Unsafe.park(Unsafe.java)
+       at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:410)
+       at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.park(CoroutineScheduler.kt:284)
+       at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.tryPark(CoroutineScheduler.kt:284)
+       at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:284)
+       at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:284)
